@@ -1,0 +1,176 @@
+header {
+	padding-top: 50px;
+	padding-bottom: 40px;
+	color: #FFFFFF;
+}
+header li {
+	display: inline-block;
+	margin: 0 30px 0 0;
+}
+header li a {	
+	display: block;
+	padding: 20px 0;
+	transition: color .5s;
+}
+#logo h1{ 
+	font-size: 42px;
+	letter-spacing: 5px;
+	text-transform: uppercase;
+	margin-bottom: 0;
+}
+#logo p{
+	margin-top: -3px;
+	font-size: .9rem;
+	font-style: italic;
+	text-transform: lowercase;
+}
+#pageintro {
+	width: 90%;
+	max-width: 600px;
+	padding: 20px 0;
+	margin: 120px auto 200px auto;
+	border-radius:0 50px;
+	padding-left: 30px; 
+	padding-right: 30px;
+}
+#pageintro article h2 { 
+	margin-bottom: 30px;
+	font-size: 36px;
+	margin-top: 0px;
+}
+#pageintro #topP {
+	margin-bottom: 0px;
+}
+#categoryDiv {
+	padding-top: 50px;
+	padding-bottom: 50px;
+}
+#categoryBlock {
+	margin: auto;
+	width: 90%;
+	max-width: 1000px;
+	/*border: 1px solid black;*/
+}
+.categoryWrapper {
+	width: 200px;
+	height: 200px;
+	margin: 1%;
+	display: inline-block;
+	border: 1px solid green;
+	position: relative;
+}
+.categoryBox {
+	width: 100%;
+	height: 100%;
+	position: absolute;
+	top: 0;
+	left: 0;
+	transition: background-color .4s;
+}
+.categoryBox:hover {
+	background-color: grey;
+}
+.categoryBox div {
+	transition: color .5s, background-color .5s, border-color .5s;	
+}
+#testimonials {
+	margin: auto;
+	width: 90%;
+	max-width: 1400px;
+	padding: 30px 0;
+	/*border: 1px solid white;*/
+}
+#testimonials > div {
+	/*border: 1px solid yellow;	*/
+}
+#testimonials li div {
+	width: 550px;
+}
+#testimonials li div { 
+	position: relative;
+	min-height: 120px;
+	padding: 20px 20px 20px 120px;
+	border-radius: 0 35px;
+	color: #000000;
+	background-color:rgba(255,255,255,.75);
+	text-align: left;
+	transition: background-color .3s;
+}
+#testimonials li {
+	display: inline-block;
+	margin: 20px;
+}	
+#testimonials li div:hover { 
+	color:#FFFFFF;
+	background-color:#82A800;
+}
+#testimonials li img {
+	position:absolute;
+	left:20px;
+}
+#testimonials li span { 
+	margin-bottom:5px;
+	transition: color .4s;
+}
+#testimonials li span strong { 
+	margin-bottom:5px;
+	transition: color .5s;
+}
+#testimonials li span em { 
+	font-size:.8rem;
+	transition: color .5s;
+}
+#testimonials li blockquote { 
+	display:block;
+	position:relative;
+	width:100%;
+	margin:0;
+	padding:0;
+	transition: color .4s;
+}
+#itemDiv {
+	padding-top: 50px;
+	padding-bottom: 50px;
+}
+#itemBlock {
+	margin: auto;
+	width: 90%;
+	max-width: 1000px;
+	/*border: 1px solid black;*/
+}
+.itemWrapper {
+	width: 300px;
+	height: 400px;
+	margin: 1%;
+	display: inline-block;
+	border: 1px solid green;
+	position: relative;
+	border: 1px solid blue;
+}
+.itemBox {
+	width: 100%;
+	height: 75%;
+	border: 3px solid black;
+}
+.itemBox:hover {
+	background-color: grey;
+}
+.itemBox div {
+	transition: color .5s, background-color .5s, border-color .5s;	
+}
+.itemButton {
+	margin-top: 20px;
+	transition: color .5s, background-color .5s, border-color .5s;
+}
+#brandDiv {
+
+}
+.brandWrapper {
+	width: 200px;
+	height: 75px;
+	margin: 30px;
+	display: inline-block;
+	background-color: white;
+	color: black;
+	transition: color .5s, background-color .5s, border-color .5s;
+}

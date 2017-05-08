@@ -1,0 +1,83 @@
+<header class='glOverlay'>
+	<nav>
+		<ul>
+			<li><a href='#' class='glCWhite glCGreenHover'>somthing more</a></li>
+			<li><a href='#' class='glCWhite glCGreenHover'>ABOUT Hike-Spirit</a></li>
+			<li><a href='#' class='glCWhite glCGreenHover'>SHOP</a></li>
+			<li><a href='#' class='glCWhite glCGreenHover'>CONTACTS</a></li>
+		</ul>
+	</nav>
+    <div id="logo">         
+        <h1>Hike-Spirit</h1>
+        <p>time to spend time in another way...</p>
+    </div>	
+</header>
+<!-- ################################################################################ -->
+<div id="pageintro" class='glBgWhite' > 
+	<article>
+	    <p id='topP' >Laoreet tellus quis finibus metus</p>
+	    <h2>Mauris integer finibus</h2>
+	    <p>Nunc quis arcu congue congue nulla sed nisl libero quis mollis eros bibendum efficitur praesent placerat dui eu sem sollicitudin fermentum in lobortis urna vitae dui convallis sed pulvinar ipsum.</p>
+	</article>
+</div>
+<!-- ################################################################################ -->
+<div id='categoryDiv' class="glContainer">
+	<div id='categoryBlock'>
+    <div>
+      <h2>Consectetur suspendisse</h2>
+      <p>Potenti nam aliquet varius dolor ut lobortis morbi sit amet rutrum nunc cras imperdiet consequat eros nec efficitur sed placerat lacus orci sed eleifend odio aliquam vitae etiam imperdiet feugiat nisl non accumsan ante eleifend.</p>
+    </div>
+    <div *ngFor='let category of categoryList' class='categoryWrapper'>
+    	<div class='categoryBox'>
+			<div class='glBtn glBGGreenHover'>    	
+    		{{category}}
+    		</div>
+    	</div>
+    </div>
+    </div>
+</div>
+<!-- ################################################################################ -->
+<div class='glOverlay'>
+  <section id='testimonials'>     
+    <div>
+      <h2>Etiam proin porta interdum</h2>
+      <p>Purus vestibulum ante ipsum primis in faucibus orci luctus turpis ullamcorper dolor gravida ut laoreet arcu finibus praesent tincidunt nulla id augue hendrerit ac eleifend turpis tempor suspendisse fringilla massa nec laoreet.</p>
+    </div>
+    <ul class='glNoStyle'>
+      <li>
+        <div>
+          <img src="images/80x80.png" alt="" class=''> <span class=''><strong>A.Doe</strong> / <em>Position, Company Name</em></span>
+          <blockquote class=''>Ornare sed nec sagittis nisi nulla nec aliquam mi interdum et malesuada fames&hellip;</blockquote>
+        </div>
+      </li>
+      <li>
+        <div>
+          <img src="images/80x80.png" alt=""> <span><strong>B.Doe</strong> / <em>Position, Company Name</em></span>
+          <blockquote>Ac ante ipsum primis in faucibus curabitur cursus est nec turpis posuere aliquet&hellip;</blockquote>
+        </div>
+      </li>
+    </ul>    
+  </section>
+</div>
+<!-- ################################################################################ -->
+<div id='itemDiv' class="glContainer">
+	<div id='itemBlock'>
+	    <div>
+	      <h2>Consectetur suspendisse</h2>
+	      <p>Potenti nam aliquet varius dolor ut lobortis morbi sit amet rutrum nunc cras imperdiet consequat eros nec efficitur sed placerat lacus orci sed eleifend odio aliquam vitae etiam imperdiet feugiat nisl non accumsan ante eleifend.</p>
+	    </div>
+	    <div *ngFor='let item of itemList' class='itemWrapper'>
+	    	<div class='itemBox'>
+	    	</div>
+			<div class='glBtn glBGGreenHover itemButton'>    	
+				{{item}}
+			</div>
+	    </div>
+    </div>
+</div>
+<!-- ################################################################################ -->
+<div id='brandDiv' class='glBgGreen' >
+	<div *ngFor='let brand of brandList' class='brandWrapper glBGGreenHover'>
+		{{brand}}
+	</div>
+</div>
