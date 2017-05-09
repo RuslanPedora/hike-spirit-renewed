@@ -1,0 +1,10 @@
+<div id='categoryList' class='glOverlay'>
+	<div *ngFor='let category of categoryList' class='categoryWrapper'>		
+		<div class='extDiv'>
+			<div class='intDiv'>
+				<span class='glBtn medium glBGGreenHover categorySpan glClickable' (click)='gotoItemList(category)'>{{category.name}}</span>
+			</div>
+		</div>
+		<img src='images/{{category.image}}' class='categoryImage'>		
+	</div>	
+</div>

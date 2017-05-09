@@ -15,7 +15,7 @@ var DEBUG_MODE = true;
 
 var connetionData = {
                       host     : 'localhost',
-                      database : 'trial_shop_db',
+                      database : 'hike_spirit',
                       user     : 'root',
                       multipleStatements: true
                     };
@@ -31,8 +31,8 @@ if ( process.env.DATABASE_URL ) {
 appExpress.use( cors() );
 
 appExpress.get( "/", initResponse );
-
-appExpress.get( "/items", itemsResponse );
+appExpress.get( "/getCategoryList", categoryListResponse );
+appExpress.get( "/getItemList", itemListResponse );
 
 appExpress.post( "/order", orderResponse );
 
@@ -212,11 +212,10 @@ function makeResponseOnDBData( querySQL, request, response ) {
     connection.query( querySQL, function ( error, results, fields ) {
                         if (error) { 
                           logRequest( 'db connetion failed: ' + querySQL );
-                          logRequest( 'Error: ' + error );
-                          //serverSideError( request, response )
+                          logRequest( 'Error: ' + error );                          
                           return;
                         }
-                        response.writeHead( 200, {'Content-Type': 'text/plain' } );
+                        response.writeHead( 200, { 'Content-Type': 'text/plain' } );
                         responseStr = JSON.stringify( results );                                                     
                         response.end( responseStr );
                         logRequest( request.url, 'itmes request processed' );
@@ -227,39 +226,16 @@ function makeResponseOnDBData( querySQL, request, response ) {
     logRequest( request.url, 'connection is closed' );
 }
 //-----------------------------------------------------------------------------
-function itemImagesResponse( request, response ) {
-    var querySQL;
-    var queryInputString;
-    var indexOfQueryString;
+function categoryListResponse( request, response ) {
 
-    indexOfQueryString = request.url.indexOf( '/?' );
-    if ( indexOfQueryString > 0 )
-      queryInputString = request.url.slice( indexOfQueryString + 2 , request.url.length );
-    else 
-      queryInputString = '';
+    querySQL = 'SELECT * FROM categories WHERE id IN ( SELECT categoryId FROM categoryhierarchy WHERE parentId IS NULL)';
 
-    if ( DEBUG_MODE )
-      logRequest( request.url, 'query string: ' + queryInputString );
-
-    querySQL = '\
-      SELECT mainImage imageSrc FROM items WHERE id = conditionInjection\
-      UNION ALL\
-      SELECT imageSrc FROM images WHERE itemId = conditionInjection';
-    try {
-      conditionString = JSON.parse( decodeQuotes( queryInputString ) ).id;
-    }
-    catch ( error )  {
-      logRequest( error );
-      //serverSideError( request, response )
-    }
-
-    logRequest( request.url, 'condition string: ' + conditionString);    
-    querySQL = querySQL.replace( new RegExp( 'conditionInjection', 'g' ), conditionString );
+    logRequest( request.url );    
 
     makeResponseOnDBData( querySQL, request, response );
 }
 //-----------------------------------------------------------------------------
-function itemsResponse( request, response ) {
+function itemListResponse( request, response ) {
     var querySQL;
     var queryInputString;
     var indexOfQueryString;
@@ -278,7 +254,7 @@ function itemsResponse( request, response ) {
     querySQL = '\
       SELECT * FROM\
         ( SELECT items.id as id, items.name as name, items.mainImage as mainImage,\
-                 IFNULL( price, 0 ) AS price, discount AS discount,\
+                 IFNULL( price, 0 ) AS price, IFNULL( discount, 0 ) AS discount,\
                  CAST( IFNULL( price, 0 ) * ( 1 - IFNULL( discountTable.discount, 0 ) / 100 ) AS DECIMAL(20,2) ) AS discountPrice,\
                  items.categoryId, categories.name as category\
         FROM items as items\
@@ -311,47 +287,7 @@ function itemsResponse( request, response ) {
         ON items.categoryId = categories.id) as itemSelection\
       conditionInjection';
 
-    try {
-
-      conditionInjection = constructSQLCondition( decodeQuotes( queryInputString ), ITEM_TABLE_PREFIX );
-      logRequest( request.url, 'condition string: ' + conditionInjection );    
-
-      if( queryInputString != '' )
-        queryObject = JSON.parse( decodeQuotes( queryInputString ) );
-      propertyCondition = '';
-      currentCondition = '';
-      numberOrder = '';
-      for( var property in queryObject ) {
-        if( property.indexOf( "propertyId_" ) >= 0 ) {
-            numberOrder = property.slice( property.lastIndexOf( '_' ) );
-            currentCondition = constructSQLCondition( JSON.stringify( { propertyId: queryObject[ property ], 
-                                                                        value: queryObject[ 'value' + numberOrder ] } ) );
-            if( propertyCondition != '' ) {
-              currentCondition = currentCondition.replace( 'WHERE', 'OR' );
-            }
-            propertyCondition += currentCondition;
-            propertyCount++;
-        }
-      }
-      if( propertyCondition != '' ) {
-          if( conditionInjection == '' ) 
-              conditionInjection = " WHERE ( ";
-          else  
-              conditionInjection += " AND ( ";
-          conditionInjection += 'id IN \
-                ( SELECT itemId\
-                  FROM itemProperties\
-                  ' + propertyCondition + '\
-                  GROUP BY itemId\
-                  HAVING COUNT( propertyId ) = ' + propertyCount + ' ) ';
-          conditionInjection += ' ) ';        
-      }
-
-    }
-    catch ( error )  {
-      logRequest( error );
-      //serverSideError( request, response )
-    }
+    conditionInjection = '';
 
     querySQL = querySQL.replace( 'conditionInjection', conditionInjection );
 

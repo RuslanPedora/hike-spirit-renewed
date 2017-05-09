@@ -9,16 +9,48 @@ var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
 var core_1 = require("@angular/core");
+var router_1 = require("@angular/router");
 //import { DataService }  from 'services/data.service';
 var ApplicationComponent = (function () {
     //-----------------------------------------------------------------------------
-    function ApplicationComponent() {
+    function ApplicationComponent(router) {
+        this.router = router;
     }
     //-----------------------------------------------------------------------------
     ApplicationComponent.prototype.ngOnInit = function () {
+        this.routerListener = this.router.events.subscribe(this.resizeOutlet);
     };
     //-----------------------------------------------------------------------------
     ApplicationComponent.prototype.onResize = function (event) {
+    };
+    //-----------------------------------------------------------------------------
+    ApplicationComponent.prototype.gotoBasket = function () {
+        this.router.navigate(['/basket']);
+    };
+    //-----------------------------------------------------------------------------
+    ApplicationComponent.prototype.resizeOutlet = function (event) {
+        var elementOutlet;
+        var elementContacts;
+        var elementCopyRights;
+        var elementPanelDiv;
+        elementOutlet = document.getElementById('outlerDiv');
+        elementContacts = document.getElementById('contactDiv');
+        elementCopyRights = document.getElementById('copyright');
+        elementPanelDiv = document.getElementById('panelDiv');
+        if (event.url.indexOf('invitation') < 0) {
+            elementOutlet.style.maxWidth = '1000px';
+            elementContacts.style.maxWidth = '1000px';
+            elementCopyRights.style.maxWidth = '1000px';
+        }
+        else {
+            elementOutlet.style.maxWidth = 'none';
+            elementContacts.style.maxWidth = 'none';
+            elementCopyRights.style.maxWidth = 'none';
+        }
+        if (event.url.indexOf('item-list') >= 0) {
+        }
+        else {
+        }
     };
     return ApplicationComponent;
 }());
@@ -32,7 +64,7 @@ ApplicationComponent = __decorate([
             '(window:resize)': 'onResize($event)'
         }
     }),
-    __metadata("design:paramtypes", [])
+    __metadata("design:paramtypes", [router_1.Router])
 ], ApplicationComponent);
 exports.ApplicationComponent = ApplicationComponent;
 //# sourceMappingURL=app.component.js.map

@@ -1,0 +1,39 @@
+<div id='itemList' class='glOverlay'>
+	<div *ngFor='let item of itemList' class='itemWrapper'>
+		<div class='itemInner glBgWhite'>
+			<div class='fixedInner'>
+				<i id='leftArrow' class='fa fa-chevron-circle-left glCGreen'></i>
+				<i id='rightArrow' class='fa fa-chevron-circle-right glCGreen'></i>
+				<div id='newDiv' *ngIf='item.newItem'>
+					NEW
+				</div>
+				<div id='discountDiv' *ngIf='item.discount>0'>
+					-{{item.discount}}%
+				</div>
+				<div class='imageDiv'>
+					<img src='/images/{{item.mainImage}}'>
+				</div>
+				<div class='rateDiv'>
+					<i class='fa fa-star glCGreen'></i>
+					<i class='fa fa-star glCGreen'></i>
+					<i class='fa fa-star glCGreen'></i>
+					<i class='fa fa-star-half-full glCGreen'></i>
+					<i class='fa fa-star-o glCGreen'></i>
+				</div>
+				<div class='nameDiv'>
+					{{item.name}}
+				</div>
+				<div class='idDiv'>
+					code:{{item.id}}
+				</div>
+				<div class='priceDiv'>
+					<del *ngIf='item.discount>0'>
+						({{item.price}})
+					</del>
+					{{item.discountPrice.toFixed(2)}}$
+				</div>
+				<div class='buyButton glBtn small glBGGreenHover glClickable'>buy <i class='fa fa-cart-plus'></i></div>
+			</div>	
+		</div>	
+	</div>
+</div>

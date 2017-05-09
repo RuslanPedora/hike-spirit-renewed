@@ -1,29 +1,80 @@
+#panelDiv {
+	max-width: 1000px;
+	margin: auto;
+	/*border: 1px solid white;*/
+	text-align: left;
+	vertical-align: top;
+}
+#logoImage {
+	margin: 5px;	
+	height: 70px;
+	border-radius: 5px;
+}
+#contactBar {
+	margin-top: 5px;
+	padding: 5px;
+	display: inline-block;
+	vertical-align: top;
+	/*border: 1px solid white;*/
+}
+#searchBar {
+	margin: 3px;
+	padding: 5px;
+	display: inline-block;
+	border: 1px solid white;
+	border-radius: 5px;
+	vertical-align: middle;
+}
+#searchBar input {
+	width: 300px;
+	background-color: inherit;
+	color: #FFFFFF;
+	border: none;
+}
+#searchBar ::-webkit-input-placeholder {
+  color: #FFFFFF;
+}
+#basketBar {
+	display: inline-block;
+	/*border: 1px solid white;*/
+	vertical-align: bottom;
+	padding: 0px 5px 5px 5px;	
+	float: right;
+}
+#basketBar i {
+	font-size: 30px;
+}
 #outlerDiv {
 	width: 100%;	
 	min-height: 100vh; 
 	margin: auto;	
 }
-
 #contactDiv {
+	margin: auto;
 }
 #contactBlock {
 	margin: auto;
 	width: 90%;
 	max-width: 1000px;
-	border: 1px solid white;
+	/*border: 1px solid white;*/
 }
 .contactSection {	
-	max-width: 300px;
+	max-width: 250px;
 	height: 350px;
 	display: inline-block;
 	margin: 0 auto;
-	border: 1px solid white;
+	/*border: 1px solid white;*/
 	padding: 10px;
 	vertical-align: top;
+}
+.contactSection ul {	
+	padding-left: 2px;
+	/*border: 1px solid white;*/
 }
 #contactList li{ 
 	display: block;
 	margin-bottom: 15px;
+	margin-left: 0;
 	padding: 0 0 15px 40px;
 	border-bottom: 1px solid;
 	text-align: left;
@@ -63,10 +114,10 @@
 	text-align: left;
 }
 #middleList li:last-child { 
-	margin: 0;
+/*	margin: 0;
 	padding: 0;
 	border: none;
-}
+*/}
 fieldset { 
 	margin: 0;
 	padding: 0;
@@ -95,6 +146,7 @@ fieldset {
 }
 #copyright {
 	padding: 1px;
+	margin: auto;
 }
 #backtotop { 
 	z-index: 999;
@@ -140,9 +192,8 @@ fieldset {
 }
 :host /deep/ .glContainer { 
 	color:#888888;
-	background-color:#FFFFFF;
+	background-color: #FFFFFF;
 }
-
 :host /deep/ .glBgGreen {
 	color: #FFFFFF; 
 	background-color: #82A800; 
@@ -167,8 +218,15 @@ fieldset {
 :host /deep/ .glCBlack {
 	color: #000000; 
 }
+:host /deep/ .glCGreen {
+	color: #82A800; 
+	border-color: #82A800;
+}
 :host /deep/ .glCGreenHover:hover {
 	color: #82A800; 
+}
+:host /deep/ .glClickable:hover {
+	cursor: pointer;
 }
 :host /deep/ .glFont-xs { font-size:.8rem; }
 :host /deep/ .glFont-x1 { font-size:1.2rem; }

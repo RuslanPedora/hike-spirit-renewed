@@ -1,3 +1,19 @@
+<!-- ################################################################################ -->
+<div id='panelDiv' class='glOverlay'>
+	<img id='logoImage' src='images/logo.jpg'>
+	<div id='contactBar'>
+		(232) 000-0000,(232) 000-0000, Lviv, street 5/1 0000/000
+	</div>
+	<div id='searchBar'>
+		<input type='text' placeholder='search term...'>
+		<i class='fa fa-search glClickable'></i>
+	</div> 	
+	<div id='basketBar' class='glClickable' (click)='gotoBasket()'>
+		<i class='fa fa-shopping-cart'></i>
+		<i class='fa fa-cart-arrow-down'></i>
+	</div>
+ </div>
+<!-- ################################################################################ -->
 <div id='outlerDiv'>
 	<router-outlet>
 	</router-outlet>
@@ -6,7 +22,7 @@
 <div id='contactDiv' class='glBgGrey'>
 	<div id='contactBlock'>
 		<div class="contactSection">
-	      <h6 class="title">Elementum aliquet</h6>
+	      <h6 class="title">get in touch with us</h6>
 	      <ul id="contactList">
 	        <li><i class="fa fa-map-marker"></i>
 	          <address>
@@ -26,31 +42,29 @@
 	      </ul>
 	    </div>
 	    <div class="contactSection">
-	    	<h6 class="title">Suscipit magna sed</h6>
+	    	<h6 class="title">We are in Ukraine</h6>
     		<ul id='middleList'>
-    			<li>fisrt line</li>
-    			<li>second line</li>
-    			<li>third line</li>
-    			<li>fourth line</li>
+    			<li>Lviv</li>
+    			<li>Kiyv</li>
+    			<li>Odessa</li>
+    			<li>Kharkiv</li>
     		</ul>
 	    </div>
 		<div class="contactSection">
-	      <h6 class="title">Suscipit magna sed</h6>
-	      <p>Varius libero molestie habitasse sed platea dictumst proin.</p>
+	      <h6 class="title">Hike-Spirit news</h6>
+	      <p>Are you passion about hiking and nature, our community shares impressions</p>
 	      <form method="post" action="#">
 	        <fieldset>
 	          <input class="btmspace-15" type="text" value="" placeholder="Name">
 	          <input class="btmspace-15" type="text" value="" placeholder="Email">
-	          <button type="submit" value="submit" class='glBgGreen'>Submit</button>
+	          <button type="submit" value="submit" class='glBgGreen'>Subscribe</button>
 	        </fieldset>
 	      </form>
 	    </div>
 	</div>
 </div>
 <!-- ################################################################################ -->
-<div class="glContainer">
-  <div id="copyright"> 
-    <p>Copyright &copy; 2017 - All Rights Reserved - Hike-Spirit</p>
-  </div>
+<div id="copyright" class='glContainer'> 
+	<p>Copyright &copy; 2017 - All Rights Reserved - Hike-Spirit</p>
 </div>
 <a id="backtotop" href="#top"><i class='fa fa-chevron-up glBgGreen'></i></a>

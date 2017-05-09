@@ -13,6 +13,10 @@ var common_1 = require("@angular/common");
 var angular_2_local_storage_1 = require("angular-2-local-storage");
 var app_component_1 = require("./app.component");
 var invitation_component_1 = require("hs_app/component-invitation/invitation.component");
+var item_list_component_1 = require("hs_app/component-item-list/item.list.component");
+var category_list_component_1 = require("hs_app/component-category-list/category.list.component");
+var basket_component_1 = require("hs_app/component-basket/basket.component");
+var data_service_1 = require("hs_services/data.service");
 var routing_module_1 = require("./routing.module");
 var AppModule = (function () {
     function AppModule() {
@@ -30,10 +34,15 @@ AppModule = __decorate([
                 storageType: 'localStorage'
             })
         ],
-        declarations: [app_component_1.ApplicationComponent, invitation_component_1.InvitationComponent],
+        declarations: [app_component_1.ApplicationComponent,
+            invitation_component_1.InvitationComponent,
+            item_list_component_1.ItemListComponent,
+            category_list_component_1.CategoryListComponent,
+            basket_component_1.BasketComponent],
         providers: [common_1.Location,
             { provide: common_1.LocationStrategy,
-                useClass: common_1.HashLocationStrategy }
+                useClass: common_1.HashLocationStrategy },
+            data_service_1.DataService
         ],
         bootstrap: [app_component_1.ApplicationComponent]
     })

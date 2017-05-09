@@ -8,9 +8,15 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
 var core_1 = require("@angular/core");
 var router_1 = require("@angular/router");
 var invitation_component_1 = require("hs_app/component-invitation/invitation.component");
+var item_list_component_1 = require("hs_app/component-item-list/item.list.component");
+var category_list_component_1 = require("hs_app/component-category-list/category.list.component");
+var basket_component_1 = require("hs_app/component-basket/basket.component");
 var routes = [
     { path: '', redirectTo: '/invitation', pathMatch: 'full' },
     { path: 'invitation', component: invitation_component_1.InvitationComponent },
+    { path: 'item-list', component: item_list_component_1.ItemListComponent },
+    { path: 'category-list', component: category_list_component_1.CategoryListComponent },
+    { path: 'basket', component: basket_component_1.BasketComponent },
 ];
 var RoutingModule = (function () {
     function RoutingModule() {
