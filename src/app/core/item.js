@@ -1,6 +1,7 @@
 "use strict";
 var Item = (function () {
     function Item() {
+        this.rateArray = [];
         this.newItem = true;
     }
     return Item;

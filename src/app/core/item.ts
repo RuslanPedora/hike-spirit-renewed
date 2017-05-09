@@ -8,6 +8,7 @@ export class Item {
 	dsicount: number;
 	discountPrice: number;
 	rate: number;
+	rateArray: number[] = [];
 	newItem: boolean = true;
 	description: string;
 	shortDescription: string;

@@ -21,7 +21,10 @@ var ItemListComponent = (function () {
     //-----------------------------------------------------------------------------
     ItemListComponent.prototype.ngOnInit = function () {
         var _this = this;
-        this.dataService.getItemList('').then(function (itemList) { return _this.itemList = itemList; });
+        this.dataService.getItemList('').then(function (itemList) {
+            _this.itemList = itemList;
+            _this.dataService.converRate(_this.itemList);
+        });
     };
     return ItemListComponent;
 }());

@@ -255,6 +255,8 @@ function itemListResponse( request, response ) {
       SELECT * FROM\
         ( SELECT items.id as id, items.name as name, items.mainImage as mainImage,\
                  IFNULL( price, 0 ) AS price, IFNULL( discount, 0 ) AS discount,\
+                 IFNULL( rate, 0 ) AS rate,\
+                 CASE WHEN newItems.itemId IS NULL THEN false ELSE true END AS newItem,\
                  CAST( IFNULL( price, 0 ) * ( 1 - IFNULL( discountTable.discount, 0 ) / 100 ) AS DECIMAL(20,2) ) AS discountPrice,\
                  items.categoryId, categories.name as category\
         FROM items as items\
@@ -282,6 +284,15 @@ function itemListResponse( request, response ) {
           ON discountItems.itemId = lastDiscountDates.itemId AND discountItems.startDate = lastDiscountDates.maxStartDate\
         ) AS discountTable\
         ON id = discountTable.itemIdDisc\
+        \
+        LEFT JOIN\
+        ( SELECT itemId, AVG(rate) as rate\
+        FROM itemRates\
+        GROUP BY itemId ) AS rates\
+        ON id = rates.itemId\
+        \
+        LEFT JOIN newItems\
+        ON id = newItems.itemId\
         \
         LEFT JOIN categories\
         ON items.categoryId = categories.id) as itemSelection\

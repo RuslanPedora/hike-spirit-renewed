@@ -30,6 +30,19 @@ export class DataService {
 	}
 
 	//-----------------------------------------------------------------------------
+	converRate( data: Item[] ): void {
+		let rate: number;
+
+		for( let i in data ) {
+			rate = data[ i ].rate;
+			data[ i ].rateArray = [];
+			for( let j = 0; j < 5; j++  ) {				
+				data[ i ].rateArray.push( rate >= 1 ?  1 : rate );
+				rate = Math.max( 0, rate - 1 );
+			}
+		}
+	}	
+	//-----------------------------------------------------------------------------
 	getCategoryList(): Promise<Category[]> {
 		return this.http.get( this.categoryUrl )
 		           .toPromise()

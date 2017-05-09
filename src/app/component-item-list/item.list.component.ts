@@ -23,6 +23,8 @@ export class ItemListComponent implements OnInit {
 	}
 	//-----------------------------------------------------------------------------
 	ngOnInit() {
-		this.dataService.getItemList( '' ).then( itemList => this.itemList = itemList );
+		this.dataService.getItemList( '' ).then( itemList => { this.itemList = itemList;
+			                                                   this.dataService.converRate( this.itemList );
+		} );
 	}
 }

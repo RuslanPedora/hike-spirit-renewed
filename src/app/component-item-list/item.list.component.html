@@ -2,8 +2,8 @@
 	<div *ngFor='let item of itemList' class='itemWrapper'>
 		<div class='itemInner glBgWhite'>
 			<div class='fixedInner'>
-				<i id='leftArrow' class='fa fa-chevron-circle-left glCGreen'></i>
-				<i id='rightArrow' class='fa fa-chevron-circle-right glCGreen'></i>
+				<i id='leftArrow' class='fa fa-chevron-circle-left glCGreen glClickable'></i>
+				<i id='rightArrow' class='fa fa-chevron-circle-right glCGreen glClickable'></i>
 				<div id='newDiv' *ngIf='item.newItem'>
 					NEW
 				</div>
@@ -11,14 +11,14 @@
 					-{{item.discount}}%
 				</div>
 				<div class='imageDiv'>
-					<img src='/images/{{item.mainImage}}'>
+					<img src='/images/{{item.mainImage}}' class='glClickable'>
 				</div>
 				<div class='rateDiv'>
-					<i class='fa fa-star glCGreen'></i>
-					<i class='fa fa-star glCGreen'></i>
-					<i class='fa fa-star glCGreen'></i>
-					<i class='fa fa-star-half-full glCGreen'></i>
-					<i class='fa fa-star-o glCGreen'></i>
+					<span *ngFor='let rateElement of item.rateArray'>						
+						<i class='fa fa-star glCGreen' *ngIf='rateElement==1'></i>
+						<i class='fa fa-star-half-full glCGreen' *ngIf='rateElement>0&&rateElement<1'></i>
+						<i class='fa fa-star-o glCGreen' *ngIf='rateElement==0'></i>
+					</span>					
 				</div>
 				<div class='nameDiv'>
 					{{item.name}}
@@ -28,9 +28,9 @@
 				</div>
 				<div class='priceDiv'>
 					<del *ngIf='item.discount>0'>
-						({{item.price}})
+						{{item.price.toFixed(2)}}$
 					</del>
-					{{item.discountPrice.toFixed(2)}}$
+					<b>{{item.discountPrice.toFixed(2)}}$</b>
 				</div>
 				<div class='buyButton glBtn small glBGGreenHover glClickable'>buy <i class='fa fa-cart-plus'></i></div>
 			</div>	

@@ -23,6 +23,18 @@ var DataService = (function () {
         this.itemUrl = this.hostUrl + '/getItemList';
     }
     //-----------------------------------------------------------------------------
+    DataService.prototype.converRate = function (data) {
+        var rate;
+        for (var i in data) {
+            rate = data[i].rate;
+            data[i].rateArray = [];
+            for (var j = 0; j < 5; j++) {
+                data[i].rateArray.push(rate >= 1 ? 1 : rate);
+                rate = Math.max(0, rate - 1);
+            }
+        }
+    };
+    //-----------------------------------------------------------------------------
     DataService.prototype.getCategoryList = function () {
         return this.http.get(this.categoryUrl)
             .toPromise()
