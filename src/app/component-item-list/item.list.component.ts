@@ -27,4 +27,23 @@ export class ItemListComponent implements OnInit {
 			                                                   this.dataService.converRate( this.itemList );
 		} );
 	}
+	//-----------------------------------------------------------------------------
+	scrollImage( selectedItem: Item, forward: boolean ): void {
+		let imageIndex = 0;
+		if( selectedItem.imageList.length == 0 ) 
+			return;
+		imageIndex = selectedItem.imageList.findIndex( element => element.mediumImage == selectedItem.mainImage );
+		if( imageIndex < 0 )
+			selectedItem.mainImage = selectedItem.imageList[ 0 ].mediumImage;
+		else {
+			 if ( forward ) {
+				imageIndex = ( imageIndex + 1 == selectedItem.imageList.length ? 0 : imageIndex + 1 );
+			 }
+			 else {
+				imageIndex = ( imageIndex - 1 < 0 ? selectedItem.imageList.length - 1 : imageIndex - 1 );
+			 }
+  		     selectedItem.mainImage = selectedItem.imageList[ imageIndex ].mediumImage;
+		}	 
+	}
+	//-----------------------------------------------------------------------------
 }

@@ -26,6 +26,24 @@ var ItemListComponent = (function () {
             _this.dataService.converRate(_this.itemList);
         });
     };
+    //-----------------------------------------------------------------------------
+    ItemListComponent.prototype.scrollImage = function (selectedItem, forward) {
+        var imageIndex = 0;
+        if (selectedItem.imageList.length == 0)
+            return;
+        imageIndex = selectedItem.imageList.findIndex(function (element) { return element.mediumImage == selectedItem.mainImage; });
+        if (imageIndex < 0)
+            selectedItem.mainImage = selectedItem.imageList[0].mediumImage;
+        else {
+            if (forward) {
+                imageIndex = (imageIndex + 1 == selectedItem.imageList.length ? 0 : imageIndex + 1);
+            }
+            else {
+                imageIndex = (imageIndex - 1 < 0 ? selectedItem.imageList.length - 1 : imageIndex - 1);
+            }
+            selectedItem.mainImage = selectedItem.imageList[imageIndex].mediumImage;
+        }
+    };
     return ItemListComponent;
 }());
 ItemListComponent = __decorate([

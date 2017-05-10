@@ -4,6 +4,7 @@ export class Item {
 	id: number;
 	name: string;
 	categoryId: number;
+	mainImage: string;
 	price: number;
 	dsicount: number;
 	discountPrice: number;
@@ -12,5 +13,5 @@ export class Item {
 	newItem: boolean = true;
 	description: string;
 	shortDescription: string;
-	image: Image;
+	imageList: Image[] = [];
 }

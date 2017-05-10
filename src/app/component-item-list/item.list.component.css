@@ -18,6 +18,12 @@
 	transition: width .1s, left .1s, background-color .1s;	
 	background-color:#F7F7F7;
 	overflow: hidden;
+/*    animation: mymove .5s;
+    animation-fill-mode: forwards;
+*/}
+@keyframes mymove {
+    from { top: 50%; left: 50%;width: 0%;height: 0%;border-radius: 50%;}
+    to { top: 0%;left: 0%;width: 100%;height: 100%;border-radius: 0%; }
 }
 .fixedInner {
 	width: 100%;
@@ -37,6 +43,7 @@
 	left: -20%;
 	padding: 5px 55px 5px 55px;
 	transform: rotateZ(-45deg);
+	z-index: 2;
 }
 
 #discountDiv {
@@ -49,6 +56,7 @@
 	top: 5%;
 	right: 5%;
 	padding: 5px;
+	z-index: 2;
 }
 #leftArrow {
 	position: absolute;
@@ -66,9 +74,11 @@
 }
 .itemWrapper:hover #leftArrow {
 	left: 3%;
+	z-index: 2;
 }
 .itemWrapper:hover #rightArrow {
 	right: 3%;
+	z-index: 2;
 }
 .itemWrapper:hover .itemInner {
 	width: 110%;
@@ -78,26 +88,44 @@
 	box-shadow: 5px 5px 5px 5px rgb( 100, 100, 100 );
 	border-radius: 5px;
 	z-index: 10;
+	animation-fill-mode: none;
+	top: 0%;
 }
 .itemWrapper:hover .fixedInner {
 	height: 77%;
 }	
 .imageDiv {
 	height: 65%;
-	padding: 5px;
 	margin: 0 auto;
+	overflow: hidden;
 }
+.imageScrollDiv {
+	width: 100%;
+	height: 100%;
+	padding: 5px;
+	position: relative;
+	left: 0%;
+	z-index: 0;
+}	
 .imageDiv img {
 	max-height: 100%;
 	max-width: 100%;
 }
-.nameDiv {
+/*.itemInner .imageDiv img {
+    animation: imageSlide 2s;
+    animation-fill-mode: forwards;
+}
+@keyframes imageSlide {
+    from { left: 100%; }
+    to { left: 0%; }
+}
+*/.nameDiv {
 	height: 10%;
 	text-overflow: ellipsis;
 	overflow: hidden;
 	white-space: nowrap;
-	padding-left: 2px;
-	padding-right: 2px;
+	padding-left: 5px;
+	padding-right: 5px;
 }
 .idDiv {
 	font-size: .7rem;

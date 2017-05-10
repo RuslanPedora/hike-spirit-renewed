@@ -43,7 +43,11 @@
 }
 #basketBar i {
 	font-size: 30px;
+	transition: color .5s, transform .5s;
 }
+#basketBar:hover i {
+	transform: scale( 1.15 );
+}	
 #outlerDiv {
 	width: 100%;	
 	min-height: 100vh; 

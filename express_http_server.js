@@ -206,13 +206,17 @@ function sendOrderEmail( orderNumber, orderData ) {
 
 }
 //-----------------------------------------------------------------------------
-function makeResponseOnDBData( querySQL, request, response ) {
+function makeResponseOnDBData( querySQL, request, response, postProcessor ) {
     connection = mysql.createConnection( connetionData );
     connection.connect();
     connection.query( querySQL, function ( error, results, fields ) {
                         if (error) { 
                           logRequest( 'db connetion failed: ' + querySQL );
                           logRequest( 'Error: ' + error );                          
+                          return;
+                        }
+                        if( postProcessor != undefined && results.length > 0) {
+                          postProcessor( request, response, results );
                           return;
                         }
                         response.writeHead( 200, { 'Content-Type': 'text/plain' } );
@@ -302,7 +306,51 @@ function itemListResponse( request, response ) {
 
     querySQL = querySQL.replace( 'conditionInjection', conditionInjection );
 
-    makeResponseOnDBData( querySQL, request, response );
+    makeResponseOnDBData( querySQL, request, response, imageListBinder );
+}
+//-----------------------------------------------------------------------------
+function imageListBinder( request, response, innerResults ) {
+  querySQL = 'SELECT * FROM images WHERE ';
+  for( var i in innerResults) {
+    querySQL += ( i == 0 ? ' ' : ' OR ' ) + ' itemId = ' + innerResults[ i ].id;
+  }
+  querySQL += ' ORDER BY itemId';
+  connection = mysql.createConnection( connetionData );
+  connection.connect();
+  connection.query( querySQL, function ( error, imageListResult, fields ) {
+                      var tempItemId = -1;
+                      var imageList;
+                      if (error) { 
+                        logRequest( 'db connetion failed: ' + querySQL );
+                        logRequest( 'Error: ' + error );                          
+                        return;
+                      }
+                      innerResults.forEach( function( currentValue ) { currentValue.imageList = []; } );
+                      for( var i in imageListResult ) {
+                          if( tempItemId != imageListResult[ i ].itemId ) {                            
+                            if( tempItemId != -1 ) {
+                              innerResults.forEach( function( currentValue ) { if( currentValue.id == tempItemId ) currentValue.imageList = imageList; } );
+                            }
+                            imageList = [];
+                            tempItemId = imageListResult[ i ].itemId;
+                          }
+                          imageList.push( { 'smallImage': imageListResult[ i ].smallImage,
+                                            'mediumImage': imageListResult[ i ].mediumImage,
+                                            'bigimage': imageListResult[ i ].bigImage
+                          });
+                      }
+                      if( tempItemId != -1 ) {
+                        innerResults.forEach( function( currentValue ) { if( currentValue.id == tempItemId ) currentValue.imageList = imageList; } );
+                      }                      
+                      response.writeHead( 200, { 'Content-Type': 'text/plain' } );
+                      responseStr = JSON.stringify( innerResults );                                                     
+                      response.end( responseStr );
+                      logRequest( request.url, 'itmes request processed' );
+  });
+  connection.end( function( err ) {
+     console.log( 'connection ended with error: ' + err );
+  });
+
 }
 //-----------------------------------------------------------------------------
 function decodeQuotes( inputString ) {

@@ -1,9 +1,9 @@
 <div id='itemList' class='glOverlay'>
-	<div *ngFor='let item of itemList' class='itemWrapper'>
-		<div class='itemInner glBgWhite'>
+	<div *ngFor='let item of itemList;let i = index;' class='itemWrapper'>
+		<div class='itemInner glBgWhite' style.animationDelay='{{i/10}}s'>
 			<div class='fixedInner'>
-				<i id='leftArrow' class='fa fa-chevron-circle-left glCGreen glClickable'></i>
-				<i id='rightArrow' class='fa fa-chevron-circle-right glCGreen glClickable'></i>
+				<i id='leftArrow' class='fa fa-chevron-circle-left glCGreen glClickable' (click)='scrollImage(item,false)'></i>
+				<i id='rightArrow' class='fa fa-chevron-circle-right glCGreen glClickable' (click)='scrollImage(item,true)'></i>
 				<div id='newDiv' *ngIf='item.newItem'>
 					NEW
 				</div>
@@ -11,7 +11,9 @@
 					-{{item.discount}}%
 				</div>
 				<div class='imageDiv'>
-					<img src='/images/{{item.mainImage}}' class='glClickable'>
+					<div class='imageScrollDiv'>
+						<img src='/images/{{item.mainImage}}' class='glClickable'>
+					</div>
 				</div>
 				<div class='rateDiv'>
 					<span *ngFor='let rateElement of item.rateArray'>						
@@ -31,6 +33,7 @@
 						{{item.price.toFixed(2)}}$
 					</del>
 					<b>{{item.discountPrice.toFixed(2)}}$</b>
+					{{item.imageList.length}}
 				</div>
 				<div class='buyButton glBtn small glBGGreenHover glClickable'>buy <i class='fa fa-cart-plus'></i></div>
 			</div>	

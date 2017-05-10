@@ -3,6 +3,7 @@ var Item = (function () {
     function Item() {
         this.rateArray = [];
         this.newItem = true;
+        this.imageList = [];
     }
     return Item;
 }());
