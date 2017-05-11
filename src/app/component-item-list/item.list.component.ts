@@ -30,20 +30,26 @@ export class ItemListComponent implements OnInit {
 	//-----------------------------------------------------------------------------
 	scrollImage( selectedItem: Item, forward: boolean ): void {
 		let imageIndex = 0;
-		if( selectedItem.imageList.length == 0 ) 
+		let i: any;
+		if( selectedItem.imageList.length <= 1 ) 
 			return;
-		imageIndex = selectedItem.imageList.findIndex( element => element.mediumImage == selectedItem.mainImage );
-		if( imageIndex < 0 )
-			selectedItem.mainImage = selectedItem.imageList[ 0 ].mediumImage;
+		
+		imageIndex = selectedItem.imageList.findIndex( element => element.shift == 0 );
+		if( forward && imageIndex == selectedItem.imageList.length  - 1 ) {
+			for( i in selectedItem.imageList )
+				selectedItem.imageList[ i ].shift = 100 * i;
+		}
+		else if ( !forward && imageIndex == 0 ) {
+			for( i in selectedItem.imageList )
+				selectedItem.imageList[ i ].shift = -100 * ( selectedItem.imageList.length - i - 1 );
+		}
 		else {
-			 if ( forward ) {
-				imageIndex = ( imageIndex + 1 == selectedItem.imageList.length ? 0 : imageIndex + 1 );
-			 }
-			 else {
-				imageIndex = ( imageIndex - 1 < 0 ? selectedItem.imageList.length - 1 : imageIndex - 1 );
-			 }
-  		     selectedItem.mainImage = selectedItem.imageList[ imageIndex ].mediumImage;
-		}	 
+			for( i in selectedItem.imageList )  
+				selectedItem.imageList[ i ].shift += forward ? -100 : 100 ;
+		}
 	}
 	//-----------------------------------------------------------------------------
+	gotoItem( selectedItem: Item ): void {
+		this.router.navigate( [ '/item' ], { queryParams: { itemId: selectedItem.id } } );
+	}
 }

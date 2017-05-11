@@ -10,6 +10,7 @@ import { LocalStorageModule }   from 'angular-2-local-storage';
 import { ApplicationComponent }  from './app.component';
 import { InvitationComponent }   from 'hs_app/component-invitation/invitation.component';
 import { ItemListComponent }     from 'hs_app/component-item-list/item.list.component';
+import { ItemComponent }         from 'hs_app/component-item/item.component';
 import { CategoryListComponent } from 'hs_app/component-category-list/category.list.component';
 import { BasketComponent }       from 'hs_app/component-basket/basket.component';
 
@@ -30,6 +31,7 @@ import { RoutingModule }   from './routing.module';
   declarations: [ ApplicationComponent, 
                   InvitationComponent, 
                   ItemListComponent,
+                  ItemComponent,
                   CategoryListComponent,
                   BasketComponent ],
   providers: [ Location, 

@@ -14,6 +14,7 @@ var angular_2_local_storage_1 = require("angular-2-local-storage");
 var app_component_1 = require("./app.component");
 var invitation_component_1 = require("hs_app/component-invitation/invitation.component");
 var item_list_component_1 = require("hs_app/component-item-list/item.list.component");
+var item_component_1 = require("hs_app/component-item/item.component");
 var category_list_component_1 = require("hs_app/component-category-list/category.list.component");
 var basket_component_1 = require("hs_app/component-basket/basket.component");
 var data_service_1 = require("hs_services/data.service");
@@ -37,6 +38,7 @@ AppModule = __decorate([
         declarations: [app_component_1.ApplicationComponent,
             invitation_component_1.InvitationComponent,
             item_list_component_1.ItemListComponent,
+            item_component_1.ItemComponent,
             category_list_component_1.CategoryListComponent,
             basket_component_1.BasketComponent],
         providers: [common_1.Location,

@@ -12,7 +12,6 @@ import { Router }       from '@angular/router';
 export class InvitationComponent implements OnInit {
 	private categoryList: number[] = [ 1, 2342, 3, 9909424 ];
 	private itemList: number[] = [ 1, 2, 3 ];
-	private brandList: number[] = [ 1, 2, 3, 4, 5 ];
 	//-----------------------------------------------------------------------------
 	constructor( private router: Router ) {
 	}

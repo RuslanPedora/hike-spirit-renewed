@@ -29,20 +29,26 @@ var ItemListComponent = (function () {
     //-----------------------------------------------------------------------------
     ItemListComponent.prototype.scrollImage = function (selectedItem, forward) {
         var imageIndex = 0;
-        if (selectedItem.imageList.length == 0)
+        var i;
+        if (selectedItem.imageList.length <= 1)
             return;
-        imageIndex = selectedItem.imageList.findIndex(function (element) { return element.mediumImage == selectedItem.mainImage; });
-        if (imageIndex < 0)
-            selectedItem.mainImage = selectedItem.imageList[0].mediumImage;
-        else {
-            if (forward) {
-                imageIndex = (imageIndex + 1 == selectedItem.imageList.length ? 0 : imageIndex + 1);
-            }
-            else {
-                imageIndex = (imageIndex - 1 < 0 ? selectedItem.imageList.length - 1 : imageIndex - 1);
-            }
-            selectedItem.mainImage = selectedItem.imageList[imageIndex].mediumImage;
+        imageIndex = selectedItem.imageList.findIndex(function (element) { return element.shift == 0; });
+        if (forward && imageIndex == selectedItem.imageList.length - 1) {
+            for (i in selectedItem.imageList)
+                selectedItem.imageList[i].shift = 100 * i;
         }
+        else if (!forward && imageIndex == 0) {
+            for (i in selectedItem.imageList)
+                selectedItem.imageList[i].shift = -100 * (selectedItem.imageList.length - i - 1);
+        }
+        else {
+            for (i in selectedItem.imageList)
+                selectedItem.imageList[i].shift += forward ? -100 : 100;
+        }
+    };
+    //-----------------------------------------------------------------------------
+    ItemListComponent.prototype.gotoItem = function (selectedItem) {
+        this.router.navigate(['/item'], { queryParams: { itemId: selectedItem.id } });
     };
     return ItemListComponent;
 }());

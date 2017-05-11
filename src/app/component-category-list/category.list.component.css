@@ -33,9 +33,9 @@
 	z-index: 0;
 	vertical-align: top;
 	transition: transform 1s, top 1s, left 1s;	
-    animation: mymove 1s;
+/*    animation: mymove 1s;
     animation-fill-mode: forwards;	
-}
+*/}
 @keyframes mymove {
     from { top: 50%; left: 50%;height: 0%;}
     to { top: 0%;left: 0%;height: 100%;}

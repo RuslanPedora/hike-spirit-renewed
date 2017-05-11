@@ -33,23 +33,33 @@ var ApplicationComponent = (function () {
         var elementContacts;
         var elementCopyRights;
         var elementPanelDiv;
+        var elementBGImage;
         elementOutlet = document.getElementById('outlerDiv');
         elementContacts = document.getElementById('contactDiv');
         elementCopyRights = document.getElementById('copyright');
         elementPanelDiv = document.getElementById('panelDiv');
+        elementBGImage = document.getElementById('mainBgImage');
         if (event.url.indexOf('invitation') < 0) {
             elementOutlet.style.maxWidth = '1000px';
             elementContacts.style.maxWidth = '1000px';
             elementCopyRights.style.maxWidth = '1000px';
         }
         else {
-            elementOutlet.style.maxWidth = 'none';
-            elementContacts.style.maxWidth = 'none';
-            elementCopyRights.style.maxWidth = 'none';
+            elementOutlet.style.maxWidth = '100%';
+            elementContacts.style.maxWidth = '100%';
+            elementCopyRights.style.maxWidth = '100%';
         }
-        if (event.url.indexOf('item-list') >= 0) {
+        if (event.url.indexOf('item') >= 0 || event.url.indexOf('basket') >= 0) {
+            elementPanelDiv.style.display = 'block';
         }
         else {
+            elementPanelDiv.style.display = 'none';
+        }
+        if (event.url.indexOf('category-list') >= 0) {
+            elementBGImage.style.opacity = '.8';
+        }
+        else {
+            elementBGImage.style.opacity = '1';
         }
     };
     return ApplicationComponent;

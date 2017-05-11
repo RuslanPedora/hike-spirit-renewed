@@ -10,29 +10,30 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 };
 var core_1 = require("@angular/core");
 var router_1 = require("@angular/router");
-var InvitationComponent = (function () {
+var data_service_1 = require("hs_services/data.service");
+var ItemComponent = (function () {
     //-----------------------------------------------------------------------------
-    function InvitationComponent(router) {
+    function ItemComponent(router, dataService) {
         this.router = router;
-        this.categoryList = [1, 2342, 3, 9909424];
-        this.itemList = [1, 2, 3];
+        this.dataService = dataService;
     }
     //-----------------------------------------------------------------------------
-    InvitationComponent.prototype.ngOnInit = function () {
+    ItemComponent.prototype.ngOnInit = function () {
+        // this.dataService.getItemList( '' ).then( itemList => { this.itemList = itemList;
+        // 	                                                   this.dataService.converRate( this.itemList );
+        // } );
     };
-    //-----------------------------------------------------------------------------
-    InvitationComponent.prototype.onResize = function (event) {
-    };
-    return InvitationComponent;
+    return ItemComponent;
 }());
-InvitationComponent = __decorate([
+ItemComponent = __decorate([
     core_1.Component({
         moduleId: module.id,
-        selector: 'invitaion-component',
-        templateUrl: './invitation.component.html',
-        styleUrls: ['./invitation.component.css'],
+        selector: 'item-component',
+        templateUrl: './item.component.html',
+        styleUrls: ['./item.component.css'],
     }),
-    __metadata("design:paramtypes", [router_1.Router])
-], InvitationComponent);
-exports.InvitationComponent = InvitationComponent;
-//# sourceMappingURL=invitation.component.js.map
+    __metadata("design:paramtypes", [router_1.Router,
+        data_service_1.DataService])
+], ItemComponent);
+exports.ItemComponent = ItemComponent;
+//# sourceMappingURL=item.component.js.map

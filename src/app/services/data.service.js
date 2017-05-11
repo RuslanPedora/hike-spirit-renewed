@@ -32,6 +32,9 @@ var DataService = (function () {
                 data[i].rateArray.push(rate >= 1 ? 1 : rate);
                 rate = Math.max(0, rate - 1);
             }
+            for (var k in data[i].imageList) {
+                data[i].imageList[k].shift = 100 * k;
+            }
         }
     };
     //-----------------------------------------------------------------------------
