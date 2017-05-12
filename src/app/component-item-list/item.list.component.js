@@ -50,6 +50,10 @@ var ItemListComponent = (function () {
     ItemListComponent.prototype.gotoItem = function (selectedItem) {
         this.router.navigate(['/item'], { queryParams: { itemId: selectedItem.id } });
     };
+    //-----------------------------------------------------------------------------
+    ItemListComponent.prototype.buyItem = function (selectedItem) {
+        this.dataService.addItemToBasket(selectedItem);
+    };
     return ItemListComponent;
 }());
 ItemListComponent = __decorate([

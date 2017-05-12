@@ -1,3 +1,67 @@
 <div id='basketDiv' class='glOverlay'>
-this is basket
+<p id='emptyRow' *ngIf='orderRows.length==0' >Your basket is empty</p>
+<table *ngIf='orderRows.length>0'>
+	<tr *ngFor='let row of orderRows'>
+		<td style='width: 20%;'>
+			<img src='images/{{row.item.mainImage}}' class='glClickable' (click)='gotoItem(row.item)'>			
+		</td>
+		<td style='width: 30%;'>
+			{{row.item.name}}
+		</td>
+		<td style='width: 15%;'>
+			<i class='fa fa-minus-square glCGreen glClickable' (click)='deleteItem(row.item)'></i>
+			<input id='quantityInput' class='' #quantityInput [ngModel]='row.quantity' (input)=addItem(row.item,quantityInput.value) />
+			<i class='fa fa-plus-square glCGreen glClickable' (click)='addItem(row.item)'></i>
+		</td>
+		<td style='width: 10%;'>
+			{{row.item.discountPrice.toFixed(2)}}$
+		</td>
+		<td style='width: 10%;'>
+			{{row.total.toFixed(2)}}$
+		</td>
+	<tr>
+	<tr>	
+		<td colspan='4'></td>
+		<td><b>{{total.toFixed(2)}}$</b></td>
+	</tr>
+</table>
+<form action="#" method="post">
+  <div class='fieldDiv'>
+    <label for="name">Name <span>*</span></label>
+    <input type="text" name="name" id="name" value="" size="22" required placeholder='your name...'>
+  </div>
+  <div class='fieldDiv'>
+    <label for="email">Mail <span>*</span></label>
+    <input type="email" name="email" id="email" value="" size="22" required placeholder='e-mail...'>
+  </div>
+  <div class='fieldDiv'>
+    <label for="phone">Phone <span>*</span></label>
+    <input type="phone" name="phone" id="phone" value="" size="22" placeholder='phone number...'>
+  </div>
+  <div id='areaDiv'>
+    <label for="comment">Your Comment</label>
+    <textarea name="comment" id="comment" cols="25" rows="5"></textarea>
+  </div>
+  <div id='addData'>
+  	<div class='dataBlock'>
+  		<table id='carriers' class='glSmallBrRadius'>
+			<tr *ngFor='let carrier of carrierList'>
+				<td>
+					<input type='radio' name='carrierType'
+					       value='carrier.id' [checked]='carrier.id===selectedCarrier.id' (click)='selectCarrier(carrier)'>
+					{{carrier.name}}		
+				</td>	
+				<td>
+					{{carrier.cost.toFixed(2)}}$
+				</td>
+			</tr>	
+		</table>
+  	</div>
+  	<div class='dataBlock'>
+  	</div>
+  </div>
+  <div>
+    <input id='orderButton' type='submit' name='submit' value='Place order' class='glBtn small glBGGreenHover glClickable'>
+  </div>
+</form>
 </div>

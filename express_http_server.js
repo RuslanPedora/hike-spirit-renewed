@@ -33,6 +33,7 @@ appExpress.use( cors() );
 appExpress.get( "/", initResponse );
 appExpress.get( "/getCategoryList", categoryListResponse );
 appExpress.get( "/getItemList", itemListResponse );
+appExpress.get( "/getCarrierList", carrierListResponse );
 
 appExpress.post( "/order", orderResponse );
 
@@ -228,6 +229,15 @@ function makeResponseOnDBData( querySQL, request, response, postProcessor ) {
       console.log( 'connection ended with error: ' + err );
     });
     logRequest( request.url, 'connection is closed' );
+}
+//-----------------------------------------------------------------------------
+function carrierListResponse( request, response ) {
+
+    querySQL = 'SELECT * FROM carriers ORDER BY cost';
+
+    logRequest( request.url );    
+
+    makeResponseOnDBData( querySQL, request, response );
 }
 //-----------------------------------------------------------------------------
 function categoryListResponse( request, response ) {

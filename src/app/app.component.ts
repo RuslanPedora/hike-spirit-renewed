@@ -4,7 +4,7 @@ import { Router,
 		 ActivatedRoute } from '@angular/router';
 import { Subscription }   from 'rxjs/Subscription';
 
-//import { DataService }  from 'services/data.service';
+import { DataService } from 'hs_services/data.service';
 
 @Component({
 	moduleId: module.id,
@@ -18,12 +18,20 @@ import { Subscription }   from 'rxjs/Subscription';
 //-----------------------------------------------------------------------------
 export class ApplicationComponent implements OnInit {
 	private routerListener: Subscription;
+	private basketListener: Subscription;
+	private total: number = 0;
 	//-----------------------------------------------------------------------------
-	constructor( private router: Router ) {
+	constructor( private router: Router,
+				 private dataService: DataService ) {
 	}
 	//-----------------------------------------------------------------------------
 	ngOnInit() {
 		this.routerListener = this.router.events.subscribe( this.resizeOutlet );
+		this.basketListener = this.dataService.basketEventSource.subscribe(
+			                        	  eventValue => 
+			                               this.total = this.dataService.getBasketTotal()
+			                             );
+		this.total = this.dataService.getBasketTotal();
 	}
 	//-----------------------------------------------------------------------------
 	onResize( event: any ): void {
@@ -45,15 +53,15 @@ export class ApplicationComponent implements OnInit {
    		elementCopyRights = document.getElementById( 'copyright' );
    		elementPanelDiv = document.getElementById( 'panelDiv' );
    		elementBGImage = document.getElementById( 'mainBgImage' );
-   		if( event.url.indexOf( 'invitation' ) < 0 ) {
-			elementOutlet.style.maxWidth = '1000px';
-			elementContacts.style.maxWidth = '1000px';
-			elementCopyRights.style.maxWidth = '1000px';
-   		}
-		else {
+   		if( event.url.indexOf( 'invitation' ) >= 0 ) {
 			elementOutlet.style.maxWidth = '100%';
 			elementContacts.style.maxWidth = '100%';
 			elementCopyRights.style.maxWidth = '100%';
+   		}
+		else {
+			elementOutlet.style.maxWidth = '1000px';
+			elementContacts.style.maxWidth = '1000px';
+			elementCopyRights.style.maxWidth = '1000px';
 		}
    		if( event.url.indexOf( 'item' ) >= 0 || event.url.indexOf( 'basket' ) >= 0 ) {
 			elementPanelDiv.style.display = 'block';

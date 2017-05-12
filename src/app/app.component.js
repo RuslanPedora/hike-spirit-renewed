@@ -10,15 +10,22 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 };
 var core_1 = require("@angular/core");
 var router_1 = require("@angular/router");
-//import { DataService }  from 'services/data.service';
+var data_service_1 = require("hs_services/data.service");
 var ApplicationComponent = (function () {
     //-----------------------------------------------------------------------------
-    function ApplicationComponent(router) {
+    function ApplicationComponent(router, dataService) {
         this.router = router;
+        this.dataService = dataService;
+        this.total = 0;
     }
     //-----------------------------------------------------------------------------
     ApplicationComponent.prototype.ngOnInit = function () {
+        var _this = this;
         this.routerListener = this.router.events.subscribe(this.resizeOutlet);
+        this.basketListener = this.dataService.basketEventSource.subscribe(function (eventValue) {
+            return _this.total = _this.dataService.getBasketTotal();
+        });
+        this.total = this.dataService.getBasketTotal();
     };
     //-----------------------------------------------------------------------------
     ApplicationComponent.prototype.onResize = function (event) {
@@ -39,15 +46,15 @@ var ApplicationComponent = (function () {
         elementCopyRights = document.getElementById('copyright');
         elementPanelDiv = document.getElementById('panelDiv');
         elementBGImage = document.getElementById('mainBgImage');
-        if (event.url.indexOf('invitation') < 0) {
-            elementOutlet.style.maxWidth = '1000px';
-            elementContacts.style.maxWidth = '1000px';
-            elementCopyRights.style.maxWidth = '1000px';
-        }
-        else {
+        if (event.url.indexOf('invitation') >= 0) {
             elementOutlet.style.maxWidth = '100%';
             elementContacts.style.maxWidth = '100%';
             elementCopyRights.style.maxWidth = '100%';
+        }
+        else {
+            elementOutlet.style.maxWidth = '1000px';
+            elementContacts.style.maxWidth = '1000px';
+            elementCopyRights.style.maxWidth = '1000px';
         }
         if (event.url.indexOf('item') >= 0 || event.url.indexOf('basket') >= 0) {
             elementPanelDiv.style.display = 'block';
@@ -74,7 +81,8 @@ ApplicationComponent = __decorate([
             '(window:resize)': 'onResize($event)'
         }
     }),
-    __metadata("design:paramtypes", [router_1.Router])
+    __metadata("design:paramtypes", [router_1.Router,
+        data_service_1.DataService])
 ], ApplicationComponent);
 exports.ApplicationComponent = ApplicationComponent;
 //# sourceMappingURL=app.component.js.map

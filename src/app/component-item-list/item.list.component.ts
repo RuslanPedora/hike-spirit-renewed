@@ -52,4 +52,9 @@ export class ItemListComponent implements OnInit {
 	gotoItem( selectedItem: Item ): void {
 		this.router.navigate( [ '/item' ], { queryParams: { itemId: selectedItem.id } } );
 	}
+	//-----------------------------------------------------------------------------
+	buyItem( selectedItem: Item ): void {
+		this.dataService.addItemToBasket( selectedItem );
+	}
+	//-----------------------------------------------------------------------------
 }

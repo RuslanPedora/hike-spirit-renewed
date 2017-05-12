@@ -49,12 +49,14 @@
 	transform: scale( 1.15 );
 }	
 #outlerDiv {
-	width: 100%;	
+	width: 100%;
+	max-width: 100%;
 	min-height: 100vh; 
 	margin: auto;	
 }
 #contactDiv {
 	margin: auto;
+	max-width: 100%;
 }
 #contactBlock {
 	margin: auto;
@@ -151,6 +153,7 @@ fieldset {
 #copyright {
 	padding: 1px;
 	margin: auto;
+	max-width: 100%;
 }
 #backtotop { 
 	z-index: 999;

@@ -2,8 +2,8 @@
 	<div *ngFor='let item of itemList;let i = index;' class='itemWrapper'>
 		<div class='itemInner glBgWhite' style.animationDelay='{{i/20}}s'>
 			<div class='fixedInner'>
-				<i id='leftArrow' class='fa fa-chevron-circle-left glCGreen glClickable' (click)='scrollImage(item,false)'></i>
-				<i id='rightArrow' class='fa fa-chevron-circle-right glCGreen glClickable' (click)='scrollImage(item,true)'></i>
+				<i id='leftArrow' class='fa fa-chevron-left glCGreen glClickable' (click)='scrollImage(item,false)'></i>
+				<i id='rightArrow' class='fa fa-chevron-right glCGreen glClickable' (click)='scrollImage(item,true)'></i>
 				<div id='newDiv' *ngIf='item.newItem'>
 					NEW
 				</div>
@@ -41,7 +41,7 @@
 					</del>
 					<b>{{item.discountPrice.toFixed(2)}}$</b>
 				</div>
-				<div class='buyButton glBtn small glBGGreenHover glClickable'>buy <i class='fa fa-cart-plus'></i></div>
+				<div class='buyButton glBtn small glBGGreenHover glClickable' (click)='buyItem(item)'>buy <i class='fa fa-cart-plus'></i></div>
 			</div>	
 		</div>	
 	</div>
