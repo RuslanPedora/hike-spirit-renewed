@@ -150,5 +150,4 @@ DataService = __decorate([
         angular_2_local_storage_1.LocalStorageService])
 ], DataService);
 exports.DataService = DataService;
-//-----------------------------------------------------------------------------} 
 //# sourceMappingURL=data.service.js.map

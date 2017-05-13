@@ -6,36 +6,39 @@
 	padding: 10px;
 	margin: 0px;
 }
-#basketDiv table {
+#mainTable {
 	border-collapse: collapse; 	
 }
-#basketDiv tr {
+#mainTable tr {
 	background-color: rgb( 240,240,240);
 	/*#F7F7F7*/
 	color: #888888;
 	transition: background-color 1s;
 }
-#basketDiv tr input {
+#mainTable tr input {
 	width: 50px;
 	font-size: 20px;
 	text-align: right;
 }	
-#basketDiv td {	
+#mainTable td {	
 	border-bottom: 1px solid #888888;
 }
-#basketDiv table tr:last-child td:last-child {
+#mainTable tr:last-child td:last-child {
 	color: black;
 	padding: 10px;
 }	
-#basketDiv table i {	
+#mainTable i {	
 	font-size: 25px;
 	transition: transform .2s;
 }
-#basketDiv table i:hover {	
+#mainTable i:hover {	
 	transform: scale(1.1);
 }
-#basketDiv table tr:hover {
+#mainTable tr:hover {
 	background-color: rgb( 255,255,255);
+}
+.nameTd:hover {
+	text-decoration: underline;
 }
 form {
 	padding-top: 20px;
@@ -102,7 +105,37 @@ form textarea:focus {
 #addData {
 
 }
-.dataBlock {
-	width: 50%;
-	border: 1px solid black;
+.dataBlock {	
+	/*border: 1px solid black;*/
+	display: inline-block;
+	margin-left: 0 0 0 3%;
+	width: 47%;	
+}
+.dataBlock th {
+	padding: 5px;
+}
+#carriers td {
+	padding: 5px 5px 5px 0;
+}
+#carriers tr td:first-child {
+	text-align: left;
+}
+#carriers tr td:last-child {
+	text-align: right;
+}
+#paymetns td {
+	padding: 5px;
+}
+#paymetns tr td:first-child {
+	text-align: left;
+}
+.bottomBlock {
+	text-align: left;
+	padding: 5px 5px 20px 3%;
+}
+.bottomBlock b {
+	color: black;
+}
+.bottomBlock input {
+	/*float: right;*/
 }

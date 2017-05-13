@@ -1,11 +1,11 @@
 <div id='basketDiv' class='glOverlay'>
 <p id='emptyRow' *ngIf='orderRows.length==0' >Your basket is empty</p>
-<table *ngIf='orderRows.length>0'>
+<table id='mainTable' *ngIf='orderRows.length>0'>
 	<tr *ngFor='let row of orderRows'>
 		<td style='width: 20%;'>
 			<img src='images/{{row.item.mainImage}}' class='glClickable' (click)='gotoItem(row.item)'>			
 		</td>
-		<td style='width: 30%;'>
+		<td style='width: 30%;'  (click)='gotoItem(row.item)' class='nameTd glClickable'>
 			{{row.item.name}}
 		</td>
 		<td style='width: 15%;'>
@@ -16,12 +16,13 @@
 		<td style='width: 10%;'>
 			{{row.item.discountPrice.toFixed(2)}}$
 		</td>
-		<td style='width: 10%;'>
+		<td style='width: 15%;'>
 			{{row.total.toFixed(2)}}$
 		</td>
 	<tr>
 	<tr>	
-		<td colspan='4'></td>
+		<td colspan='3'></td>
+		<td>Total:</td>
 		<td><b>{{total.toFixed(2)}}$</b></td>
 	</tr>
 </table>
@@ -44,7 +45,12 @@
   </div>
   <div id='addData'>
   	<div class='dataBlock'>
-  		<table id='carriers' class='glSmallBrRadius'>
+  		<table id='carriers'>
+  			<tr>
+  				<th>
+  				Shipment:
+  				</th>
+  			</tr>
 			<tr *ngFor='let carrier of carrierList'>
 				<td>
 					<input type='radio' name='carrierType'
@@ -58,10 +64,51 @@
 		</table>
   	</div>
   	<div class='dataBlock'>
+  		<table id='paymetns'>
+  			<tr>
+  				<th>
+  				Payment type:
+  				</th>
+  			</tr>
+			<tr>
+				<td>
+					<input type='radio' name='paymentType'
+						   [checked]='paymentType=="card"'
+					       value='card'>
+					<i class='fa fa-cc-visa glCGreen'></i>
+					/
+					<i class='fa fa-cc-mastercard glCGreen'></i>
+					Visa/MasterCard
+				</td>	
+			</tr>	
+			<tr>
+				<td>
+					<input type='radio' name='paymentType'
+						   [checked]='paymentType=="payPal"'
+					       value='payPal'>
+					<i class='fa fa-cc-paypal glCGreen'></i>
+					PayPal
+				</td>	
+			</tr>	
+			<tr>
+				<td>
+					<input type='radio' name='paymentType'
+						   [checked]='paymentType=="cash"'
+					       value='cash'>
+					<i class='fa fa-money glCGreen'></i>
+					Cash
+				</td>	
+			</tr>	
+		</table>
   	</div>
   </div>
-  <div>
-    <input id='orderButton' type='submit' name='submit' value='Place order' class='glBtn small glBGGreenHover glClickable'>
+  <div class='bottomBlock' >
+  	Total (shipment included):
+  	<b>{{totalPlusShipment.toFixed(2)}}$</b>
   </div>
+  <div class='bottomBlock' >
+  	<input id='orderButton' type='submit' name='submit' value='Place order' class='glBtn small glBGGreenHover glClickable'>
+  </div>
+
 </form>
 </div>

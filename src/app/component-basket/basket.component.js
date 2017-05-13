@@ -11,6 +11,7 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 var core_1 = require("@angular/core");
 var router_1 = require("@angular/router");
 var data_service_1 = require("hs_services/data.service");
+var carrier_1 = require("hs_core/carrier");
 var BasketComponent = (function () {
     //-----------------------------------------------------------------------------
     function BasketComponent(router, dataService) {
@@ -20,13 +21,21 @@ var BasketComponent = (function () {
         this.carrierList = [];
         this.total = 0;
         this.totalPlusShipment = 0;
+        this.selectedCarrier = new carrier_1.Carrier();
+        this.paymentType = 'card';
     }
     //-----------------------------------------------------------------------------
     BasketComponent.prototype.ngOnInit = function () {
         var _this = this;
         this.orderRows = this.dataService.getBasketRows();
         this.total = this.dataService.getBasketTotal();
-        this.dataService.getCarrierList().then(function (carrierList) { _this.carrierList = carrierList; });
+        this.totalPlusShipment = this.total + this.selectedCarrier.cost;
+        this.dataService.getCarrierList().then(function (carrierList) {
+            _this.carrierList = carrierList;
+            if (_this.carrierList.length > 0)
+                _this.selectedCarrier = _this.carrierList[0];
+            _this.totalPlusShipment = _this.total + _this.selectedCarrier.cost;
+        });
     };
     //-----------------------------------------------------------------------------
     BasketComponent.prototype.selectCarrier = function (carrier) {
@@ -40,12 +49,14 @@ var BasketComponent = (function () {
         else
             this.dataService.addItemToBasket(item, fixedQuiantity);
         this.total = this.dataService.getBasketTotal();
+        this.totalPlusShipment = this.total + this.selectedCarrier.cost;
         this.orderRows = this.dataService.getBasketRows();
     };
     //-----------------------------------------------------------------------------
     BasketComponent.prototype.deleteItem = function (item) {
         this.dataService.deleteItemToBasket(item);
         this.total = this.dataService.getBasketTotal();
+        this.totalPlusShipment = this.total + this.selectedCarrier.cost;
         this.orderRows = this.dataService.getBasketRows();
     };
     //-----------------------------------------------------------------------------
