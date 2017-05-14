@@ -2,7 +2,12 @@
 	<div id='leftSide'>
 		<i id='leftArrow' class='fa fa-chevron-left glCGreen glClickable' (click)='scrollBigImage(false)'></i>
 		<i id='rightArrow' class='fa fa-chevron-right glCGreen glClickable' (click)='scrollBigImage(true)'></i>
-		<div id='bigImageDiv'>
+		<div id='bigImageDiv' 
+			(mouseleave)='mouseLeave($event)'
+		    (mouseenter)='mouseEnter($event)'
+			(mousemove)='mouseMove($event)'>
+			<div id='loupe'>
+			</div>
 			<div *ngFor='let image of item.imageList; let i=index;' 
 				 style.left='{{image.shift}}%'
 			     class='bigImageWrapper'>
@@ -19,5 +24,43 @@
 		</div>
 	</div>
 	<div id='rightSide'>
+		<div id='loupeImageDiv'>
+			<img id='loupeImageFragment' src='images/{{loupeFragment}}'>
+		</div>
+		<div id='dataDiv'>
+			<div id='discountDiv' *ngIf='item.discount>0'>
+				save<br>{{item.discount}}%
+			</div>
+			<div id='nameDiv'>
+				{{item.name}}
+			</div>
+			<div class='rateDiv'>
+				<span *ngFor='let rateElement of item.rateArray'>						
+					<i class='fa fa-star glCGreen' *ngIf='rateElement==1'></i>
+					<i class='fa fa-star-half-full glCGreen' *ngIf='rateElement>0&&rateElement<1'></i>
+					<i class='fa fa-star-o glCGreen' *ngIf='rateElement==0'></i>
+				</span>					
+			</div>
+			<div id='idDiv'>
+				code:{{item.id}}
+			</div>
+			<div id='priceDiv'>
+				<b>{{item.discountPrice.toFixed(2)}}$</b>
+				<del *ngIf='item.discount>0'>
+					{{item.price.toFixed(2)}}$
+				</del>
+			</div>
+			<div class='buyButton glBtn medium glBgGreen glClickable' (click)='buyItem()'>buy <i class='fa fa-cart-plus'></i></div>
+			<div id='socNetwork'>
+				<span>Share with your friends:</span>
+				<br>
+				<br>
+				<i class='fa fa-facebook-official glCGreen glClickable'></i>
+				<i class='fa fa-twitter glCGreen glClickable'></i>
+				<i class='fa fa-skype glCGreen glClickable'></i>
+				<i class='fa fa-youtube glCGreen glClickable'></i>
+				
+			</div>
+		</div>
 	</div>
 </div>

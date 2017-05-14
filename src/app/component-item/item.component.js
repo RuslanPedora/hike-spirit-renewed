@@ -19,6 +19,9 @@ var ItemComponent = (function () {
         this.activatedRoute = activatedRoute;
         this.dataService = dataService;
         this.item = new item_1.Item();
+        this.loupeFragment = '';
+        this.mouseEntered = false;
+        this.debugString = '';
     }
     //-----------------------------------------------------------------------------
     ItemComponent.prototype.ngOnInit = function () {
@@ -48,7 +51,6 @@ var ItemComponent = (function () {
         var imageIndex = 0;
         var i;
         var item = this.item;
-        var zeroIndex;
         if (item.imageList.length <= 1)
             return;
         imageIndex = item.imageList.findIndex(function (element) { return element.shift == 0; });
@@ -95,6 +97,43 @@ var ItemComponent = (function () {
         for (i in this.item.imageList) {
             this.item.imageList[i].smallShift = 20 * this.item.imageList[i].shift / 100 + 40 + delta;
         }
+    };
+    //-----------------------------------------------------------------------------
+    ItemComponent.prototype.mouseMove = function (event) {
+        var newLeft;
+        var newTop;
+        if (this.mouseEntered) {
+            newLeft = Math.min(event.offsetX, this.elementBigImage.clientWidth - this.elementLuope.clientWidth - 2);
+            newTop = Math.min(event.offsetY, this.elementBigImage.clientHeight - this.elementLuope.clientHeight - 2);
+            this.elementLuope.style.left = '' + newLeft + 'px';
+            this.elementLuope.style.top = '' + newTop + 'px';
+            this.elementLoupeFragment.style.left = '-' + (newLeft / this.elementBigImage.clientWidth * this.elementLoupeFragment.clientWidth) + 'px';
+            this.elementLoupeFragment.style.top = '-' + (newTop / this.elementBigImage.clientHeight * this.elementLoupeFragment.clientHeight) + 'px';
+        }
+        //this.debugString = '' + this.elementLoupeFragment.style.left + '_' + this.elementLoupeFragment.style.top;
+    };
+    //-----------------------------------------------------------------------------
+    ItemComponent.prototype.mouseEnter = function (event) {
+        var zeroIndex;
+        this.elementLuope = document.getElementById('loupe');
+        this.elementBigImage = document.getElementById('bigImageDiv');
+        this.elementLoupeImage = document.getElementById('loupeImageDiv');
+        this.elementLoupeFragment = document.getElementById('loupeImageFragment');
+        this.elementLoupeImage.style.display = 'block';
+        //this.elementLuope.style.display = 'block';
+        zeroIndex = this.item.imageList.findIndex(function (element) { return element.shift == 0; });
+        this.loupeFragment = this.item.imageList[zeroIndex].bigImage;
+        this.debugString = 'zzz_' + event.offsetX;
+        this.mouseEntered = true;
+    };
+    //-----------------------------------------------------------------------------
+    ItemComponent.prototype.mouseLeave = function (event) {
+        this.elementLoupeImage.style.display = 'none';
+        this.mouseEntered = false;
+    };
+    //-----------------------------------------------------------------------------
+    ItemComponent.prototype.buyItem = function () {
+        this.dataService.addItemToBasket(this.item);
     };
     return ItemComponent;
 }());

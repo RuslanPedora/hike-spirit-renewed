@@ -17,6 +17,11 @@ export class Item {
 	constructor () {
 		this.id = -1;
 		this.name = '';
+		this.price = 0;
+		this.discountPrice = 0;
+		this.dsicount = 0;
+		this.description = '';
+		this.rate = 0;
 		this.imageList = [];
 	}
 }

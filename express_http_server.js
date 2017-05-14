@@ -346,7 +346,7 @@ function imageListBinder( request, response, innerResults ) {
                           }
                           imageList.push( { 'smallImage': imageListResult[ i ].smallImage,
                                             'mediumImage': imageListResult[ i ].mediumImage,
-                                            'bigimage': imageListResult[ i ].bigImage
+                                            'bigImage': imageListResult[ i ].bigImage
                           });
                       }
                       if( tempItemId != -1 ) {

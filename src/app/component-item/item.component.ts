@@ -19,6 +19,13 @@ import { Image }    from 'hs_core/image';
 //-----------------------------------------------------------------------------
 export class ItemComponent implements OnInit {
 	private item: Item = new Item();
+	private loupeFragment: string = '';
+	private elementLuope: any;
+	private elementBigImage: any;
+	private elementLoupeFragment: any;
+	private elementLoupeImage: any;
+	private mouseEntered: boolean = false;
+	private debugString: string = '';
 	//-----------------------------------------------------------------------------
 	constructor( private router: Router,
 				 private activatedRoute: ActivatedRoute,
@@ -50,8 +57,7 @@ export class ItemComponent implements OnInit {
 	scrollBigImage( forward: boolean ):void {
 		let imageIndex = 0;
 		let i: any;
-		let item: Item = this.item;
-		let zeroIndex: number;
+		let item: Item = this.item;		
 
 		if( item.imageList.length <= 1 ) 
 			return;
@@ -102,6 +108,53 @@ export class ItemComponent implements OnInit {
 		for( i in this.item.imageList ) {
 			this.item.imageList[ i ].smallShift = 20 * this.item.imageList[ i ].shift / 100 + 40 + delta;
 		}		
+	}
+	//-----------------------------------------------------------------------------
+	mouseMove( event: any ) {
+		let newLeft: number;
+		let newTop: number;
+
+		if( this.mouseEntered ) {
+			newLeft	= Math.min( event.offsetX, this.elementBigImage.clientWidth - this.elementLuope.clientWidth - 2 );
+			newTop  = Math.min( event.offsetY, this.elementBigImage.clientHeight - this.elementLuope.clientHeight - 2 );
+
+			this.elementLuope.style.left = '' + newLeft + 'px';
+			this.elementLuope.style.top  = '' + newTop + 'px';
+
+			this.elementLoupeFragment.style.left = '-' + ( newLeft / this.elementBigImage.clientWidth * this.elementLoupeFragment.clientWidth ) + 'px';
+			this.elementLoupeFragment.style.top  = '-' + ( newTop / this.elementBigImage.clientHeight * this.elementLoupeFragment.clientHeight ) + 'px';
+
+		}
+		//this.debugString = '' + this.elementLoupeFragment.style.left + '_' + this.elementLoupeFragment.style.top;
+	}
+	//-----------------------------------------------------------------------------
+	mouseEnter( event: any ) {
+		let zeroIndex: number;
+
+		this.elementLuope         = document.getElementById( 'loupe' );
+		this.elementBigImage      = document.getElementById( 'bigImageDiv' );
+		
+		this.elementLoupeImage    = document.getElementById( 'loupeImageDiv' );
+		this.elementLoupeFragment = document.getElementById( 'loupeImageFragment' );
+
+		this.elementLoupeImage.style.display = 'block';
+		//this.elementLuope.style.display = 'block';
+		
+		zeroIndex = this.item.imageList.findIndex( element => element.shift == 0 );
+		this.loupeFragment = this.item.imageList[ zeroIndex ].bigImage;
+
+		this.debugString = 'zzz_' + event.offsetX;
+
+		this.mouseEntered = true;
+	}
+	//-----------------------------------------------------------------------------
+	mouseLeave( event: any ) {
+		this.elementLoupeImage.style.display = 'none';	
+		this.mouseEntered = false;
+	}
+	//-----------------------------------------------------------------------------
+	buyItem(): void {
+		this.dataService.addItemToBasket( this.item );
 	}
 	//-----------------------------------------------------------------------------
 }
