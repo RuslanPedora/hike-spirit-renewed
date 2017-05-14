@@ -46,7 +46,6 @@
 	transform: rotateZ(-45deg);
 	z-index: 2;
 }
-
 #discountDiv {
 	position: absolute;
 	display: inline-block;

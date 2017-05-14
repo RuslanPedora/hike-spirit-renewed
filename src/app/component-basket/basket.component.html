@@ -5,8 +5,8 @@
 		<td style='width: 20%;'>
 			<img src='images/{{row.item.mainImage}}' class='glClickable' (click)='gotoItem(row.item)'>			
 		</td>
-		<td style='width: 30%;'  (click)='gotoItem(row.item)' class='nameTd glClickable'>
-			{{row.item.name}}
+		<td style='width: 30%;' class='nameTd'>
+			<span class='glClickable' (click)='gotoItem(row.item)'>{{row.item.name}}</span>
 		</td>
 		<td style='width: 15%;'>
 			<i class='fa fa-minus-square glCGreen glClickable' (click)='deleteItem(row.item)'></i>
@@ -26,7 +26,7 @@
 		<td><b>{{total.toFixed(2)}}$</b></td>
 	</tr>
 </table>
-<form action="#" method="post">
+<form id='orderForm' action="#" (ngSubmit)='postOrder()'>
   <div class='fieldDiv'>
     <label for="name">Name <span>*</span></label>
     <input type="text" name="name" id="name" value="" size="22" required placeholder='your name...'>
@@ -102,12 +102,12 @@
 		</table>
   	</div>
   </div>
-  <div class='bottomBlock' >
+  <div class='bottomBlock' *ngIf='orderRows.length>0'>
   	Total (shipment included):
   	<b>{{totalPlusShipment.toFixed(2)}}$</b>
   </div>
-  <div class='bottomBlock' >
-  	<input id='orderButton' type='submit' name='submit' value='Place order' class='glBtn small glBGGreenHover glClickable'>
+  <div class='bottomBlock' *ngIf='orderRows.length>0'>
+  	<input id='orderButton' type='submit' value='Place order' form='orderForm' class='glBtn small glBGGreenHover glClickable'>
   </div>
 
 </form>

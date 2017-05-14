@@ -4,6 +4,9 @@ var Item = (function () {
         this.rateArray = [];
         this.newItem = true;
         this.imageList = [];
+        this.id = -1;
+        this.name = '';
+        this.imageList = [];
     }
     return Item;
 }());

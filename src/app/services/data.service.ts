@@ -122,6 +122,7 @@ export class DataService {
 			}
 			for( k in data[ i ].imageList ) {
 				data[ i ].imageList[ k ].shift = 100 * k;
+				data[ i ].imageList[ k ].smallShift = 20 * k;
 			}
 		}
 	}	

@@ -312,7 +312,7 @@ function itemListResponse( request, response ) {
         ON items.categoryId = categories.id) as itemSelection\
       conditionInjection';
 
-    conditionInjection = '';
+    conditionInjection = constructSQLCondition( decodeQuotes( queryInputString ), ITEM_TABLE_PREFIX );
 
     querySQL = querySQL.replace( 'conditionInjection', conditionInjection );
 

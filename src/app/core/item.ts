@@ -14,4 +14,9 @@ export class Item {
 	description: string;
 	shortDescription: string;
 	imageList: Image[] = [];
+	constructor () {
+		this.id = -1;
+		this.name = '';
+		this.imageList = [];
+	}
 }

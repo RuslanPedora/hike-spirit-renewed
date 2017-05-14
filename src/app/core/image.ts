@@ -3,4 +3,5 @@ export class Image {
 	mediumImage: string = '';
 	bigImage: string = '';
 	shift: number;
+	smallShift: number;
 }

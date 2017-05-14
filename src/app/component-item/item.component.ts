@@ -1,6 +1,8 @@
 import { Component, 
-	     OnInit }       from '@angular/core';
-import { Router }       from '@angular/router';
+	     OnInit }         from '@angular/core';
+import { Router, 
+	     Params, 
+	     ActivatedRoute } from '@angular/router';
 
 import { DataService } from 'hs_services/data.service';
 
@@ -16,15 +18,90 @@ import { Image }    from 'hs_core/image';
 })
 //-----------------------------------------------------------------------------
 export class ItemComponent implements OnInit {
+	private item: Item = new Item();
 	//-----------------------------------------------------------------------------
 	constructor( private router: Router,
+				 private activatedRoute: ActivatedRoute,
 				 private dataService: DataService ) {
 	}
 	//-----------------------------------------------------------------------------
 	ngOnInit() {
-		// this.dataService.getItemList( '' ).then( itemList => { this.itemList = itemList;
-		// 	                                                   this.dataService.converRate( this.itemList );
-		// } );
+		this.activatedRoute.queryParams.subscribe(
+			queryParams => {				
+				let itemId = queryParams [ 'itemId' ];
+				if( itemId != undefined ) {
+					this.getItem( Number.parseInt( itemId ) );
+				}
+			}
+		);		
+	}
+	//-----------------------------------------------------------------------------
+	getItem( itemId: number ):void {
+		let tempList: Item[];
+		JSON.stringify( { id_IT: itemId } )
+		this.dataService.getItemList( '/?' + JSON.stringify( { id_IT: itemId } ) )
+		                .then( itemList => { tempList = itemList;
+			                                 this.dataService.converRate( tempList );
+			                                 if( tempList.length > 0 )
+			                                     this.item = tempList[0];
+		} ); 
+	}
+	//-----------------------------------------------------------------------------
+	scrollBigImage( forward: boolean ):void {
+		let imageIndex = 0;
+		let i: any;
+		let item: Item = this.item;
+		let zeroIndex: number;
+
+		if( item.imageList.length <= 1 ) 
+			return;
+		
+		imageIndex = item.imageList.findIndex( element => element.shift == 0 );
+		if( forward && imageIndex == item.imageList.length  - 1 ) {
+			for( i in item.imageList )
+				item.imageList[ i ].shift = 100 * i;
+		}
+		else if ( !forward && imageIndex == 0 ) {
+			for( i in item.imageList )
+				item.imageList[ i ].shift = -100 * ( item.imageList.length - i - 1 );
+		}
+		else {
+			for( i in item.imageList )  
+				item.imageList[ i ].shift += forward ? -100 : 100 ;
+		}		
+		this.scrollSmallImageList();
+	}
+	//-----------------------------------------------------------------------------
+	smallImageSelect( index: number ):void {
+		let i: any;
+		for( i in this.item.imageList ) {
+			this.item.imageList[ i ].shift = ( i - index) * 100;			
+		}
+		this.scrollSmallImageList();
+	}	
+	//-----------------------------------------------------------------------------
+	scrollSmallImageList(): void {
+		let i: any;
+		let delta: number = 0;
+		if( this.item.imageList[ 0 ].shift / 100 == 0 ) {
+			delta =  -40;
+		}
+		if( this.item.imageList[ 0 ].shift / 100 == -1 ) {
+			delta =  -20;
+		}
+		if( this.item.imageList.length > 5 ) {
+			if( this.item.imageList[ this.item.imageList.length - 1 ].shift == 0 ) {
+				delta =  40;
+			}
+			if( this.item.imageList[ this.item.imageList.length - 2 ].shift == 0 ) {
+				delta =  20;
+			}
+
+		}
+		
+		for( i in this.item.imageList ) {
+			this.item.imageList[ i ].smallShift = 20 * this.item.imageList[ i ].shift / 100 + 40 + delta;
+		}		
 	}
 	//-----------------------------------------------------------------------------
 }

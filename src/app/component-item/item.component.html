@@ -1,3 +1,23 @@
 <div id='itemDiv' class='glOverlay'>
-item detail;
+	<div id='leftSide'>
+		<i id='leftArrow' class='fa fa-chevron-left glCGreen glClickable' (click)='scrollBigImage(false)'></i>
+		<i id='rightArrow' class='fa fa-chevron-right glCGreen glClickable' (click)='scrollBigImage(true)'></i>
+		<div id='bigImageDiv'>
+			<div *ngFor='let image of item.imageList; let i=index;' 
+				 style.left='{{image.shift}}%'
+			     class='bigImageWrapper'>
+			     	<img src='images/{{image.mediumImage}}' class='itemImage'>
+			</div>
+		</div>	
+		<div id='imageList'>
+			<div *ngFor='let image of item.imageList; let i=index;'
+				 style.left='{{image.smallShift}}%'
+				 (click)='smallImageSelect(i)'
+			     class='smallImageWrapper glClickable'>
+			     	<img src='images/{{image.smallImage}}' class='itemImage'>
+			</div>
+		</div>
+	</div>
+	<div id='rightSide'>
+	</div>
 </div>

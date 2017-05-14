@@ -65,4 +65,8 @@ export class BasketComponent implements OnInit {
 		this.router.navigate( [ '/item' ], { queryParams: { itemId: selectedItem.id } } );
 	}
 	//-----------------------------------------------------------------------------
+	postOrder(): void {
+		alert( 'Your order has been posted' );
+	}
+	//-----------------------------------------------------------------------------
 }

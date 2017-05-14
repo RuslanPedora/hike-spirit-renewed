@@ -5,6 +5,8 @@
 #emptyRow {
 	padding: 10px;
 	margin: 0px;
+	background-color: rgb( 240,240,240);
+	color: #888888;	
 }
 #mainTable {
 	border-collapse: collapse; 	
@@ -37,7 +39,7 @@
 #mainTable tr:hover {
 	background-color: rgb( 255,255,255);
 }
-.nameTd:hover {
+.nameTd span:hover {
 	text-decoration: underline;
 }
 form {

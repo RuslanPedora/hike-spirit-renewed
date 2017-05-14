@@ -63,6 +63,10 @@ var BasketComponent = (function () {
     BasketComponent.prototype.gotoItem = function (selectedItem) {
         this.router.navigate(['/item'], { queryParams: { itemId: selectedItem.id } });
     };
+    //-----------------------------------------------------------------------------
+    BasketComponent.prototype.postOrder = function () {
+        alert('Your order has been posted');
+    };
     return BasketComponent;
 }());
 BasketComponent = __decorate([
