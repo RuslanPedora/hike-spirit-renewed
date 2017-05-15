@@ -58,9 +58,54 @@
 				<i class='fa fa-facebook-official glCGreen glClickable'></i>
 				<i class='fa fa-twitter glCGreen glClickable'></i>
 				<i class='fa fa-skype glCGreen glClickable'></i>
-				<i class='fa fa-youtube glCGreen glClickable'></i>
-				
+				<i class='fa fa-youtube glCGreen glClickable'></i>				
 			</div>
+			<div class='compareButton glBtn small glBgGreen glClickable' (click)='addToCompareItem()'>Compare +</div>
+			<compare-items></compare-items>
 		</div>
 	</div>
+	<ul id='viewList' class='glBgGrey'>
+		<li 
+			[ngClass]="{'glBGGreenHover':true,'glClickable':true,'glBgGreen':detailBlockIndex==0}"
+			(click)='detailBlockIndex=0'>
+			Description
+		</li>
+		<li 
+			[ngClass]="{'glBGGreenHover':true,'glClickable':true,'glBgGreen':detailBlockIndex==1}"
+			(click)='detailBlockIndex=1'>
+			Characteristics
+		</li>
+		<li 
+			[ngClass]="{'glBGGreenHover':true,'glClickable':true,'glBgGreen':detailBlockIndex==2}"
+			(click)='detailBlockIndex=2'>
+			Review
+		</li>
+	</ul>
+	<div id='detailDiv'>
+		<div id='descriptionDiv' *ngIf='detailBlockIndex==0'>
+			<b>{{item.shortDescription}}</b>
+			<br><br>
+			<span>{{item.description}}</span>
+		</div>
+		<div id='detailDiv' *ngIf='detailBlockIndex==1'>
+			<table>
+				<tr>
+					<th>Name</th>
+					<th>Value</th>
+				</tr>
+				<tr *ngFor='let property of itemProperties;'>
+					<td>
+						{{property.name}}
+					</td>
+					<td>
+						{{property.value}}
+					</td>
+				</tr>
+			</table>
+		</div>
+		<div id='reviewDiv' *ngIf='detailBlockIndex==2'>
+			Here will be displayed customer feedbacks
+		</div>
+	</div>
+	<last-viewed-items></last-viewed-items>
 </div>

@@ -8,14 +8,14 @@ body {
 	overflow-y: auto;
 	font-family:Verdana, Geneva, sans-serif;
 }
-#imageDiv {
+#indexImageDiv {
 	width: 100vw;
 	height: 100vh;
 	position: fixed;
 	overflow: hidden;
 	z-index: -1;
 }
-#imageDiv img {
+#indexImageDiv img {
 	max-width: 100%;
 	z-index: -1;
 }	

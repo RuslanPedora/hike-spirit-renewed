@@ -1,0 +1,8 @@
+<div id='lastViewList' *ngIf='lastViewedItems.length>0'>
+	<div id='viewCaption'>Last viewed...</div>
+	<div *ngFor='let item of lastViewedItems;' class='itemViewedWrapper'>
+		<div class='itemViewedImageDiv glClickable' (click)='gotoItem(item)'>
+			<img src='images/{{item.mainImage}}' >
+		</div>
+	</div>
+</div>

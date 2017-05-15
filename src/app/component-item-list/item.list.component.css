@@ -146,9 +146,13 @@
 	margin: 0px;
 }
 .buyButton {
-	margin-top: 10px;	
-	transition: color .5s, background-color .5s;
+	margin-top: 15px;	
+	transition: box-shadow .7s;	
 }
+.buyButton:hover {
+	box-shadow: 0px 3px 3px 3px #82A800;
+}
+
 .buyButton i {
 	font-size: 20px;
 }

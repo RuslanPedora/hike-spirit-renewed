@@ -20,6 +20,10 @@ var DataService = (function () {
         this.http = http;
         this.localStorageService = localStorageService;
         //-----------------------------------------------------------------------------
+        this.lastViewItems = [];
+        this.maxViewItems = 5;
+        this.compareItems = [];
+        this.maxCompareItems = 5;
         this.orderRows = [];
         //-----------------------------------------------------------------------------
         this.basketEventEmitter = new Subject_1.Subject();
@@ -31,6 +35,7 @@ var DataService = (function () {
         this.categoryUrl = this.hostUrl + '/getCategoryList';
         this.itemUrl = this.hostUrl + '/getItemList';
         this.carrierUrl = this.hostUrl + '/getCarrierList';
+        this.itemPropertiesUrl = this.hostUrl + '/getItemProperties';
         this.restoreFromLocalStorage();
     }
     //-----------------------------------------------------------------------------
@@ -81,6 +86,23 @@ var DataService = (function () {
         catch (error) {
         }
         this.basketEventEmitter.next('');
+        return;
+        restoredValue = this.localStorageService.get('hs_compareList');
+        try {
+            this.compareItems = JSON.parse(restoredValue);
+            if (this.compareItems == null)
+                this.compareItems = [];
+        }
+        catch (error) {
+        }
+        restoredValue = this.localStorageService.get('hs_viewList');
+        try {
+            this.lastViewItems = JSON.parse(restoredValue);
+            if (this.lastViewItems == null)
+                this.lastViewItems = [];
+        }
+        catch (error) {
+        }
     };
     //-----------------------------------------------------------------------------
     DataService.prototype.deleteItemToBasket = function (item) {
@@ -142,6 +164,45 @@ var DataService = (function () {
             .catch(function (error) {
             return console.log(error);
         });
+    };
+    //-----------------------------------------------------------------------------
+    DataService.prototype.getItemProperties = function (query) {
+        return this.http.get(this.itemPropertiesUrl + query)
+            .toPromise()
+            .then(function (response) { return response.json(); })
+            .catch(function (error) {
+            return console.log(error);
+        });
+    };
+    //-----------------------------------------------------------------------------
+    DataService.prototype.addToComapreItem = function (item) {
+        var index;
+        if (this.compareItems.findIndex(function (element) { return element.id == item.id; }) >= 0)
+            return;
+        if (this.compareItems.length == this.maxCompareItems) {
+            this.compareItems.shift();
+        }
+        this.compareItems.push(item);
+        this.localStorageService.set('hs_compareList', JSON.stringify(this.compareItems));
+    };
+    //-----------------------------------------------------------------------------
+    DataService.prototype.getCompareList = function () {
+        return this.compareItems;
+    };
+    //-----------------------------------------------------------------------------
+    DataService.prototype.addToViewItem = function (item) {
+        var index;
+        if (this.lastViewItems.findIndex(function (element) { return element.id == item.id; }) >= 0)
+            return;
+        if (this.lastViewItems.length == this.maxViewItems) {
+            this.lastViewItems.shift();
+        }
+        this.lastViewItems.push(item);
+        this.localStorageService.set('hs_viewList', JSON.stringify(this.lastViewItems));
+    };
+    //-----------------------------------------------------------------------------
+    DataService.prototype.getLastViewedItems = function () {
+        return this.lastViewItems;
     };
     return DataService;
 }());

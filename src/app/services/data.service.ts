@@ -14,6 +14,7 @@ import { Item }     from 'hs_core/item';
 import { Image }    from 'hs_core/image';
 import { OrderRow } from 'hs_core/order.row';
 import { Carrier }  from 'hs_core/carrier';
+import { ItemProperty }  from 'hs_core/item.property';
 
 @Injectable()
 //-----------------------------------------------------------------------------
@@ -22,7 +23,12 @@ export class DataService {
 	private categoryUrl: string;
 	private itemUrl: string;
 	private carrierUrl: string;
+	private itemPropertiesUrl: string;
 	//-----------------------------------------------------------------------------
+	private lastViewItems: Item[] = [];
+	private maxViewItems: number = 5;
+	private compareItems: Item[] = [];
+	private maxCompareItems: number = 5;
 	private orderRows: OrderRow[] = [];
 	//-----------------------------------------------------------------------------
 	private basketEventEmitter = new Subject<string>(); 
@@ -37,6 +43,7 @@ export class DataService {
 		this.categoryUrl = this.hostUrl + '/getCategoryList';
 		this.itemUrl = this.hostUrl + '/getItemList';
 		this.carrierUrl = this.hostUrl + '/getCarrierList';
+		this.itemPropertiesUrl = this.hostUrl + '/getItemProperties';
 
 		this.restoreFromLocalStorage();
 	}
@@ -89,6 +96,24 @@ export class DataService {
     	catch( error ) {    		
     	}    	
     	this.basketEventEmitter.next( '' );
+    	return;
+    	restoredValue = this.localStorageService.get( 'hs_compareList' );
+    	try {
+    		this.compareItems = JSON.parse( restoredValue );
+    		if( this.compareItems == null )
+    			this.compareItems = [];
+    	}
+    	catch( error ) {    		
+    	}    	
+
+    	restoredValue = this.localStorageService.get( 'hs_viewList' );
+    	try {
+    		this.lastViewItems = JSON.parse( restoredValue );
+    		if( this.lastViewItems == null )
+    			this.lastViewItems = [];
+    	}
+    	catch( error ) {    		
+    	}    	
     }    
     //-----------------------------------------------------------------------------
     deleteItemToBasket( item: Item ): void {
@@ -162,5 +187,49 @@ export class DataService {
 		           			console.log( error )
 		           	);
 	}	
+	//-----------------------------------------------------------------------------
+	getItemProperties( query: string ): Promise<ItemProperty[]> {
+		return this.http.get( this.itemPropertiesUrl + query )
+		           .toPromise()
+		           .then( 
+		           		response => response.json() as ItemProperty[]
+		           	)
+		           .catch( 
+		           		error => 
+		           			console.log( error )
+		           	);
+	}	
+	//-----------------------------------------------------------------------------
+	addToComapreItem( item: Item ): void {
+		let index: number;
+
+		if( this.compareItems.findIndex( element => element.id == item.id ) >= 0 )
+			return;
+		if( this.compareItems.length == this.maxCompareItems ) {
+			this.compareItems.shift();
+		}
+		this.compareItems.push( item );
+		this.localStorageService.set( 'hs_compareList', JSON.stringify( this.compareItems ) );
+	}
+	//-----------------------------------------------------------------------------
+	getCompareList(): Item[] {
+		return this.compareItems;
+	}
+	//-----------------------------------------------------------------------------
+	addToViewItem( item: Item ): void {
+		let index: number;
+
+		if( this.lastViewItems.findIndex( element => element.id == item.id ) >= 0 )
+			return;
+		if( this.lastViewItems.length == this.maxViewItems ) {
+			this.lastViewItems.shift();
+		}
+		this.lastViewItems.push( item );
+		this.localStorageService.set( 'hs_viewList', JSON.stringify( this.lastViewItems ) );
+	}
+	//-----------------------------------------------------------------------------
+	getLastViewedItems(): Item[] {
+		return this.lastViewItems;
+	}
 	//-----------------------------------------------------------------------------
 }

@@ -1,0 +1,8 @@
+<div id='compareList' *ngIf='compareItems.length>0'>	
+	<div id='compareCaption'>Selected items to compare...</div>
+	<div *ngFor='let item of compareItems;' class='itemCompareWrapper'>
+		<div class='itemCompareImageDiv glClickable' (click)='gotoItem(item)'>
+			<img src='images/{{item.mainImage}}' >
+		</div>
+	</div>
+</div>

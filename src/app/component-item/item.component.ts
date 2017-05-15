@@ -8,6 +8,7 @@ import { DataService } from 'hs_services/data.service';
 
 import { Item }     from 'hs_core/item';
 import { Image }    from 'hs_core/image';
+import { ItemProperty }  from 'hs_core/item.property';
 
 
 @Component({
@@ -19,13 +20,19 @@ import { Image }    from 'hs_core/image';
 //-----------------------------------------------------------------------------
 export class ItemComponent implements OnInit {
 	private item: Item = new Item();
-	private loupeFragment: string = '';
+	private itemProperties: ItemProperty[] = [];
+	private loupeFragment: string = 'logo.jpg';
+	private reEnter: boolean = false;
+	private offsetX: number;
+	private offsetY: number;
+
 	private elementLuope: any;
 	private elementBigImage: any;
 	private elementLoupeFragment: any;
 	private elementLoupeImage: any;
 	private mouseEntered: boolean = false;
 	private debugString: string = '';
+	private detailBlockIndex: number = 0;
 	//-----------------------------------------------------------------------------
 	constructor( private router: Router,
 				 private activatedRoute: ActivatedRoute,
@@ -38,6 +45,7 @@ export class ItemComponent implements OnInit {
 				let itemId = queryParams [ 'itemId' ];
 				if( itemId != undefined ) {
 					this.getItem( Number.parseInt( itemId ) );
+					this.getItemProperties( Number.parseInt( itemId ) );
 				}
 			}
 		);		
@@ -45,13 +53,26 @@ export class ItemComponent implements OnInit {
 	//-----------------------------------------------------------------------------
 	getItem( itemId: number ):void {
 		let tempList: Item[];
-		JSON.stringify( { id_IT: itemId } )
 		this.dataService.getItemList( '/?' + JSON.stringify( { id_IT: itemId } ) )
 		                .then( itemList => { tempList = itemList;
 			                                 this.dataService.converRate( tempList );
-			                                 if( tempList.length > 0 )
+			                                 if( tempList.length > 0 ) {
 			                                     this.item = tempList[0];
+			                                     this.dataService.addToViewItem( this.item );
+			                                     if( this.reEnter && this.item.imageList.length > 0 ) {
+			                                     	this.loupeFragment = this.item.imageList[ 0 ].bigImage;
+			                                     	this.mouseEntered = true;
+			                                     	this.posBigImage( this.offsetX, this.offsetY );
+			                                     }
+			                                 }
 		} ); 
+	}
+	//-----------------------------------------------------------------------------
+	getItemProperties( itemId: number ):void {
+		this.dataService.getItemProperties( '/?' + JSON.stringify( { id: itemId } ) )
+		                .then( itemProperties => 
+		                	                     this.itemProperties = itemProperties 
+		                	 ); 
 	}
 	//-----------------------------------------------------------------------------
 	scrollBigImage( forward: boolean ):void {
@@ -111,25 +132,29 @@ export class ItemComponent implements OnInit {
 	}
 	//-----------------------------------------------------------------------------
 	mouseMove( event: any ) {
+		this.posBigImage( event.offsetX, event.offsetY );
+	}
+	//-----------------------------------------------------------------------------
+	posBigImage( offsetX: number , offsetY: number ): void {
 		let newLeft: number;
 		let newTop: number;
 
 		if( this.mouseEntered ) {
-			newLeft	= Math.min( event.offsetX, this.elementBigImage.clientWidth - this.elementLuope.clientWidth - 2 );
-			newTop  = Math.min( event.offsetY, this.elementBigImage.clientHeight - this.elementLuope.clientHeight - 2 );
+			newLeft	= Math.min( offsetX, this.elementBigImage.clientWidth - this.elementLuope.clientWidth - 2 );
+			newTop  = Math.min( offsetY, this.elementBigImage.clientHeight - this.elementLuope.clientHeight - 2 );
 
 			this.elementLuope.style.left = '' + newLeft + 'px';
 			this.elementLuope.style.top  = '' + newTop + 'px';
-
-			this.elementLoupeFragment.style.left = '-' + ( newLeft / this.elementBigImage.clientWidth * this.elementLoupeFragment.clientWidth ) + 'px';
-			this.elementLoupeFragment.style.top  = '-' + ( newTop / this.elementBigImage.clientHeight * this.elementLoupeFragment.clientHeight ) + 'px';
-
+			if( this.elementLoupeFragment != null ) {
+				this.elementLoupeFragment.style.left = '-' + ( newLeft / this.elementBigImage.clientWidth * this.elementLoupeFragment.clientWidth - this.elementBigImage.clientWidth/2 ) + 'px';
+				this.elementLoupeFragment.style.top  = '-' + ( newTop / this.elementBigImage.clientHeight * this.elementLoupeFragment.clientHeight ) + 'px';
+			}
 		}
-		//this.debugString = '' + this.elementLoupeFragment.style.left + '_' + this.elementLoupeFragment.style.top;
 	}
 	//-----------------------------------------------------------------------------
 	mouseEnter( event: any ) {
 		let zeroIndex: number;
+
 
 		this.elementLuope         = document.getElementById( 'loupe' );
 		this.elementBigImage      = document.getElementById( 'bigImageDiv' );
@@ -137,24 +162,35 @@ export class ItemComponent implements OnInit {
 		this.elementLoupeImage    = document.getElementById( 'loupeImageDiv' );
 		this.elementLoupeFragment = document.getElementById( 'loupeImageFragment' );
 
-		this.elementLoupeImage.style.display = 'block';
-		//this.elementLuope.style.display = 'block';
-		
+		this.elementLoupeImage.style.display = 'block';		
+
+
+		if( this.item.imageList.length == 0 ) {
+			this.reEnter = true;			
+			this.offsetX = event.offsetX;
+			this.offsetY = event.offsetY;
+			return;
+		}
 		zeroIndex = this.item.imageList.findIndex( element => element.shift == 0 );
+
 		this.loupeFragment = this.item.imageList[ zeroIndex ].bigImage;
-
-		this.debugString = 'zzz_' + event.offsetX;
-
 		this.mouseEntered = true;
 	}
 	//-----------------------------------------------------------------------------
 	mouseLeave( event: any ) {
-		this.elementLoupeImage.style.display = 'none';	
+		if( this.item.imageList.length == 0 )
+			return;
+		this.elementLoupeImage.style.display = 'none';		
 		this.mouseEntered = false;
 	}
 	//-----------------------------------------------------------------------------
 	buyItem(): void {
 		this.dataService.addItemToBasket( this.item );
+	}
+	//-----------------------------------------------------------------------------
+	addToCompareItem(): void {
+		if( this.item.id > 0 )
+			this.dataService.addToComapreItem( this.item );
 	}
 	//-----------------------------------------------------------------------------
 }

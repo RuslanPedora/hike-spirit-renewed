@@ -33,6 +33,7 @@ appExpress.use( cors() );
 appExpress.get( "/", initResponse );
 appExpress.get( "/getCategoryList", categoryListResponse );
 appExpress.get( "/getItemList", itemListResponse );
+appExpress.get( "/getItemProperties", itemPropertiesResponse );
 appExpress.get( "/getCarrierList", carrierListResponse );
 
 appExpress.post( "/order", orderResponse );
@@ -249,12 +250,38 @@ function categoryListResponse( request, response ) {
     makeResponseOnDBData( querySQL, request, response );
 }
 //-----------------------------------------------------------------------------
-function itemListResponse( request, response ) {
+function itemPropertiesResponse( request, response ) {
     var querySQL;
     var queryInputString;
     var indexOfQueryString;
     var queryObject = {};
-    var propertyCount = 0;
+    
+
+    indexOfQueryString = request.url.indexOf( '/?' );
+    if ( indexOfQueryString > 0 )
+      queryInputString = request.url.slice( indexOfQueryString + 2 , request.url.length );
+    else 
+      queryInputString = '';
+
+    queryObject = JSON.parse( decodeQuotes( queryInputString ) );
+
+    querySQL = 'SELECT propertyId AS id, name AS name, value AS value\
+                FROM itemProperties\
+                JOIN\
+                properties\
+                ON itemProperties.propertyId = properties.id\
+                WHERE itemId = ' + queryObject.id + ' ORDER BY name';
+
+    logRequest( request.url );    
+
+    makeResponseOnDBData( querySQL, request, response );
+
+}
+//-----------------------------------------------------------------------------
+function itemListResponse( request, response ) {
+    var querySQL;
+    var queryInputString;
+    var indexOfQueryString;
 
     indexOfQueryString = request.url.indexOf( '/?' );
     if ( indexOfQueryString > 0 )
@@ -272,7 +299,8 @@ function itemListResponse( request, response ) {
                  IFNULL( rate, 0 ) AS rate,\
                  CASE WHEN newItems.itemId IS NULL THEN false ELSE true END AS newItem,\
                  CAST( IFNULL( price, 0 ) * ( 1 - IFNULL( discountTable.discount, 0 ) / 100 ) AS DECIMAL(20,2) ) AS discountPrice,\
-                 items.categoryId, categories.name as category\
+                 items.categoryId AS categoryId, categories.name AS category,\
+                 items.description AS description, items.shortDescription AS shortDescription\
         FROM items as items\
         \
         LEFT JOIN\

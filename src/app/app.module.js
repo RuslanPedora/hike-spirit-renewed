@@ -17,6 +17,8 @@ var item_list_component_1 = require("hs_app/component-item-list/item.list.compon
 var item_component_1 = require("hs_app/component-item/item.component");
 var category_list_component_1 = require("hs_app/component-category-list/category.list.component");
 var basket_component_1 = require("hs_app/component-basket/basket.component");
+var last_viewed_items_component_1 = require("hs_app/component-last-viewed-items/last.viewed.items.component");
+var compare_component_1 = require("hs_app/component-compare/compare.component");
 var data_service_1 = require("hs_services/data.service");
 var routing_module_1 = require("./routing.module");
 var AppModule = (function () {
@@ -40,7 +42,9 @@ AppModule = __decorate([
             item_list_component_1.ItemListComponent,
             item_component_1.ItemComponent,
             category_list_component_1.CategoryListComponent,
-            basket_component_1.BasketComponent],
+            basket_component_1.BasketComponent,
+            last_viewed_items_component_1.LastViewedItems,
+            compare_component_1.CompareItems],
         providers: [common_1.Location,
             { provide: common_1.LocationStrategy,
                 useClass: common_1.HashLocationStrategy },

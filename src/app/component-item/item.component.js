@@ -19,9 +19,12 @@ var ItemComponent = (function () {
         this.activatedRoute = activatedRoute;
         this.dataService = dataService;
         this.item = new item_1.Item();
-        this.loupeFragment = '';
+        this.itemProperties = [];
+        this.loupeFragment = 'logo.jpg';
+        this.reEnter = false;
         this.mouseEntered = false;
         this.debugString = '';
+        this.detailBlockIndex = 0;
     }
     //-----------------------------------------------------------------------------
     ItemComponent.prototype.ngOnInit = function () {
@@ -30,6 +33,7 @@ var ItemComponent = (function () {
             var itemId = queryParams['itemId'];
             if (itemId != undefined) {
                 _this.getItem(Number.parseInt(itemId));
+                _this.getItemProperties(Number.parseInt(itemId));
             }
         });
     };
@@ -37,13 +41,27 @@ var ItemComponent = (function () {
     ItemComponent.prototype.getItem = function (itemId) {
         var _this = this;
         var tempList;
-        JSON.stringify({ id_IT: itemId });
         this.dataService.getItemList('/?' + JSON.stringify({ id_IT: itemId }))
             .then(function (itemList) {
             tempList = itemList;
             _this.dataService.converRate(tempList);
-            if (tempList.length > 0)
+            if (tempList.length > 0) {
                 _this.item = tempList[0];
+                _this.dataService.addToViewItem(_this.item);
+                if (_this.reEnter && _this.item.imageList.length > 0) {
+                    _this.loupeFragment = _this.item.imageList[0].bigImage;
+                    _this.mouseEntered = true;
+                    _this.posBigImage(_this.offsetX, _this.offsetY);
+                }
+            }
+        });
+    };
+    //-----------------------------------------------------------------------------
+    ItemComponent.prototype.getItemProperties = function (itemId) {
+        var _this = this;
+        this.dataService.getItemProperties('/?' + JSON.stringify({ id: itemId }))
+            .then(function (itemProperties) {
+            return _this.itemProperties = itemProperties;
         });
     };
     //-----------------------------------------------------------------------------
@@ -100,17 +118,22 @@ var ItemComponent = (function () {
     };
     //-----------------------------------------------------------------------------
     ItemComponent.prototype.mouseMove = function (event) {
+        this.posBigImage(event.offsetX, event.offsetY);
+    };
+    //-----------------------------------------------------------------------------
+    ItemComponent.prototype.posBigImage = function (offsetX, offsetY) {
         var newLeft;
         var newTop;
         if (this.mouseEntered) {
-            newLeft = Math.min(event.offsetX, this.elementBigImage.clientWidth - this.elementLuope.clientWidth - 2);
-            newTop = Math.min(event.offsetY, this.elementBigImage.clientHeight - this.elementLuope.clientHeight - 2);
+            newLeft = Math.min(offsetX, this.elementBigImage.clientWidth - this.elementLuope.clientWidth - 2);
+            newTop = Math.min(offsetY, this.elementBigImage.clientHeight - this.elementLuope.clientHeight - 2);
             this.elementLuope.style.left = '' + newLeft + 'px';
             this.elementLuope.style.top = '' + newTop + 'px';
-            this.elementLoupeFragment.style.left = '-' + (newLeft / this.elementBigImage.clientWidth * this.elementLoupeFragment.clientWidth) + 'px';
-            this.elementLoupeFragment.style.top = '-' + (newTop / this.elementBigImage.clientHeight * this.elementLoupeFragment.clientHeight) + 'px';
+            if (this.elementLoupeFragment != null) {
+                this.elementLoupeFragment.style.left = '-' + (newLeft / this.elementBigImage.clientWidth * this.elementLoupeFragment.clientWidth - this.elementBigImage.clientWidth / 2) + 'px';
+                this.elementLoupeFragment.style.top = '-' + (newTop / this.elementBigImage.clientHeight * this.elementLoupeFragment.clientHeight) + 'px';
+            }
         }
-        //this.debugString = '' + this.elementLoupeFragment.style.left + '_' + this.elementLoupeFragment.style.top;
     };
     //-----------------------------------------------------------------------------
     ItemComponent.prototype.mouseEnter = function (event) {
@@ -120,20 +143,31 @@ var ItemComponent = (function () {
         this.elementLoupeImage = document.getElementById('loupeImageDiv');
         this.elementLoupeFragment = document.getElementById('loupeImageFragment');
         this.elementLoupeImage.style.display = 'block';
-        //this.elementLuope.style.display = 'block';
+        if (this.item.imageList.length == 0) {
+            this.reEnter = true;
+            this.offsetX = event.offsetX;
+            this.offsetY = event.offsetY;
+            return;
+        }
         zeroIndex = this.item.imageList.findIndex(function (element) { return element.shift == 0; });
         this.loupeFragment = this.item.imageList[zeroIndex].bigImage;
-        this.debugString = 'zzz_' + event.offsetX;
         this.mouseEntered = true;
     };
     //-----------------------------------------------------------------------------
     ItemComponent.prototype.mouseLeave = function (event) {
+        if (this.item.imageList.length == 0)
+            return;
         this.elementLoupeImage.style.display = 'none';
         this.mouseEntered = false;
     };
     //-----------------------------------------------------------------------------
     ItemComponent.prototype.buyItem = function () {
         this.dataService.addItemToBasket(this.item);
+    };
+    //-----------------------------------------------------------------------------
+    ItemComponent.prototype.addToCompareItem = function () {
+        if (this.item.id > 0)
+            this.dataService.addToComapreItem(this.item);
     };
     return ItemComponent;
 }());
