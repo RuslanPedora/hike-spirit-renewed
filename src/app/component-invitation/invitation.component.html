@@ -1,10 +1,10 @@
 <header class='glOverlay'>
 	<nav>
 		<ul>
-			<li><a href='#' class='glCWhite glCGreenHover'>ARTICALES</a></li>
-			<li><a href='#pageintro' class='glCWhite glCGreenHover'>ABOUT Hike-Spirit</a></li>
+			<li><span class='glCWhite glCGreenHover glClickable' (click)='articles()'>ARTICALES</span></li>
+			<li><span class='glCWhite glCGreenHover  glClickable' (click)='scrollToQuote()'>ABOUT Hike-Spirit</span></li>
 			<li><a routerLink='/category-list' class='glCWhite glCGreenHover'>SHOP</a></li>
-			<li><a href='#contactDiv' class='glCWhite glCGreenHover'>CONTACTS</a></li>
+			<li><span class='glCWhite glCGreenHover glClickable' (click)='scrollDown()'>CONTACTS</span></li>
 		</ul>
 	</nav>
     <div id="logo">         
@@ -15,23 +15,23 @@
 <!-- ################################################################################ -->
 <div id="pageintro" class='glBgWhite' > 
 	<article>
-	    <p id='topP' >Laoreet tellus quis finibus metus</p>
-	    <h2>Mauris integer finibus</h2>
-	    <p>Nunc quis arcu congue congue nulla sed nisl libero quis mollis eros bibendum efficitur praesent placerat dui eu sem sollicitudin fermentum in lobortis urna vitae dui convallis sed pulvinar ipsum.</p>
+	    <h2 class='headerFont'>...“Because in the end, you won’t remember the time you spent working in the office or mowing your lawn. Climb that goddamn mountain”...</h2>
+	    <div>Jack Kerouac</div>
 	</article>
 </div>
 <!-- ################################################################################ -->
 <div id='categoryDiv' class="glContainer">
 	<div id='categoryBlock'>
     <div>
-      <h2>Consectetur suspendisse</h2>
-      <p>Potenti nam aliquet varius dolor ut lobortis morbi sit amet rutrum nunc cras imperdiet consequat eros nec efficitur sed placerat lacus orci sed eleifend odio aliquam vitae etiam imperdiet feugiat nisl non accumsan ante eleifend.</p>
+      <h2 class='headerFont'>Choose what you prefer</h2>
+      <p>Winter or summer, climbing or boating, alone, with your friends or family - here below you can find all the fest equipment for best emotions and most unforgettable time of your life. Be inspired.</p>
     </div>
     <div *ngFor='let category of categoryList' class='categoryWrapper'>
     	<div class='categoryBox'>
-			<div class='glBtn glBGGreenHover'>    	
-    		{{category}}
+			<div class='glBtn small glBGGreenHover glClickable' (click)='gotoItemList(category)'>    	
+    			{{category.name}}
     		</div>
+    		<img src='images/{{category.image}}'>
     	</div>
     </div>
     </div>
@@ -40,20 +40,20 @@
 <div class='glOverlay'>
   <section id='testimonials'>     
     <div>
-      <h2>Etiam proin porta interdum</h2>
-      <p>Purus vestibulum ante ipsum primis in faucibus orci luctus turpis ullamcorper dolor gravida ut laoreet arcu finibus praesent tincidunt nulla id augue hendrerit ac eleifend turpis tempor suspendisse fringilla massa nec laoreet.</p>
+      <h2 class='headerFont'>We would really appreciate your feedback</h2>
+      <p></p>
     </div>
     <ul class='glNoStyle'>
       <li>
         <div>
-          <img src="images/80x80.png" alt="" class=''> <span class=''><strong>A.Doe</strong> / <em>Position, Company Name</em></span>
-          <blockquote class=''>Ornare sed nec sagittis nisi nulla nec aliquam mi interdum et malesuada fames&hellip;</blockquote>
+          <img src="images/face1.jpg" alt="foto 1" class='face'> <span><strong>A.Doe</strong> / <em>Accountant, "Brad's Drink"</em></span>
+          <blockquote class=''>We walked the Inca trail and not knowing how we would do at altitude it was a pleasant surprise to feel fine.&hellip;</blockquote>
         </div>
       </li>
       <li>
         <div>
-          <img src="images/80x80.png" alt=""> <span><strong>B.Doe</strong> / <em>Position, Company Name</em></span>
-          <blockquote>Ac ante ipsum primis in faucibus curabitur cursus est nec turpis posuere aliquet&hellip;</blockquote>
+          <img src="images/face2.jpg" alt="foto 2" class='face'> <span><strong>B.Doe</strong> / <em>Designer, "Research in Motion"</em></span>
+          <blockquote>Great experience. Beautiful views and sites throughout. The guide, camp chef, and porters work really hard to make the trip enjoyable.&hellip;</blockquote>
         </div>
       </li>
     </ul>    
@@ -63,14 +63,18 @@
 <div id='itemDiv' class="glContainer">
 	<div id='itemBlock'>
 	    <div>
-	      <h2>Consectetur suspendisse</h2>
-	      <p>Potenti nam aliquet varius dolor ut lobortis morbi sit amet rutrum nunc cras imperdiet consequat eros nec efficitur sed placerat lacus orci sed eleifend odio aliquam vitae etiam imperdiet feugiat nisl non accumsan ante eleifend.</p>
+	      <h2 class='headerFont'>Take a look into new admission</h2>
+	      <p>To be up to date and better suit your needs we update our product range on regular basis. Please find recent renewals in the sector below.</p>
 	    </div>
 	    <div *ngFor='let item of itemList' class='itemWrapper'>
 	    	<div class='itemBox'>
+	    		<img src='images/{{item.mainImage}}'>
 	    	</div>
-			<div class='glBtn glBGGreenHover itemButton'>    	
-				{{item}}
+	    	<div class='newItemName'>
+	    		{{item.name}}
+	    	</div>
+			<div class='glBtn small glBGGreenHover glClickable itemButton' (click)='gotoItem(item)'>    	
+				See detail...
 			</div>
 	    </div>
     </div>

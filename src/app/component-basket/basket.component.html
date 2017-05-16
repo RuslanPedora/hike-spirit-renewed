@@ -26,18 +26,18 @@
 		<td><b>{{total.toFixed(2)}}$</b></td>
 	</tr>
 </table>
-<form id='orderForm' action="#" (ngSubmit)='postOrder()'>
+<form id='orderForm' action='#' (ngSubmit)='postOrder()'>
   <div class='fieldDiv'>
     <label for="name">Name <span>*</span></label>
-    <input type="text" name="name" id="name" value="" size="22" required placeholder='your name...'>
+    <input [(ngModel)]='firstName' type='text' required placeholder='your name...' required name='fieldName'>
   </div>
   <div class='fieldDiv'>
-    <label for="email">Mail <span>*</span></label>
-    <input type="email" name="email" id="email" value="" size="22" required placeholder='e-mail...'>
+    <label for='email'>Mail <span>*</span></label>
+    <input type='email' name='email' required placeholder='e-mail...'>
   </div>
   <div class='fieldDiv'>
-    <label for="phone">Phone <span>*</span></label>
-    <input type="phone" name="phone" id="phone" value="" size="22" placeholder='phone number...'>
+    <label for='phone'>Phone <span>*</span></label>
+    <input type='text' name='phone' required placeholder='phone number...'>
   </div>
   <div id='areaDiv'>
     <label for="comment">Your Comment</label>
@@ -107,8 +107,11 @@
   	<b>{{totalPlusShipment.toFixed(2)}}$</b>
   </div>
   <div class='bottomBlock' *ngIf='orderRows.length>0'>
-  	<input id='orderButton' type='submit' value='Place order' form='orderForm' class='glBtn small glBGGreenHover glClickable'>
+  	<button id='orderButton' type='submit' class='glBtn small glBGGreenHover glClickable'>Place order</button>
   </div>
-
+</form>
+<form #f="ngForm" (ngSubmit)='postOrder()' novalidate>
+<input type='text' required>
+<input type='submit' value='test'>
 </form>
 </div>

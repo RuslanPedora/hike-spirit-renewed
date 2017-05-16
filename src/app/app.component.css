@@ -61,7 +61,7 @@
 #contactBlock {
 	margin: auto;
 	width: 90%;
-	max-width: 1000px;
+	max-width: 100%;
 	/*border: 1px solid white;*/
 }
 .contactSection {	
@@ -184,6 +184,11 @@ fieldset {
 #backtotop:hover { 
 	opacity: 1;
 }
+:host /deep/ .headerFont {
+	font-weight: normal;
+	font-family: Georgia, "Times New Roman", Times, serif;
+}
+
 :host /deep/ * {
 	box-sizing: border-box;
 }

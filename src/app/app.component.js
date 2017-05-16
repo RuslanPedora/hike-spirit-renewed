@@ -46,21 +46,17 @@ var ApplicationComponent = (function () {
         elementCopyRights = document.getElementById('copyright');
         elementPanelDiv = document.getElementById('panelDiv');
         elementBGImage = document.getElementById('mainBgImage');
-        if (event.url.indexOf('invitation') >= 0) {
+        if (event.url.indexOf('invitation') >= 0 || event.url == '/') {
             elementOutlet.style.maxWidth = '100%';
             elementContacts.style.maxWidth = '100%';
             elementCopyRights.style.maxWidth = '100%';
+            elementPanelDiv.style.display = 'none';
         }
         else {
             elementOutlet.style.maxWidth = '1000px';
             elementContacts.style.maxWidth = '1000px';
             elementCopyRights.style.maxWidth = '1000px';
-        }
-        if (event.url.indexOf('item') >= 0 || event.url.indexOf('basket') >= 0) {
             elementPanelDiv.style.display = 'block';
-        }
-        else {
-            elementPanelDiv.style.display = 'none';
         }
         if (event.url.indexOf('category-list') >= 0) {
             elementBGImage.style.opacity = '.8';
@@ -68,6 +64,14 @@ var ApplicationComponent = (function () {
         else {
             elementBGImage.style.opacity = '1';
         }
+    };
+    //-----------------------------------------------------------------------------
+    ApplicationComponent.prototype.scrollTop = function () {
+        window.scrollTo(0, 0);
+    };
+    //-----------------------------------------------------------------------------
+    ApplicationComponent.prototype.subscribe = function () {
+        alert('You have subscribed');
     };
     return ApplicationComponent;
 }());

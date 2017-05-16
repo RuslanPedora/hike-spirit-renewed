@@ -34,6 +34,7 @@ var DataService = (function () {
         }
         this.categoryUrl = this.hostUrl + '/getCategoryList';
         this.itemUrl = this.hostUrl + '/getItemList';
+        this.newItemUrl = this.hostUrl + '/getNewItemList';
         this.carrierUrl = this.hostUrl + '/getCarrierList';
         this.itemPropertiesUrl = this.hostUrl + '/getItemProperties';
         this.restoreFromLocalStorage();
@@ -86,7 +87,6 @@ var DataService = (function () {
         catch (error) {
         }
         this.basketEventEmitter.next('');
-        return;
         restoredValue = this.localStorageService.get('hs_compareList');
         try {
             this.compareItems = JSON.parse(restoredValue);
@@ -168,6 +168,15 @@ var DataService = (function () {
     //-----------------------------------------------------------------------------
     DataService.prototype.getItemProperties = function (query) {
         return this.http.get(this.itemPropertiesUrl + query)
+            .toPromise()
+            .then(function (response) { return response.json(); })
+            .catch(function (error) {
+            return console.log(error);
+        });
+    };
+    //-----------------------------------------------------------------------------
+    DataService.prototype.getNewItemList = function () {
+        return this.http.get(this.newItemUrl)
             .toPromise()
             .then(function (response) { return response.json(); })
             .catch(function (error) {

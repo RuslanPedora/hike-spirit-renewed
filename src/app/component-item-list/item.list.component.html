@@ -36,13 +36,12 @@
 					code:{{item.id}}
 				</div>
 				<div class='priceDiv'>
+					<b>{{item.discountPrice.toFixed(2)}}$</b>
 					<del *ngIf='item.discount>0'>
 						{{item.price.toFixed(2)}}$
-					</del>
-					<b>{{item.discountPrice.toFixed(2)}}$</b>
+					</del>					
 				</div>
 				<div class='buyButton glBtn small glBgGreen glClickable' (click)='buyItem(item)'>Buy <i class='fa fa-cart-plus'></i></div>
-				<!-- <compare></compare> -->
 			</div>	
 		</div>	
 	</div>

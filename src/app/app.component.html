@@ -25,7 +25,7 @@
 <div id='contactDiv' class='glBgGrey'>
 	<div id='contactBlock'>
 		<div class="contactSection">
-	      <h6 class="title">get in touch with us</h6>
+	      <h6 class="title headerFont">get in touch with us</h6>
 	      <ul id="contactList">
 	        <li><i class="fa fa-map-marker"></i>
 	          <address>
@@ -45,7 +45,7 @@
 	      </ul>
 	    </div>
 	    <div class="contactSection">
-	    	<h6 class="title">We are in Ukraine</h6>
+	    	<h6 class="title headerFont">We are in Ukraine</h6>
     		<ul id='middleList'>
     			<li>Lviv</li>
     			<li>Kiyv</li>
@@ -54,9 +54,9 @@
     		</ul>
 	    </div>
 		<div class="contactSection">
-	      <h6 class="title">Hike-Spirit news</h6>
+	      <h6 class="title headerFont">Hike-Spirit news</h6>
 	      <p>Are you passion about hiking and nature, our community shares impressions</p>
-	      <form method="post" action="#">
+	      <form action="#" (ngSubmit)='subscribe()'>
 	        <fieldset>
 	          <input class="btmspace-15" type="text" value="" placeholder="Name">
 	          <input class="btmspace-15" type="text" value="" placeholder="Email">
@@ -70,4 +70,4 @@
 <div id="copyright" class='glContainer'> 
 	<p>Copyright &copy; 2017 - All Rights Reserved - Hike-Spirit</p>
 </div>
-<a id="backtotop" href="#indexImageDiv"><i class='fa fa-chevron-up glBgGreen'></i></a>
+<div id="backtotop" class='glClickable' (click)='scrollTop()'><i class='fa fa-chevron-up glBgGreen'></i></div>

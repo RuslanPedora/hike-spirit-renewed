@@ -10,18 +10,47 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 };
 var core_1 = require("@angular/core");
 var router_1 = require("@angular/router");
+var data_service_1 = require("hs_services/data.service");
 var InvitationComponent = (function () {
     //-----------------------------------------------------------------------------
-    function InvitationComponent(router) {
+    function InvitationComponent(router, dataService) {
         this.router = router;
-        this.categoryList = [1, 2342, 3, 9909424];
-        this.itemList = [1, 2, 3];
+        this.dataService = dataService;
+        this.categoryList = [];
+        this.itemList = [];
     }
     //-----------------------------------------------------------------------------
     InvitationComponent.prototype.ngOnInit = function () {
+        var _this = this;
+        this.dataService.getCategoryList().then(function (categoryList) {
+            _this.categoryList = categoryList;
+            if (_this.categoryList.length >= 4)
+                _this.categoryList = _this.categoryList.slice(0, 4);
+        });
+        this.dataService.getNewItemList().then(function (itemList) { return _this.itemList = itemList; });
+    };
+    //-----------------------------------------------------------------------------
+    InvitationComponent.prototype.gotoItemList = function (selectedCategory) {
+        this.router.navigate(['/item-list'], { queryParams: { category: selectedCategory.id } });
+    };
+    //-----------------------------------------------------------------------------
+    InvitationComponent.prototype.gotoItem = function (selectedItem) {
+        this.router.navigate(['/item'], { queryParams: { itemId: selectedItem.id } });
     };
     //-----------------------------------------------------------------------------
     InvitationComponent.prototype.onResize = function (event) {
+    };
+    //-----------------------------------------------------------------------------
+    InvitationComponent.prototype.scrollDown = function () {
+        window.scrollTo(0, document.body.scrollHeight);
+    };
+    //-----------------------------------------------------------------------------
+    InvitationComponent.prototype.articles = function () {
+        alert('Articles will be added a little bit later...');
+    };
+    //-----------------------------------------------------------------------------
+    InvitationComponent.prototype.scrollToQuote = function () {
+        window.scrollTo(0, document.getElementById('pageintro').offsetTop);
     };
     return InvitationComponent;
 }());
@@ -32,7 +61,8 @@ InvitationComponent = __decorate([
         templateUrl: './invitation.component.html',
         styleUrls: ['./invitation.component.css'],
     }),
-    __metadata("design:paramtypes", [router_1.Router])
+    __metadata("design:paramtypes", [router_1.Router,
+        data_service_1.DataService])
 ], InvitationComponent);
 exports.InvitationComponent = InvitationComponent;
 //# sourceMappingURL=invitation.component.js.map

@@ -23,6 +23,7 @@ var BasketComponent = (function () {
         this.totalPlusShipment = 0;
         this.selectedCarrier = new carrier_1.Carrier();
         this.paymentType = 'card';
+        this.firstName = '';
     }
     //-----------------------------------------------------------------------------
     BasketComponent.prototype.ngOnInit = function () {

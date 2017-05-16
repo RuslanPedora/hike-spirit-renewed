@@ -33,6 +33,7 @@ appExpress.use( cors() );
 appExpress.get( "/", initResponse );
 appExpress.get( "/getCategoryList", categoryListResponse );
 appExpress.get( "/getItemList", itemListResponse );
+appExpress.get( "/getNewItemList", newItemListResponse );
 appExpress.get( "/getItemProperties", itemPropertiesResponse );
 appExpress.get( "/getCarrierList", carrierListResponse );
 
@@ -240,6 +241,18 @@ function carrierListResponse( request, response ) {
 
     makeResponseOnDBData( querySQL, request, response );
 }
+//-----------------------------------------------------------------------------
+function newItemListResponse( request, response ) {
+    querySQL = 'SELECT id, name, mainImage, shortDescription\
+                FROM items\
+                INNER JOIN newItems\
+                ON id = itemId\
+                ORDER BY name\
+                LIMIT 3';
+
+    logRequest( request.url );    
+
+    makeResponseOnDBData( querySQL, request, response );}  
 //-----------------------------------------------------------------------------
 function categoryListResponse( request, response ) {
 

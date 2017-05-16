@@ -22,6 +22,7 @@ export class BasketComponent implements OnInit {
 	private totalPlusShipment: number = 0;	
 	private selectedCarrier: Carrier = new Carrier();
 	private paymentType: string = 'card';
+	private firstName: string = '';
 	//-----------------------------------------------------------------------------
 	constructor( private router: Router, 
 		         private dataService: DataService ) {

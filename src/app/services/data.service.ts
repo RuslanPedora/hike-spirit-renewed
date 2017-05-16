@@ -22,6 +22,7 @@ export class DataService {
 	private hostUrl: string;
 	private categoryUrl: string;
 	private itemUrl: string;
+	private newItemUrl: string;
 	private carrierUrl: string;
 	private itemPropertiesUrl: string;
 	//-----------------------------------------------------------------------------
@@ -42,6 +43,7 @@ export class DataService {
 		}
 		this.categoryUrl = this.hostUrl + '/getCategoryList';
 		this.itemUrl = this.hostUrl + '/getItemList';
+		this.newItemUrl = this.hostUrl + '/getNewItemList';
 		this.carrierUrl = this.hostUrl + '/getCarrierList';
 		this.itemPropertiesUrl = this.hostUrl + '/getItemProperties';
 
@@ -96,7 +98,7 @@ export class DataService {
     	catch( error ) {    		
     	}    	
     	this.basketEventEmitter.next( '' );
-    	return;
+    	
     	restoredValue = this.localStorageService.get( 'hs_compareList' );
     	try {
     		this.compareItems = JSON.parse( restoredValue );
@@ -193,6 +195,18 @@ export class DataService {
 		           .toPromise()
 		           .then( 
 		           		response => response.json() as ItemProperty[]
+		           	)
+		           .catch( 
+		           		error => 
+		           			console.log( error )
+		           	);
+	}	
+	//-----------------------------------------------------------------------------
+	getNewItemList(): Promise<Item[]> {
+		return this.http.get( this.newItemUrl )
+		           .toPromise()
+		           .then( 
+		           		response => response.json() as Item[]
 		           	)
 		           .catch( 
 		           		error => 
