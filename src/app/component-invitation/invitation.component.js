@@ -31,11 +31,15 @@ var InvitationComponent = (function () {
     };
     //-----------------------------------------------------------------------------
     InvitationComponent.prototype.gotoItemList = function (selectedCategory) {
-        this.router.navigate(['/item-list'], { queryParams: { category: selectedCategory.id } });
+        var parObject = {};
+        parObject['category' + this.dataService.getItemPrefix()] = selectedCategory.id;
+        this.router.navigate(['/item-list'], { queryParams: parObject });
     };
     //-----------------------------------------------------------------------------
     InvitationComponent.prototype.gotoItem = function (selectedItem) {
-        this.router.navigate(['/item'], { queryParams: { itemId: selectedItem.id } });
+        var parObject = {};
+        parObject['id' + this.dataService.getItemPrefix()] = selectedItem.id;
+        this.router.navigate(['/item'], { queryParams: parObject });
     };
     //-----------------------------------------------------------------------------
     InvitationComponent.prototype.onResize = function (event) {

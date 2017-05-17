@@ -30,7 +30,7 @@ var ItemComponent = (function () {
     ItemComponent.prototype.ngOnInit = function () {
         var _this = this;
         this.activatedRoute.queryParams.subscribe(function (queryParams) {
-            var itemId = queryParams['itemId'];
+            var itemId = queryParams['id' + _this.dataService.getItemPrefix()];
             if (itemId != undefined) {
                 _this.getItem(Number.parseInt(itemId));
                 _this.getItemProperties(Number.parseInt(itemId));

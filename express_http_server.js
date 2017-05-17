@@ -351,10 +351,11 @@ function itemListResponse( request, response ) {
         \
         LEFT JOIN categories\
         ON items.categoryId = categories.id) as itemSelection\
-      conditionInjection';
+      conditionInjection\
+      ORDER BY name';
 
     conditionInjection = constructSQLCondition( decodeQuotes( queryInputString ), ITEM_TABLE_PREFIX );
-
+    conditionInjection = conditionInjection.replace( 'AND (searchId', 'OR (id' );
     querySQL = querySQL.replace( 'conditionInjection', conditionInjection );
 
     makeResponseOnDBData( querySQL, request, response, imageListBinder );

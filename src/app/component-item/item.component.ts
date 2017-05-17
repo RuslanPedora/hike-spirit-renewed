@@ -42,7 +42,7 @@ export class ItemComponent implements OnInit {
 	ngOnInit() {
 		this.activatedRoute.queryParams.subscribe(
 			queryParams => {				
-				let itemId = queryParams [ 'itemId' ];
+				let itemId = queryParams [ 'id' + this.dataService.getItemPrefix() ];
 				if( itemId != undefined ) {
 					this.getItem( Number.parseInt( itemId ) );
 					this.getItemProperties( Number.parseInt( itemId ) );

@@ -1,4 +1,37 @@
 <div id='itemList' class='glOverlay'>
+	<div id='sortingBar' class='glBgGrey'>
+		Sorted by:
+		<select #sortingValue value='nameUp' (change)='sortItemList(sortingValue.value)'>
+			<option value='nameUp' class='glBGGreenHover'>
+				<span>&#xf160;</span>
+				Name
+			</option>
+			<option value='nameDown'>
+				&#xf161;
+				Name
+			</option>
+			<option value='priceUp'>
+				&#xf160;
+				Price
+			</option>
+			<option value='priceDown'>
+				&#xf161;
+				Price
+			</option>
+			<option value='rateUp'>
+				&#xf160;
+				Rate
+			</option>
+			<option value='rateDown'>
+				&#xf161;
+				Rate
+			</option>
+		</select>
+	</div>
+	<div id='emptyListMessage' *ngIf='itemList.length==0'>
+		Unfortunately nothing was find according to your request please try another criteria
+		<i class='fa-meh-o'></i>
+	</div>
 	<div *ngFor='let item of itemList;let i = index;' class='itemWrapper'>
 		<div class='itemInner glBgWhite' style.animationDelay='{{i/20}}s'>
 			<div class='fixedInner'>

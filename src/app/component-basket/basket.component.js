@@ -62,7 +62,9 @@ var BasketComponent = (function () {
     };
     //-----------------------------------------------------------------------------
     BasketComponent.prototype.gotoItem = function (selectedItem) {
-        this.router.navigate(['/item'], { queryParams: { itemId: selectedItem.id } });
+        var parObject = {};
+        parObject['id' + this.dataService.getItemPrefix()] = selectedItem.id;
+        this.router.navigate(['/item'], { queryParams: parObject });
     };
     //-----------------------------------------------------------------------------
     BasketComponent.prototype.postOrder = function () {

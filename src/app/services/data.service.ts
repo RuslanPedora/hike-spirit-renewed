@@ -26,6 +26,8 @@ export class DataService {
 	private carrierUrl: string;
 	private itemPropertiesUrl: string;
 	//-----------------------------------------------------------------------------
+	private itemPrefix: string = '_IT';
+	//-----------------------------------------------------------------------------
 	private lastViewItems: Item[] = [];
 	private maxViewItems: number = 5;
 	private compareItems: Item[] = [];
@@ -244,6 +246,10 @@ export class DataService {
 	//-----------------------------------------------------------------------------
 	getLastViewedItems(): Item[] {
 		return this.lastViewItems;
+	}
+	//-----------------------------------------------------------------------------
+	getItemPrefix(): string {
+		return this.itemPrefix
 	}
 	//-----------------------------------------------------------------------------
 }

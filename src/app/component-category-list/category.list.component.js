@@ -25,7 +25,9 @@ var CategoryListComponent = (function () {
     };
     //-----------------------------------------------------------------------------
     CategoryListComponent.prototype.gotoItemList = function (selectedCategory) {
-        this.router.navigate(['/item-list'], { queryParams: { category: selectedCategory.id } });
+        var parObject = {};
+        parObject['category' + this.dataService.getItemPrefix()] = selectedCategory.id;
+        this.router.navigate(['/item-list'], { queryParams: parObject });
     };
     return CategoryListComponent;
 }());

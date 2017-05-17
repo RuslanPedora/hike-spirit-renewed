@@ -24,7 +24,9 @@ var CompareItems = (function () {
     };
     //-----------------------------------------------------------------------------
     CompareItems.prototype.gotoItem = function (selectedItem) {
-        this.router.navigate(['/item'], { queryParams: { itemId: selectedItem.id } });
+        var parObject = {};
+        parObject['id' + this.dataService.getItemPrefix()] = selectedItem.id;
+        this.router.navigate(['/item'], { queryParams: parObject });
     };
     return CompareItems;
 }());

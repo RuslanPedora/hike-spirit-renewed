@@ -25,7 +25,10 @@ export class CategoryListComponent implements OnInit {
 	}
 	//-----------------------------------------------------------------------------
 	gotoItemList( selectedCategory: Category ) {
-		this.router.navigate( [ '/item-list' ], { queryParams: { category: selectedCategory.id } } );
+		let parObject = {};
+		parObject[ 'category' + this.dataService.getItemPrefix() ] = selectedCategory.id;
+		this.router.navigate( [ '/item-list' ], { queryParams: parObject } );
+
 	}
 	//-----------------------------------------------------------------------------
 }

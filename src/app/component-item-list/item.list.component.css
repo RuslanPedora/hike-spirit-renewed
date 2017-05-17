@@ -1,6 +1,26 @@
 #itemList {
 	min-height: 100vh;
 }
+#sortingBar {
+	/*border-bottom: 1px solid #D7D7D7;	*/
+	padding: 7px;	
+	text-align: left;
+	color: white;
+	font-size: 15px;
+	color: #888888;
+}
+#sortingBar select {
+	padding: 3px;
+	background-color:#2E2E2E;
+	border: 1px solid #2E2E2E;	
+	font-family: 'FontAwesome', 'sans-serif';
+	font-size: 15px;
+	color: white;
+	outline: none;
+}	
+#emptyListMessage {
+	padding: 10px;
+}
 .itemWrapper {
 	width: 24.8%;
 	padding-top: 25%;

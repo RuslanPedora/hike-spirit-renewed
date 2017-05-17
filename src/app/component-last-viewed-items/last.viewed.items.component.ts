@@ -25,7 +25,9 @@ export class LastViewedItems implements OnInit {
 	}
 	//-----------------------------------------------------------------------------
 	gotoItem( selectedItem: Item ) {
-		this.router.navigate( [ '/item' ], { queryParams: { itemId: selectedItem.id } } );
+		let parObject = {};
+		parObject[ 'id' + this.dataService.getItemPrefix() ] = selectedItem.id;		
+		this.router.navigate( [ '/item' ], { queryParams: parObject } );
 	}
 	//-----------------------------------------------------------------------------
 }

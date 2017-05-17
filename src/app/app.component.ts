@@ -80,4 +80,18 @@ export class ApplicationComponent implements OnInit {
    subscribe(): void {
         alert( 'You have subscribed' );   		
    }
+   //-----------------------------------------------------------------------------
+   searchItem( searchKey: string ): void {
+		let parObject = {};
+		let keyAsNumber: any;
+		parObject[ 'name' + this.dataService.getItemPrefix() ] = searchKey;
+		
+		keyAsNumber = Number.parseInt( searchKey );
+		if( !isNaN( keyAsNumber ) )
+			parObject[ 'searchId' + this.dataService.getItemPrefix() ] = searchKey;
+		if( searchKey == '' )
+			this.router.navigate( [ '/item-list' ] );
+		else	
+			this.router.navigate( [ '/item-list' ], { queryParams: parObject } );
+   }
 }

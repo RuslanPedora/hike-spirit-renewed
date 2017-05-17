@@ -73,6 +73,19 @@ var ApplicationComponent = (function () {
     ApplicationComponent.prototype.subscribe = function () {
         alert('You have subscribed');
     };
+    //-----------------------------------------------------------------------------
+    ApplicationComponent.prototype.searchItem = function (searchKey) {
+        var parObject = {};
+        var keyAsNumber;
+        parObject['name' + this.dataService.getItemPrefix()] = searchKey;
+        keyAsNumber = Number.parseInt(searchKey);
+        if (!isNaN(keyAsNumber))
+            parObject['searchId' + this.dataService.getItemPrefix()] = searchKey;
+        if (searchKey == '')
+            this.router.navigate(['/item-list']);
+        else
+            this.router.navigate(['/item-list'], { queryParams: parObject });
+    };
     return ApplicationComponent;
 }());
 ApplicationComponent = __decorate([

@@ -35,11 +35,15 @@ export class InvitationComponent implements OnInit {
 	}
 	//-----------------------------------------------------------------------------
 	gotoItemList( selectedCategory: Category ) {
-		this.router.navigate( [ '/item-list' ], { queryParams: { category: selectedCategory.id } } );
+		let parObject = {};
+		parObject[ 'category' + this.dataService.getItemPrefix() ] = selectedCategory.id;
+		this.router.navigate( [ '/item-list' ], { queryParams: parObject } );
 	}
 	//-----------------------------------------------------------------------------
 	gotoItem( selectedItem: Item ): void {
-		this.router.navigate( [ '/item' ], { queryParams: { itemId: selectedItem.id } } );
+		let parObject = {};
+		parObject[ 'id' + this.dataService.getItemPrefix() ] = selectedItem.id;		
+		this.router.navigate( [ '/item' ], { queryParams: parObject } );
 	}
 	//-----------------------------------------------------------------------------
 	onResize( event: any ){

@@ -1,8 +1,9 @@
 import { Component, 
-	     OnInit }       from '@angular/core';
-import { Router }       from '@angular/router';
+	     OnInit }         from '@angular/core';
+import { Router,
+		 ActivatedRoute } from '@angular/router';
 
-import { DataService } from 'hs_services/data.service';
+import { DataService }    from 'hs_services/data.service';
 
 import { Item }     from 'hs_core/item';
 import { Image }    from 'hs_core/image';
@@ -19,12 +20,33 @@ export class ItemListComponent implements OnInit {
 	itemList: Item[] = [];
 	//-----------------------------------------------------------------------------
 	constructor( private router: Router,
+				 private activatedRoute: ActivatedRoute,
 				 private dataService: DataService ) {
 	}
 	//-----------------------------------------------------------------------------
 	ngOnInit() {
-		this.dataService.getItemList( '' ).then( itemList => { this.itemList = itemList;
-			                                                   this.dataService.converRate( this.itemList );
+
+		this.activatedRoute.queryParams.subscribe( queryParams => this.getItemList( queryParams ) );		
+
+
+	}
+	//-----------------------------------------------------------------------------
+	getItemList( params: any ): void {
+		let queryString: string = '';
+		let queryObject = {};
+		let tempItemList: Item[] = [];
+		let paramName: string;
+
+		for( paramName in params ) {
+			if( paramName.indexOf( 'category' ) < 0 )
+				queryObject[ paramName ] = params[ paramName ];
+		}
+		if( Object.keys( queryObject ).length > 0 )
+			queryString = '/?' + JSON.stringify( queryObject );
+
+		this.dataService.getItemList( queryString ).then( itemList => { tempItemList = itemList;
+			                                                   this.dataService.converRate( tempItemList );
+			                                                   this.itemList = tempItemList;
 		} );
 	}
 	//-----------------------------------------------------------------------------
@@ -50,11 +72,41 @@ export class ItemListComponent implements OnInit {
 	}
 	//-----------------------------------------------------------------------------
 	gotoItem( selectedItem: Item ): void {
-		this.router.navigate( [ '/item' ], { queryParams: { itemId: selectedItem.id } } );
+		let parObject = {};
+		parObject[ 'id' + this.dataService.getItemPrefix() ] = selectedItem.id;		
+		this.router.navigate( [ '/item' ], { queryParams: parObject } );
 	}
 	//-----------------------------------------------------------------------------
 	buyItem( selectedItem: Item ): void {
 		this.dataService.addItemToBasket( selectedItem );
+	}
+	//-----------------------------------------------------------------------------
+	sortItemList( sortKey: string ): void {
+		this.itemList.sort( this[ sortKey ] );
+	}
+	//-----------------------------------------------------------------------------
+	nameUp( a: Item, b: Item ): number {
+		return ( a.name < b.name ? -1 : 1 );
+	}
+	//-----------------------------------------------------------------------------
+	nameDown( a: Item, b: Item ): number {
+		return ( a.name > b.name ? -1 : 1 );
+	}
+	//-----------------------------------------------------------------------------
+	priceUp( a: Item, b: Item ): number {
+		return ( a.discountPrice < b.discountPrice ? -1 : 1 );
+	}
+	//-----------------------------------------------------------------------------
+	priceDown( a: Item, b: Item ): number {
+		return ( a.discountPrice > b.discountPrice ? -1 : 1 );
+	}
+	//-----------------------------------------------------------------------------
+	rateUp( a: Item, b: Item ): number {
+		return ( a.rate < b.rate ? -1 : 1 );
+	}
+	//-----------------------------------------------------------------------------
+	rateDown( a: Item, b: Item ): number {
+		return ( a.rate > b.rate ? -1 : 1 );
 	}
 	//-----------------------------------------------------------------------------
 }

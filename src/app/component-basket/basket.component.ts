@@ -63,7 +63,9 @@ export class BasketComponent implements OnInit {
 	}
 	//-----------------------------------------------------------------------------
 	gotoItem( selectedItem: Item ): void {
-		this.router.navigate( [ '/item' ], { queryParams: { itemId: selectedItem.id } } );
+		let parObject = {};
+		parObject[ 'id' + this.dataService.getItemPrefix() ] = selectedItem.id;		
+		this.router.navigate( [ '/item' ], { queryParams: parObject } );
 	}
 	//-----------------------------------------------------------------------------
 	postOrder(): void {

@@ -20,6 +20,8 @@ var DataService = (function () {
         this.http = http;
         this.localStorageService = localStorageService;
         //-----------------------------------------------------------------------------
+        this.itemPrefix = '_IT';
+        //-----------------------------------------------------------------------------
         this.lastViewItems = [];
         this.maxViewItems = 5;
         this.compareItems = [];
@@ -212,6 +214,10 @@ var DataService = (function () {
     //-----------------------------------------------------------------------------
     DataService.prototype.getLastViewedItems = function () {
         return this.lastViewItems;
+    };
+    //-----------------------------------------------------------------------------
+    DataService.prototype.getItemPrefix = function () {
+        return this.itemPrefix;
     };
     return DataService;
 }());

@@ -1,20 +1,25 @@
 <!-- ################################################################################ -->
 <div id='panelDiv' class='glOverlay'>
-	<img id='logoImage' src='images/logo.jpg'>
-	<div id='contactBar'>
-		(232) 000-0000,(232) 000-0000, Lviv, street 5/1 0000/000
+	<div id='logoWrapper'>
+		<img id='logoImage' src='images/logo.jpg'>
 	</div>
-	<div id='searchBar'>
-		<input type='text' placeholder='search term...'>
-		<i class='fa fa-search glClickable'></i>
-	</div> 	
-	<div id='basketBar' class='glClickable' (click)='gotoBasket()'>
-		<ng-container *ngIf='total>0'>
-			<span>{{total.toFixed(2)}}$</span>
-		</ng-container>
-		<i class='fa fa-shopping-cart glCGreenHover' *ngIf='total==0'></i>
-		<i class='fa fa-cart-arrow-down glCGreenHover' *ngIf='total>0'></i>
-	</div>
+	<div id='additionalWrapper'>
+		<div id='contactBar'>
+			(232) 456-43-23,(232) 456-36-86, Lviv, Vyhovsky street 79/1, 79049/555
+		</div>
+		<br>
+		<div id='searchBar'>
+			<input type='text' placeholder='Search term...' #searchKey>
+			<i class='fa fa-search glClickable' (click)='searchItem(searchKey.value)'></i>
+		</div>
+		<div id='basketBar' class='glClickable' (click)='gotoBasket()'>
+			<ng-container *ngIf='total>0'>
+				<span>{{total.toFixed(2)}}$</span>
+			</ng-container>
+			<i class='fa fa-shopping-cart glCGreenHover' *ngIf='total==0'></i>
+			<i class='fa fa-cart-arrow-down glCGreenHover' *ngIf='total>0'></i>
+		</div>
+	</div>	
  </div>
 <!-- ################################################################################ -->
 <div id='outlerDiv'>
@@ -29,15 +34,15 @@
 	      <ul id="contactList">
 	        <li><i class="fa fa-map-marker"></i>
 	          <address>
-	          	 Lviv, street 5/1 0000/000
+	          	 Lviv, Vyhovsky street 79/1, 79049/555
 	          </address>
 	        </li>
 	        <li><i class="fa fa-phone"></i>
-	        	+00 (232) 000 0000<br>
-	            +00 (232) 000 0000
+	        	+08 (232) 456-43-23<br>
+	            +08 (232) 456-36-86
 	        </li>
 	        <li><i class="fa fa-fax"></i>
-	            +00 (232) 000 0000
+	            +08 (232) 456-36-86
 	        </li>
 	        <li><i class="fa fa-envelope-o"></i>
 	        	hike.spirit@gmail.com

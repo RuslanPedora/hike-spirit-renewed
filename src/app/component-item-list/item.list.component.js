@@ -13,17 +13,34 @@ var router_1 = require("@angular/router");
 var data_service_1 = require("hs_services/data.service");
 var ItemListComponent = (function () {
     //-----------------------------------------------------------------------------
-    function ItemListComponent(router, dataService) {
+    function ItemListComponent(router, activatedRoute, dataService) {
         this.router = router;
+        this.activatedRoute = activatedRoute;
         this.dataService = dataService;
         this.itemList = [];
     }
     //-----------------------------------------------------------------------------
     ItemListComponent.prototype.ngOnInit = function () {
         var _this = this;
-        this.dataService.getItemList('').then(function (itemList) {
-            _this.itemList = itemList;
-            _this.dataService.converRate(_this.itemList);
+        this.activatedRoute.queryParams.subscribe(function (queryParams) { return _this.getItemList(queryParams); });
+    };
+    //-----------------------------------------------------------------------------
+    ItemListComponent.prototype.getItemList = function (params) {
+        var _this = this;
+        var queryString = '';
+        var queryObject = {};
+        var tempItemList = [];
+        var paramName;
+        for (paramName in params) {
+            if (paramName.indexOf('category') < 0)
+                queryObject[paramName] = params[paramName];
+        }
+        if (Object.keys(queryObject).length > 0)
+            queryString = '/?' + JSON.stringify(queryObject);
+        this.dataService.getItemList(queryString).then(function (itemList) {
+            tempItemList = itemList;
+            _this.dataService.converRate(tempItemList);
+            _this.itemList = tempItemList;
         });
     };
     //-----------------------------------------------------------------------------
@@ -48,11 +65,41 @@ var ItemListComponent = (function () {
     };
     //-----------------------------------------------------------------------------
     ItemListComponent.prototype.gotoItem = function (selectedItem) {
-        this.router.navigate(['/item'], { queryParams: { itemId: selectedItem.id } });
+        var parObject = {};
+        parObject['id' + this.dataService.getItemPrefix()] = selectedItem.id;
+        this.router.navigate(['/item'], { queryParams: parObject });
     };
     //-----------------------------------------------------------------------------
     ItemListComponent.prototype.buyItem = function (selectedItem) {
         this.dataService.addItemToBasket(selectedItem);
+    };
+    //-----------------------------------------------------------------------------
+    ItemListComponent.prototype.sortItemList = function (sortKey) {
+        this.itemList.sort(this[sortKey]);
+    };
+    //-----------------------------------------------------------------------------
+    ItemListComponent.prototype.nameUp = function (a, b) {
+        return (a.name < b.name ? -1 : 1);
+    };
+    //-----------------------------------------------------------------------------
+    ItemListComponent.prototype.nameDown = function (a, b) {
+        return (a.name > b.name ? -1 : 1);
+    };
+    //-----------------------------------------------------------------------------
+    ItemListComponent.prototype.priceUp = function (a, b) {
+        return (a.discountPrice < b.discountPrice ? -1 : 1);
+    };
+    //-----------------------------------------------------------------------------
+    ItemListComponent.prototype.priceDown = function (a, b) {
+        return (a.discountPrice > b.discountPrice ? -1 : 1);
+    };
+    //-----------------------------------------------------------------------------
+    ItemListComponent.prototype.rateUp = function (a, b) {
+        return (a.rate < b.rate ? -1 : 1);
+    };
+    //-----------------------------------------------------------------------------
+    ItemListComponent.prototype.rateDown = function (a, b) {
+        return (a.rate > b.rate ? -1 : 1);
     };
     return ItemListComponent;
 }());
@@ -64,6 +111,7 @@ ItemListComponent = __decorate([
         styleUrls: ['./item.list.component.css'],
     }),
     __metadata("design:paramtypes", [router_1.Router,
+        router_1.ActivatedRoute,
         data_service_1.DataService])
 ], ItemListComponent);
 exports.ItemListComponent = ItemListComponent;

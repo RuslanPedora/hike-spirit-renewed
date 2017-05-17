@@ -1,24 +1,38 @@
 #panelDiv {
 	max-width: 1000px;
 	margin: auto;
+	padding: 10px;
 	/*border: 1px solid white;*/
 	text-align: left;
 	vertical-align: top;
+	/*border-bottom: 1px solid #D7D7D7;	*/
+}
+#logoWrapper {
+	/*border: 1px solid;*/
+	display: inline-block;	
+	float: left;
 }
 #logoImage {
 	margin: 5px;	
-	height: 70px;
+	width: 200px;
+	height: 100px;	
 	border-radius: 5px;
 }
+#additionalWrapper {
+	/*border: 1px solid;*/
+	height: 115px;
+}
 #contactBar {
-	margin-top: 5px;
+	height: 69px;
 	padding: 5px;
+	margin-left: 15px;
 	display: inline-block;
-	vertical-align: top;
+	text-align: right;
+	word-break: break-all;
 	/*border: 1px solid white;*/
 }
 #searchBar {
-	margin: 3px;
+	margin: 3px 3px 3px 15px;
 	padding: 5px;
 	display: inline-block;
 	border: 1px solid white;
@@ -34,6 +48,12 @@
 #searchBar ::-webkit-input-placeholder {
   color: #FFFFFF;
 }
+#searchBar i {
+	transition: color .5s;
+}
+#searchBar i:hover {
+	transform: scale(1.1);
+}	
 #basketBar {
 	display: inline-block;
 	/*border: 1px solid white;*/
