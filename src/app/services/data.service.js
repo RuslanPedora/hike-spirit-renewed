@@ -39,6 +39,7 @@ var DataService = (function () {
         this.newItemUrl = this.hostUrl + '/getNewItemList';
         this.carrierUrl = this.hostUrl + '/getCarrierList';
         this.itemPropertiesUrl = this.hostUrl + '/getItemProperties';
+        this.comparedPropertiesUrl = this.hostUrl + '/getComparedProperties';
         this.restoreFromLocalStorage();
     }
     //-----------------------------------------------------------------------------
@@ -186,6 +187,15 @@ var DataService = (function () {
         });
     };
     //-----------------------------------------------------------------------------
+    DataService.prototype.getComparedProperties = function (query) {
+        return this.http.get(this.comparedPropertiesUrl + query)
+            .toPromise()
+            .then(function (response) { return response.json(); })
+            .catch(function (error) {
+            return console.log(error);
+        });
+    };
+    //-----------------------------------------------------------------------------
     DataService.prototype.addToComapreItem = function (item) {
         var index;
         if (this.compareItems.findIndex(function (element) { return element.id == item.id; }) >= 0)
@@ -195,6 +205,10 @@ var DataService = (function () {
         }
         this.compareItems.push(item);
         this.localStorageService.set('hs_compareList', JSON.stringify(this.compareItems));
+    };
+    //-----------------------------------------------------------------------------
+    DataService.prototype.removeToCompareList = function (item) {
+        this.compareItems = this.compareItems.filter(function (element) { return element.id != item.id; });
     };
     //-----------------------------------------------------------------------------
     DataService.prototype.getCompareList = function () {

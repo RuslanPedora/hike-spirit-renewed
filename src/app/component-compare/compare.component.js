@@ -13,20 +13,100 @@ var router_1 = require("@angular/router");
 var data_service_1 = require("hs_services/data.service");
 var CompareItems = (function () {
     //-----------------------------------------------------------------------------
-    function CompareItems(router, dataService) {
+    function CompareItems(router, activatedRoute, dataService) {
         this.router = router;
+        this.activatedRoute = activatedRoute;
         this.dataService = dataService;
         this.compareItems = [];
+        this.compareProperties = [];
+        this.collapse = true;
+        this.compared = false;
     }
     //-----------------------------------------------------------------------------
     CompareItems.prototype.ngOnInit = function () {
+        var _this = this;
         this.compareItems = this.dataService.getCompareList();
+        this.activatedRoute.queryParams.subscribe(function (queryParams) {
+            var collapse = queryParams['collapse'];
+            _this.collapse = (collapse == undefined);
+        });
     };
     //-----------------------------------------------------------------------------
-    CompareItems.prototype.gotoItem = function (selectedItem) {
+    CompareItems.prototype.processItem = function (selectedItem) {
         var parObject = {};
-        parObject['id' + this.dataService.getItemPrefix()] = selectedItem.id;
-        this.router.navigate(['/item'], { queryParams: parObject });
+        if (this.collapse) {
+            parObject['collapse'] = false;
+            this.router.navigate(['/compare-items'], { queryParams: parObject });
+        }
+        else {
+            parObject['id' + this.dataService.getItemPrefix()] = selectedItem.id;
+            this.router.navigate(['/item'], { queryParams: parObject });
+        }
+    };
+    //-----------------------------------------------------------------------------
+    CompareItems.prototype.removeItem = function (selectedItem) {
+        this.dataService.removeToCompareList(selectedItem);
+        this.compareItems = this.dataService.getCompareList();
+        this.compared = false;
+    };
+    //-----------------------------------------------------------------------------
+    CompareItems.prototype.compare = function () {
+        var _this = this;
+        var queryString;
+        var tempList = [];
+        var itemId;
+        var propertyName = '';
+        var propertyValues = [];
+        var tempArray = [];
+        queryString = '/?' + JSON.stringify({ id: this.compareItems.map(function (element) { return element.id; }) });
+        this.dataService.getComparedProperties(queryString).then(function (dataList) {
+            tempList = dataList;
+            var _loop_1 = function (i) {
+                itemId = _this.compareItems[i].id;
+                dataList.forEach(function (element) {
+                    if (element.itemId == itemId)
+                        element['sortKey'] = i;
+                });
+            };
+            for (var i in _this.compareItems) {
+                _loop_1(i);
+            }
+            dataList.sort(_this.comparator);
+            _this.compareProperties = [];
+            for (var i in dataList) {
+                if (propertyName != dataList[i].propertyName) {
+                    if (propertyName != '') {
+                        tempArray = [];
+                        tempArray.push(propertyName);
+                        for (var j in propertyValues) {
+                            tempArray.push(propertyValues[j]);
+                        }
+                        _this.compareProperties.push(tempArray);
+                    }
+                    propertyValues = [];
+                    propertyName = dataList[i].propertyName;
+                }
+                propertyValues.push(dataList[i].value);
+            }
+            if (propertyName != '') {
+                tempArray = [];
+                tempArray.push(propertyName);
+                for (var j in propertyValues) {
+                    tempArray.push(propertyValues[j]);
+                }
+                _this.compareProperties.push(tempArray);
+            }
+        });
+        this.compared = true;
+    };
+    //-----------------------------------------------------------------------------
+    CompareItems.prototype.comparator = function (a, b) {
+        if (a.propertyName < b.propertyName)
+            return -1;
+        else if (a.propertyName > b.propertyName)
+            return 1;
+        else
+            return (a.sortKey < b.sortKey ? -1 : 1);
     };
     return CompareItems;
 }());
@@ -38,6 +118,7 @@ CompareItems = __decorate([
         styleUrls: ['./compare.component.css'],
     }),
     __metadata("design:paramtypes", [router_1.Router,
+        router_1.ActivatedRoute,
         data_service_1.DataService])
 ], CompareItems);
 exports.CompareItems = CompareItems;

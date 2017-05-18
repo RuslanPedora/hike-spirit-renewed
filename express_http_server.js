@@ -36,6 +36,8 @@ appExpress.get( "/getItemList", itemListResponse );
 appExpress.get( "/getNewItemList", newItemListResponse );
 appExpress.get( "/getItemProperties", itemPropertiesResponse );
 appExpress.get( "/getCarrierList", carrierListResponse );
+appExpress.get( "/getComparedProperties", comparePropertiesResponse );
+
 
 appExpress.post( "/order", orderResponse );
 
@@ -81,8 +83,7 @@ function orderResponse( request, response ) {
           passedObject = JSON.parse( passedObjectAsString );
         }
         catch ( error )  {
-          logRequest( error );
-          //serverSideError( request, response )
+          logRequest( error );          
         }
 
         querySQL = '\
@@ -231,6 +232,63 @@ function makeResponseOnDBData( querySQL, request, response, postProcessor ) {
       console.log( 'connection ended with error: ' + err );
     });
     logRequest( request.url, 'connection is closed' );
+}
+//-----------------------------------------------------------------------------
+function comparePropertiesResponse( request, response ) {
+    var querySQL = '';
+    var queryInputString = '';
+    var indexOfQueryString = '';
+    var queryObject = {};
+    var idArray = [];
+    var conditionInjection = '';
+    
+
+    indexOfQueryString = request.url.indexOf( '/?' );
+    if ( indexOfQueryString > 0 )
+      queryInputString = request.url.slice( indexOfQueryString + 2 , request.url.length );
+    else 
+      queryInputString = '';
+
+    queryObject = JSON.parse( decodeQuotes( queryInputString ) );
+    idArray = queryObject.id;
+
+    querySQL = 'SELECT * FROM carriers';
+
+    conditionInjection += ' WHERE ( ';
+    for( var i in idArray ) 
+        conditionInjection += ( i > 0 ? ' OR ' : '' ) + ' id = ' + idArray[ i ];
+    conditionInjection += ' ) ';
+
+
+    querySQL = 'SELECT allPares.propertyId AS propertyId,\
+                       allPares.propertyName AS propertyName,\
+                       allPares.itemId AS itemId,\
+                       propertyValues.value\
+                FROM\
+                ( SELECT propertyId, propertyName, itemIds.itemId\
+                  FROM\
+                  ( SELECT DISTINCT itemProperties.propertyId AS propertyId, properties.name AS propertyName\
+                    FROM itemProperties\
+                    INNER JOIN properties\
+                    ON itemProperties.propertyId = properties.id\
+                    propCondition\
+                  ) AS allProperties\
+                  INNER JOIN\
+                  ( SELECT id AS itemId FROM items conditionInjection ) AS itemIds\
+                  ON 1=1\
+                ) AS allPares\
+                LEFT JOIN\
+                ( SELECT * FROM itemProperties propCondition ) AS propertyValues\
+                ON allPares.itemId = propertyValues.itemId AND\
+                   allPares.propertyId = propertyValues.propertyId';
+
+    querySQL = querySQL.replace( new RegExp( 'conditionInjection', 'g' ), conditionInjection );
+    conditionInjection = conditionInjection.replace( new RegExp( 'id', 'g' ), 'itemId' );    
+    querySQL = querySQL.replace( new RegExp( 'propCondition', 'g' ), conditionInjection );
+
+    logRequest( request.url );    
+
+    makeResponseOnDBData( querySQL, request, response );
 }
 //-----------------------------------------------------------------------------
 function carrierListResponse( request, response ) {

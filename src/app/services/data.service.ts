@@ -25,6 +25,7 @@ export class DataService {
 	private newItemUrl: string;
 	private carrierUrl: string;
 	private itemPropertiesUrl: string;
+	private comparedPropertiesUrl: string;
 	//-----------------------------------------------------------------------------
 	private itemPrefix: string = '_IT';
 	//-----------------------------------------------------------------------------
@@ -48,6 +49,7 @@ export class DataService {
 		this.newItemUrl = this.hostUrl + '/getNewItemList';
 		this.carrierUrl = this.hostUrl + '/getCarrierList';
 		this.itemPropertiesUrl = this.hostUrl + '/getItemProperties';
+		this.comparedPropertiesUrl = this.hostUrl + '/getComparedProperties';
 
 		this.restoreFromLocalStorage();
 	}
@@ -214,7 +216,19 @@ export class DataService {
 		           		error => 
 		           			console.log( error )
 		           	);
-	}	
+	}		
+	//-----------------------------------------------------------------------------
+	getComparedProperties( query: string ): Promise<any[]> {
+		return this.http.get( this.comparedPropertiesUrl + query )
+		           .toPromise()
+		           .then( 
+		           		response => response.json()
+		           	)
+		           .catch( 
+		           		error => 
+		           			console.log( error )
+		           	);
+	}		
 	//-----------------------------------------------------------------------------
 	addToComapreItem( item: Item ): void {
 		let index: number;
@@ -226,6 +240,10 @@ export class DataService {
 		}
 		this.compareItems.push( item );
 		this.localStorageService.set( 'hs_compareList', JSON.stringify( this.compareItems ) );
+	}	
+	//-----------------------------------------------------------------------------
+	removeToCompareList( item: Item) {
+		this.compareItems = this.compareItems.filter( element => element.id != item.id );
 	}
 	//-----------------------------------------------------------------------------
 	getCompareList(): Item[] {

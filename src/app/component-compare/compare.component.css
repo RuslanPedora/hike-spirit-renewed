@@ -19,7 +19,43 @@
 .itemCompareImageDiv img {
 	max-width: 100%;
 	max-height: 100%;
+	z-index: 0;
 }
-#compareCaption {
+.compareCaption {
 	padding: 10px;
+}
+.removeI {
+	position: absolute;
+	padding: 2px;
+	font-size: 20px;
+	top: 5px;
+	right: 5px;
+	z-index: 1;
+}
+#copmareDiv {
+	min-height: 100vh;
+}
+#copmareDiv img {
+	border: 1px solid #D7D7D7;
+}
+#copmareDiv table {
+	margin: auto;
+	margin-bottom: 20px;
+	border-collapse: collapse;
+}
+#copmareDiv th, td {
+	padding: 10px;
+	border: 1px solid #D7D7D7;	
+	max-width: 190px;
+}
+#compareButtonDiv {
+	padding: 10px;
+}
+#compareButton {
+	transition: box-shadow .7s;	
+	margin-top: 10px;
+	margin-bottom: 15px;
+}
+#compareButton:hover {
+	box-shadow: 0px 3px 3px 3px #82A800;
 }
