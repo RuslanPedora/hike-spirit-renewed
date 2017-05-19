@@ -1,5 +1,8 @@
 #categoryList {
 	min-height: 100vh;
+	border-bottom: 1px solid #D7D7D7;	
+	border-top: 1px solid #D7D7D7;	
+	padding-top: 3px;
 }
 .categoryWrapper {
 	width: 50%;

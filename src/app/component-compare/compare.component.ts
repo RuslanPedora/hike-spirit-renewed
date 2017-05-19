@@ -101,7 +101,7 @@ export class CompareItems implements OnInit {
 		this.compared = true;
 	}
 	//-----------------------------------------------------------------------------
-	comparator( a, b ): number {
+	comparator( a: any, b: any ): number {
 		if( a.propertyName < b.propertyName )
 			return -1;
 		else if( a.propertyName > b.propertyName )
