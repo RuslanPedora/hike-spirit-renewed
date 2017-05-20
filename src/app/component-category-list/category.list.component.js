@@ -26,7 +26,7 @@ var CategoryListComponent = (function () {
     //-----------------------------------------------------------------------------
     CategoryListComponent.prototype.gotoItemList = function (selectedCategory) {
         var parObject = {};
-        parObject['category' + this.dataService.getItemPrefix()] = selectedCategory.id;
+        parObject['categoryId' + this.dataService.getItemPrefix()] = selectedCategory.id;
         this.router.navigate(['/item-list'], { queryParams: parObject });
     };
     return CategoryListComponent;

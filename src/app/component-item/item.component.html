@@ -61,9 +61,10 @@
 				<a href='http://youtube.com' target='_blank'><i class='fa fa-youtube glCGreen glClickable'></i></a>				
 			</div>
 			<div class='compareButton glBtn small glBgGreen glClickable' (click)='addToCompareItem()'>Compare +</div>
-			<compare-items></compare-items>
+			<compare-items id='smallCompareList'></compare-items>
 		</div>
 	</div>
+	<compare-items id='bigCompareList'></compare-items>
 	<ul id='viewList' class='glBgGrey'>
 		<li 
 			[ngClass]="{'glBGGreenHover':true,'glClickable':true,'glBgGreen':detailBlockIndex==0}"

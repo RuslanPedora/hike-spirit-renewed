@@ -18,30 +18,32 @@
 	<div id='compareButtonDiv' *ngIf='compareItems.length>0'>
 		<div id='compareButton' class='glBtn small glBgGreen glClickable' (click)='compare()'>Compare <i class='fa fa-spinner'></i></div>
 	</div>
-	<table *ngIf='compareItems.length>0&&compared'>
-		<tr>
-			<th>Name</th>
-			<th *ngFor='let item of compareItems;'>
-				{{item.name}}
-			</th>
-		</tr>		
-		<tr>
-			<td>Code</td>
-			<td *ngFor='let item of compareItems;'>
-				{{item.id}}
-			</td>
-		</tr>
-		<tr>
-			<td>Price</td>
-			<td *ngFor='let item of compareItems;'>
-				{{item.discountPrice.toFixed(2)}}$
-			</td>
-		</tr>
-		<tr *ngFor='let row of compareProperties;'>
-			<td *ngFor='let element of row;'>
-				{{element}}
-			</td>
-		</tr>
-	</table>	
+	<div id='compareTableWrapper'>
+		<table *ngIf='compareItems.length>0&&compared'>
+			<tr>
+				<th>Name</th>
+				<th *ngFor='let item of compareItems;'>
+					{{item.name}}
+				</th>
+			</tr>		
+			<tr>
+				<td>Code</td>
+				<td *ngFor='let item of compareItems;'>
+					{{item.id}}
+				</td>
+			</tr>
+			<tr>
+				<td>Price</td>
+				<td *ngFor='let item of compareItems;'>
+					{{item.discountPrice.toFixed(2)}}$
+				</td>
+			</tr>
+			<tr *ngFor='let row of compareProperties;'>
+				<td *ngFor='let element of row;'>
+					{{element}}
+				</td>
+			</tr>
+		</table>	
+	</div>	
 	<last-viewed-items></last-viewed-items>
 </div>

@@ -10,22 +10,56 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 };
 var core_1 = require("@angular/core");
 var router_1 = require("@angular/router");
+var common_1 = require("@angular/common");
 var data_service_1 = require("hs_services/data.service");
 var ApplicationComponent = (function () {
     //-----------------------------------------------------------------------------
-    function ApplicationComponent(router, dataService) {
+    function ApplicationComponent(router, activatedRoute, dataService, location) {
         this.router = router;
+        this.activatedRoute = activatedRoute;
         this.dataService = dataService;
+        this.location = location;
         this.total = 0;
+        this.categoryPath = [];
     }
     //-----------------------------------------------------------------------------
     ApplicationComponent.prototype.ngOnInit = function () {
         var _this = this;
-        this.routerListener = this.router.events.subscribe(this.resizeOutlet);
+        this.routerListener = this.router.events.subscribe(function (event) {
+            _this.categoryPath = [];
+            _this.resizeOutlet(event);
+        });
         this.basketListener = this.dataService.basketEventSource.subscribe(function (eventValue) {
             return _this.total = _this.dataService.getBasketTotal();
         });
+        this.pathListener = this.dataService.pathEventSource.subscribe(function (eventValue) {
+            return _this.categoryPath = eventValue;
+        });
+        this.activatedRoute.queryParams.subscribe(function (queryParams) {
+            var categoryIdPar = queryParams['categoryId' + _this.dataService.getItemPrefix()];
+            if (categoryIdPar != undefined) {
+                _this.dataService.buildPath({ id: Number.parseInt(categoryIdPar) });
+            }
+        });
         this.total = this.dataService.getBasketTotal();
+    };
+    //-----------------------------------------------------------------------------
+    ApplicationComponent.prototype.ngOnDestroy = function () {
+        this.routerListener.unsubscribe();
+        this.basketListener.unsubscribe();
+        this.pathListener.unsubscribe();
+    };
+    //-----------------------------------------------------------------------------
+    ApplicationComponent.prototype.goPath = function (pathElelement) {
+        var parObject = {};
+        if (pathElelement['mainImage'] != undefined) {
+            parObject['id' + this.dataService.getItemPrefix()] = pathElelement.id;
+            this.router.navigate(['/item'], { queryParams: parObject });
+        }
+        else {
+            parObject['categoryId' + this.dataService.getItemPrefix()] = pathElelement.id;
+            this.router.navigate(['/item-list'], { queryParams: parObject });
+        }
     };
     //-----------------------------------------------------------------------------
     ApplicationComponent.prototype.onResize = function (event) {
@@ -86,6 +120,18 @@ var ApplicationComponent = (function () {
         else
             this.router.navigate(['/item-list'], { queryParams: parObject });
     };
+    //-----------------------------------------------------------------------------
+    ApplicationComponent.prototype.scrollDown = function () {
+        window.scrollTo(0, document.body.scrollHeight);
+    };
+    //-----------------------------------------------------------------------------
+    ApplicationComponent.prototype.back = function () {
+        this.location.back();
+    };
+    //-----------------------------------------------------------------------------
+    ApplicationComponent.prototype.forwar = function () {
+        this.location.forward();
+    };
     return ApplicationComponent;
 }());
 ApplicationComponent = __decorate([
@@ -99,7 +145,9 @@ ApplicationComponent = __decorate([
         }
     }),
     __metadata("design:paramtypes", [router_1.Router,
-        data_service_1.DataService])
+        router_1.ActivatedRoute,
+        data_service_1.DataService,
+        common_1.Location])
 ], ApplicationComponent);
 exports.ApplicationComponent = ApplicationComponent;
 //# sourceMappingURL=app.component.js.map

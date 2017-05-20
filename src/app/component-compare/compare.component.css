@@ -38,10 +38,14 @@
 #copmareDiv img {
 	border: 1px solid #D7D7D7;
 }
+#compareTableWrapper {
+	overflow-x: auto;
+}
 #copmareDiv table {
 	margin: auto;
 	margin-bottom: 20px;
 	border-collapse: collapse;
+	min-width: 700px;
 }
 #copmareDiv th, td {
 	padding: 10px;

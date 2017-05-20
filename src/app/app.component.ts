@@ -1,10 +1,14 @@
 import { Component, 
-	     OnInit }         from '@angular/core';
+	     OnInit,
+	     OnDestroy }         from '@angular/core';
 import { Router,
 		 ActivatedRoute } from '@angular/router';
 import { Subscription }   from 'rxjs/Subscription';
+import { Location }       from '@angular/common';
 
 import { DataService } from 'hs_services/data.service';
+import { Item } from 'hs_core/item';
+import { Category } from 'hs_core/category';
 
 @Component({
 	moduleId: module.id,
@@ -16,22 +20,63 @@ import { DataService } from 'hs_services/data.service';
   	}	
 })
 //-----------------------------------------------------------------------------
-export class ApplicationComponent implements OnInit {
+export class ApplicationComponent implements OnInit, OnDestroy {
 	private routerListener: Subscription;
 	private basketListener: Subscription;
+	private pathListener: Subscription;
 	private total: number = 0;
+	private categoryPath: any[] = [];
 	//-----------------------------------------------------------------------------
 	constructor( private router: Router,
-				 private dataService: DataService ) {
+				 private activatedRoute: ActivatedRoute,
+				 private dataService: DataService,
+				 private location: Location ) {
 	}
 	//-----------------------------------------------------------------------------
 	ngOnInit() {
-		this.routerListener = this.router.events.subscribe( this.resizeOutlet );
+		this.routerListener = this.router.events.subscribe( event => {
+			this.categoryPath = [];
+			this.resizeOutlet( event );		
+		} );
 		this.basketListener = this.dataService.basketEventSource.subscribe(
 			                        	  eventValue => 
 			                               this.total = this.dataService.getBasketTotal()
 			                             );
+		this.pathListener = this.dataService.pathEventSource.subscribe (
+										  eventValue => 
+										   this.categoryPath = eventValue
+		)
+		this.activatedRoute.queryParams.subscribe(
+			queryParams => {				
+				let categoryIdPar = queryParams [ 'categoryId' + this.dataService.getItemPrefix() ];
+				if( categoryIdPar != undefined ) {
+					this.dataService.buildPath( { id: Number.parseInt( categoryIdPar ) } );
+				}
+			}
+		);				
+
+
+
 		this.total = this.dataService.getBasketTotal();
+	}
+	//-----------------------------------------------------------------------------
+	ngOnDestroy() {
+		this.routerListener.unsubscribe();
+		this.basketListener.unsubscribe();
+		this.pathListener.unsubscribe();
+	}
+	//-----------------------------------------------------------------------------
+	goPath( pathElelement: any ) {
+		let parObject = {};
+		if( pathElelement[ 'mainImage' ] != undefined ) {
+			parObject[ 'id' + this.dataService.getItemPrefix() ] = pathElelement.id;		
+			this.router.navigate( [ '/item' ], { queryParams: parObject } );
+		}
+		else {
+			parObject[ 'categoryId' + this.dataService.getItemPrefix() ] = pathElelement.id;		
+			this.router.navigate( [ '/item-list' ], { queryParams: parObject } );
+		}
+
 	}
 	//-----------------------------------------------------------------------------
 	onResize( event: any ): void {
@@ -75,13 +120,13 @@ export class ApplicationComponent implements OnInit {
    	//-----------------------------------------------------------------------------
    	scrollTop():void {
 	   	window.scrollTo( 0, 0 );
-   }
-   //-----------------------------------------------------------------------------
-   subscribe(): void {
-        alert( 'You have subscribed' );   		
-   }
-   //-----------------------------------------------------------------------------
-   searchItem( searchKey: string ): void {
+    }
+    //-----------------------------------------------------------------------------
+    subscribe(): void {
+         alert( 'You have subscribed' );   		
+    }
+    //-----------------------------------------------------------------------------
+    searchItem( searchKey: string ): void {
 		let parObject = {};
 		let keyAsNumber: any;
 		parObject[ 'name' + this.dataService.getItemPrefix() ] = searchKey;
@@ -93,5 +138,18 @@ export class ApplicationComponent implements OnInit {
 			this.router.navigate( [ '/item-list' ] );
 		else	
 			this.router.navigate( [ '/item-list' ], { queryParams: parObject } );
-   }
+    }
+ 	//-----------------------------------------------------------------------------
+ 	scrollDown(): void {
+ 		window.scrollTo( 0, document.body.scrollHeight );
+ 	}
+ 	//-----------------------------------------------------------------------------
+ 	back():void {
+		this.location.back();
+ 	}
+ 	//-----------------------------------------------------------------------------
+ 	forwar():void {
+		this.location.forward();
+ 	}
+	//-----------------------------------------------------------------------------
 }

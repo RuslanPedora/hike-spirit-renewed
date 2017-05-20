@@ -1,5 +1,6 @@
 #itemList {
 	min-height: 100vh;
+	text-align: left;
 }
 #sortingBar {
 	/*border-bottom: 1px solid #D7D7D7;	*/
@@ -28,6 +29,7 @@
 	margin-bottom: -2px;
 	display: inline-block;
 	position: relative;
+	text-align: center;
 }
 .itemInner {
 	width: 100%;
@@ -176,5 +178,26 @@
 .buyButton i {
 	font-size: 20px;
 }
-.itemWrapper:hover .buyButton {
+@media only screen and (max-width: 820px) {
+	.itemWrapper {
+		width: 33%;
+		padding-top: 33.33%;
+	}	
+}
+@media only screen and (max-width: 670px) {
+	.itemWrapper {
+		width: 49.5%;
+		padding-top: 50%;
+	}	
+}
+@media only screen and (max-width: 400px) {
+	.itemWrapper {
+		width: 100%;
+		padding-top: 100%;
+	}	
+	.itemWrapper:hover .itemInner {
+		width: 100%;
+		height: 105%;
+		left: 0%;
+	}	
 }

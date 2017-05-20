@@ -37,7 +37,7 @@ appExpress.get( "/getNewItemList", newItemListResponse );
 appExpress.get( "/getItemProperties", itemPropertiesResponse );
 appExpress.get( "/getCarrierList", carrierListResponse );
 appExpress.get( "/getComparedProperties", comparePropertiesResponse );
-
+appExpress.get( "/getCategoryPath", categoryPathResponse );
 
 appExpress.post( "/order", orderResponse );
 
@@ -209,6 +209,62 @@ function sendOrderEmail( orderNumber, orderData ) {
 
 
 }
+//-----------------------------------------------------------------------------
+function categoryPathResponse( request, response ) {
+    var querySQL = '';
+    var queryInputString = '';
+    var indexOfQueryString = '';
+    var queryObject = {};
+    var path =[];
+    var index = -1;
+    
+
+    indexOfQueryString = request.url.indexOf( '/?' );
+    if ( indexOfQueryString > 0 )
+      queryInputString = request.url.slice( indexOfQueryString + 2 , request.url.length );
+    else 
+      queryInputString = '';
+
+    queryObject = JSON.parse( decodeQuotes( queryInputString ) );
+
+    querySQL = 'SELECT categoryId, categories.name AS categoryName,\
+                       categories.image AS categoryImage,\
+                       parentId\
+                FROM categoryhierarchy\
+                INNER JOIN categories\
+                ON categoryId = id';
+
+    connection = mysql.createConnection( connetionData );
+    connection.connect();
+    connection.query( querySQL, function ( error, results, fields ) {
+                        if (error) { 
+                          logRequest( 'db connetion failed: ' + querySQL );
+                          logRequest( 'Error: ' + error );                          
+                          return;
+                        }
+                        element = results.find( function( element ) { 
+                            return element.categoryId == queryObject.categoryId; 
+                        } );
+                        
+                        while ( element != undefined ) {
+                            path.push( { 'id': element.categoryId, 'name': element.categoryName, 'image':  element.categoryImage } );
+                            element = results.find( function( neededElement ) { 
+                                      return neededElement.categoryId == element.parentId;
+                            } );
+                        }
+                        path.reverse();
+
+                        response.writeHead( 200, { 'Content-Type': 'text/plain' } );
+                        responseStr = JSON.stringify( path );                                                     
+                        response.end( responseStr );
+                        logRequest( request.url, 'itmes request processed' );
+                    });
+    connection.end( function( err ) {
+      console.log( 'connection ended with error: ' + err );
+    });
+
+
+} 
 //-----------------------------------------------------------------------------
 function makeResponseOnDBData( querySQL, request, response, postProcessor ) {
     connection = mysql.createConnection( connetionData );

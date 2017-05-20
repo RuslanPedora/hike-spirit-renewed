@@ -2,10 +2,10 @@
 	max-width: 1000px;
 	margin: auto;
 	padding: 10px;
-	/*border: 1px solid white;*/
+	/*border: 1px solid red;*/
 	text-align: left;
 	vertical-align: top;
-	/*border-bottom: 1px solid #D7D7D7;	*/
+	overflow: auto;
 }
 #logoWrapper {
 	/*border: 1px solid;*/
@@ -21,15 +21,33 @@
 #additionalWrapper {
 	/*border: 1px solid;*/
 	height: 115px;
+	word-break: break-all;
+	vertical-align: top;
 }
-#contactBar {
+#topBar {
 	height: 69px;
 	padding: 5px;
-	margin-left: 15px;
-	display: inline-block;
-	text-align: right;
-	word-break: break-all;
+	/*text-align: right;*/
 	/*border: 1px solid white;*/
+}
+#topBar a {
+	text-decoration: none;
+}	
+.navButton {
+	width: 170px;
+	color: white;
+	border: 1px solid;
+	padding: 5px 15px;
+	display: inline-block;
+	margin-left: 15px;
+	margin-top: 2px;
+	border-radius: 5px;
+	text-align: center;
+	transition: color .5s, background-color .5s;
+}
+.navButton i {
+	font-size: 15px;
+	/*font-weight: bold;	*/
 }
 #searchBar {
 	margin: 3px 3px 3px 15px;
@@ -37,13 +55,14 @@
 	display: inline-block;
 	border: 1px solid white;
 	border-radius: 5px;
-	vertical-align: middle;
+	vertical-align: top;
 }
-#searchBar input {
-	width: 300px;
+#searchBar input {	
 	background-color: inherit;
+	width: 318px;
 	color: #FFFFFF;
 	border: none;
+	vertical-align: top;
 }
 #searchBar ::-webkit-input-placeholder {
   color: #FFFFFF;
@@ -54,6 +73,12 @@
 #searchBar i:hover {
 	transform: scale(1.1);
 }	
+#searchBar button {
+	border: none;
+	outline: none;
+	background-color: transparent;
+	color: white;
+}
 #basketBar {
 	display: inline-block;
 	/*border: 1px solid white;*/
@@ -68,6 +93,20 @@
 #basketBar:hover i {
 	transform: scale( 1.15 );
 }	
+#pathDiv {
+	margin: auto;
+	max-width: 1000px;
+	padding: 10px;	
+	text-align: left;
+	border-bottom: 1px solid #D7D7D7;
+	transition: color .5s;
+}
+#pathDiv span:first-child span {
+	text-transform: capitalize;
+}
+.pathElementSpan {
+	transition: color .5s;
+}
 #outlerDiv {
 	width: 100%;
 	max-width: 100%;
@@ -299,3 +338,8 @@ h1, h2, h3, h4, h5, h6, { font-family:Georgia, "Times New Roman", Times, serif;}
 :host /deep/ .inspace-30{padding:30px;}
 :host /deep/ .inspace-50{padding:50px;}
 :host /deep/ .inspace-80{padding:80px;}
+@media only screen and (max-width: 500px) {
+	#basketBar {
+		float: none;
+	}
+}

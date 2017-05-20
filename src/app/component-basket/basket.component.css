@@ -1,6 +1,5 @@
 #basketDiv {
 	min-height: 100vh;
-	min-width: 600px;
 }
 #emptyRow {
 	padding: 10px;
@@ -8,8 +7,12 @@
 	background-color: rgb( 240,240,240);
 	color: #888888;	
 }
+#mainTableWrapper {
+	overflow: auto;
+}
 #mainTable {
-	border-collapse: collapse; 	
+	border-collapse: collapse; 		
+	min-width: 700px;
 }
 #mainTable tr {
 	background-color: rgb( 240,240,240);
@@ -50,7 +53,8 @@ form {
 .fieldDiv {
 	width: 29.333333%;
 	/*margin: -2px;*/
-	float:left; margin:0 0 0 3%;	
+	float:left;
+	margin:0 0 0 3%;	
 	padding-top: 10px;
 	padding-bottom: 10px;
 	/*margin: auto;*/
@@ -140,4 +144,37 @@ form textarea:focus {
 }
 .bottomBlock input {
 	/*float: right;*/
+}
+@media only screen and (max-width: 500px) {
+	.fieldDiv {
+		width: 100%;
+		float: none;
+		padding: 3%;
+		margin-left: 0%;
+	}
+	.fieldDiv input {
+		width: 94%;
+		margin-left: 0%; 
+	}
+	.fieldDiv label {
+		padding-left: 12px;
+	}	
+	.dataBlock {	
+		width: 100%;	
+		display: inline-block;
+		padding: 3%;
+		
+	}
+	#areaDiv {
+		padding: 3%;
+	}	
+	#areaDiv textarea {
+
+	}	
+	#addData th {
+		text-align: left;
+	}
+	#mainTable tr td img {
+		max-width: 150px;
+	}
 }

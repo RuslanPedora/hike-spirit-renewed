@@ -48,6 +48,7 @@ var ItemComponent = (function () {
             if (tempList.length > 0) {
                 _this.item = tempList[0];
                 _this.dataService.addToViewItem(_this.item);
+                _this.dataService.buildPath(_this.item);
                 if (_this.reEnter && _this.item.imageList.length > 0) {
                     _this.loupeFragment = _this.item.imageList[0].bigImage;
                     _this.mouseEntered = true;

@@ -26,6 +26,7 @@ export class DataService {
 	private carrierUrl: string;
 	private itemPropertiesUrl: string;
 	private comparedPropertiesUrl: string;
+	private categoryPathUrl: string;
 	//-----------------------------------------------------------------------------
 	private itemPrefix: string = '_IT';
 	//-----------------------------------------------------------------------------
@@ -37,6 +38,8 @@ export class DataService {
 	//-----------------------------------------------------------------------------
 	private basketEventEmitter = new Subject<string>(); 
 	basketEventSource: Observable<string> = this.basketEventEmitter.asObservable();
+	private pathEventEmitter = new Subject<any[]>(); 
+	pathEventSource: Observable<any[]> = this.pathEventEmitter.asObservable();
 	//-----------------------------------------------------------------------------
 	constructor( private http: Http,
 	             private localStorageService: LocalStorageService ) {
@@ -50,6 +53,7 @@ export class DataService {
 		this.carrierUrl = this.hostUrl + '/getCarrierList';
 		this.itemPropertiesUrl = this.hostUrl + '/getItemProperties';
 		this.comparedPropertiesUrl = this.hostUrl + '/getComparedProperties';
+		this.categoryPathUrl = this.hostUrl + '/getCategoryPath';
 
 		this.restoreFromLocalStorage();
 	}
@@ -244,6 +248,7 @@ export class DataService {
 	//-----------------------------------------------------------------------------
 	removeToCompareList( item: Item) {
 		this.compareItems = this.compareItems.filter( element => element.id != item.id );
+		this.localStorageService.set( 'hs_compareList', JSON.stringify( this.compareItems ) );
 	}
 	//-----------------------------------------------------------------------------
 	getCompareList(): Item[] {
@@ -268,6 +273,32 @@ export class DataService {
 	//-----------------------------------------------------------------------------
 	getItemPrefix(): string {
 		return this.itemPrefix
+	}
+	//-----------------------------------------------------------------------------
+	buildPath( parObject: any): void {
+		let query: string = '/?';
+		let pathArray: any[];
+		let categoryPath: any;
+
+		if( parObject[ 'mainImage' ] != undefined )
+			query += JSON.stringify( { 'categoryId': parObject.categoryId } );
+		else
+			query += JSON.stringify( { 'categoryId': parObject.id } );
+
+		this.http.get( this.categoryPathUrl + query )
+		           .toPromise()
+		           .then( 
+		           		response => response.json() as Category[]
+		           	)
+		           .catch( 
+		           		error => 
+		           			console.log( error )
+		           	).then( data => {
+		           		categoryPath = data;
+		           		if( parObject[ 'mainImage' ] != undefined )
+		           			categoryPath.push( parObject );
+		           		this.pathEventEmitter.next( categoryPath );
+		           	});
 	}
 	//-----------------------------------------------------------------------------
 }

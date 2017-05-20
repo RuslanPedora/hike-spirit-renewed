@@ -30,6 +30,8 @@ var DataService = (function () {
         //-----------------------------------------------------------------------------
         this.basketEventEmitter = new Subject_1.Subject();
         this.basketEventSource = this.basketEventEmitter.asObservable();
+        this.pathEventEmitter = new Subject_1.Subject();
+        this.pathEventSource = this.pathEventEmitter.asObservable();
         this.hostUrl = window.location.origin;
         if (this.hostUrl.indexOf('localhost') >= 0) {
             this.hostUrl = this.hostUrl.replace('3000', '8081');
@@ -40,6 +42,7 @@ var DataService = (function () {
         this.carrierUrl = this.hostUrl + '/getCarrierList';
         this.itemPropertiesUrl = this.hostUrl + '/getItemProperties';
         this.comparedPropertiesUrl = this.hostUrl + '/getComparedProperties';
+        this.categoryPathUrl = this.hostUrl + '/getCategoryPath';
         this.restoreFromLocalStorage();
     }
     //-----------------------------------------------------------------------------
@@ -209,6 +212,7 @@ var DataService = (function () {
     //-----------------------------------------------------------------------------
     DataService.prototype.removeToCompareList = function (item) {
         this.compareItems = this.compareItems.filter(function (element) { return element.id != item.id; });
+        this.localStorageService.set('hs_compareList', JSON.stringify(this.compareItems));
     };
     //-----------------------------------------------------------------------------
     DataService.prototype.getCompareList = function () {
@@ -232,6 +236,28 @@ var DataService = (function () {
     //-----------------------------------------------------------------------------
     DataService.prototype.getItemPrefix = function () {
         return this.itemPrefix;
+    };
+    //-----------------------------------------------------------------------------
+    DataService.prototype.buildPath = function (parObject) {
+        var _this = this;
+        var query = '/?';
+        var pathArray;
+        var categoryPath;
+        if (parObject['mainImage'] != undefined)
+            query += JSON.stringify({ 'categoryId': parObject.categoryId });
+        else
+            query += JSON.stringify({ 'categoryId': parObject.id });
+        this.http.get(this.categoryPathUrl + query)
+            .toPromise()
+            .then(function (response) { return response.json(); })
+            .catch(function (error) {
+            return console.log(error);
+        }).then(function (data) {
+            categoryPath = data;
+            if (parObject['mainImage'] != undefined)
+                categoryPath.push(parObject);
+            _this.pathEventEmitter.next(categoryPath);
+        });
     };
     return DataService;
 }());

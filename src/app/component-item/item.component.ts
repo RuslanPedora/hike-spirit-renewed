@@ -48,7 +48,7 @@ export class ItemComponent implements OnInit {
 					this.getItemProperties( Number.parseInt( itemId ) );
 				}
 			}
-		);		
+		);				
 	}
 	//-----------------------------------------------------------------------------
 	getItem( itemId: number ):void {
@@ -59,11 +59,13 @@ export class ItemComponent implements OnInit {
 			                                 if( tempList.length > 0 ) {
 			                                     this.item = tempList[0];
 			                                     this.dataService.addToViewItem( this.item );
+			                                     this.dataService.buildPath( this.item );
 			                                     if( this.reEnter && this.item.imageList.length > 0 ) {
 			                                     	this.loupeFragment = this.item.imageList[ 0 ].bigImage;
 			                                     	this.mouseEntered = true;
 			                                     	this.posBigImage( this.offsetX, this.offsetY );
 			                                     }
+
 			                                 }
 		} ); 
 	}

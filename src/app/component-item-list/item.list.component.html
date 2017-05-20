@@ -30,7 +30,7 @@
 	</div>
 	<div id='emptyListMessage' *ngIf='itemList.length==0'>
 		Unfortunately nothing was find according to your request please try another criteria
-		<i class='fa-meh-o'></i>
+		<i class='fa fa-hand-pointer-o'></i>
 	</div>
 	<div *ngFor='let item of itemList;let i = index;' class='itemWrapper'>
 		<div class='itemInner glBgWhite' style.animationDelay='{{i/20}}s'>
