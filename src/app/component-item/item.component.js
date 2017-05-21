@@ -53,7 +53,7 @@ var ItemComponent = (function () {
                 if (_this.reEnter && _this.item.imageList.length > 0) {
                     _this.loupeFragment = _this.item.imageList[0].bigImage;
                     _this.mouseEntered = true;
-                    _this.posBigImage(_this.offsetX, _this.offsetY);
+                    _this.posBigImage(_this.offsetX, _this.offsetY, _this.clientWidth, _this.clientHeight);
                 }
             }
         });
@@ -120,20 +120,24 @@ var ItemComponent = (function () {
     };
     //-----------------------------------------------------------------------------
     ItemComponent.prototype.mouseMove = function (event) {
-        this.posBigImage(event.offsetX, event.offsetY);
+        this.posBigImage(event.offsetX, event.offsetY, event.target.clientWidth, event.target.clientHeight);
     };
     //-----------------------------------------------------------------------------
-    ItemComponent.prototype.posBigImage = function (offsetX, offsetY) {
-        var newLeft;
-        var newTop;
+    ItemComponent.prototype.posBigImage = function (offsetX, offsetY, clientWidth, clientHeight) {
+        var leftShift;
+        var topShift;
+        var flag = 0;
         if (this.mouseEntered) {
-            newLeft = Math.min(offsetX, this.elementBigImage.clientWidth - this.elementLuope.clientWidth - 2);
-            newTop = Math.min(offsetY, this.elementBigImage.clientHeight - this.elementLuope.clientHeight - 2);
-            this.elementLuope.style.left = '' + newLeft + 'px';
-            this.elementLuope.style.top = '' + newTop + 'px';
             if (this.elementLoupeFragment != null) {
-                this.elementLoupeFragment.style.left = '-' + (newLeft / this.elementBigImage.clientWidth * this.elementLoupeFragment.clientWidth - this.elementBigImage.clientWidth / 2) + 'px';
-                this.elementLoupeFragment.style.top = '-' + (newTop / this.elementBigImage.clientHeight * this.elementLoupeFragment.clientHeight) + 'px';
+                leftShift = this.elementBigImage.clientWidth / 2
+                    - this.elementLoupeFragment.clientWidth * offsetX / clientWidth;
+                topShift = this.elementBigImage.clientHeight / 2
+                    - this.elementLoupeFragment.clientHeight * offsetY / clientHeight;
+                leftShift = Math.round(leftShift);
+                topShift = Math.round(topShift);
+                this.elementLoupeFragment.style.left = leftShift.toString() + 'px';
+                this.elementLoupeFragment.style.top = topShift.toString() + 'px';
+                flag = 1;
             }
         }
     };
@@ -149,6 +153,8 @@ var ItemComponent = (function () {
             this.reEnter = true;
             this.offsetX = event.offsetX;
             this.offsetY = event.offsetY;
+            this.clientWidth = event.target.clientWidth;
+            this.clientHeight = event.target.clientHeight;
             return;
         }
         zeroIndex = this.item.imageList.findIndex(function (element) { return element.shift == 0; });

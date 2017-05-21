@@ -25,7 +25,8 @@ export class ItemComponent implements OnInit {
 	private reEnter: boolean = false;
 	private offsetX: number;
 	private offsetY: number;
-
+	private clientWidth: number;
+	private clientHeight: number;
 	private elementLuope: any;
 	private elementBigImage: any;
 	private elementLoupeFragment: any;
@@ -64,7 +65,7 @@ export class ItemComponent implements OnInit {
 			                                     if( this.reEnter && this.item.imageList.length > 0 ) {
 			                                     	this.loupeFragment = this.item.imageList[ 0 ].bigImage;
 			                                     	this.mouseEntered = true;
-			                                     	this.posBigImage( this.offsetX, this.offsetY );
+			                                     	this.posBigImage( this.offsetX, this.offsetY, this.clientWidth, this.clientHeight );
 			                                     }
 
 			                                 }
@@ -135,22 +136,28 @@ export class ItemComponent implements OnInit {
 	}
 	//-----------------------------------------------------------------------------
 	mouseMove( event: any ) {
-		this.posBigImage( event.offsetX, event.offsetY );
+		this.posBigImage( event.offsetX, event.offsetY, event.target.clientWidth, event.target.clientHeight );
 	}
 	//-----------------------------------------------------------------------------
-	posBigImage( offsetX: number , offsetY: number ): void {
-		let newLeft: number;
-		let newTop: number;
+	posBigImage( offsetX: number , offsetY: number, clientWidth: number, clientHeight: number ): void {
+		let leftShift: number;
+		let topShift: number;
+		let flag: number = 0;
 
 		if( this.mouseEntered ) {
-			newLeft	= Math.min( offsetX, this.elementBigImage.clientWidth - this.elementLuope.clientWidth - 2 );
-			newTop  = Math.min( offsetY, this.elementBigImage.clientHeight - this.elementLuope.clientHeight - 2 );
-
-			this.elementLuope.style.left = '' + newLeft + 'px';
-			this.elementLuope.style.top  = '' + newTop + 'px';
 			if( this.elementLoupeFragment != null ) {
-				this.elementLoupeFragment.style.left = '-' + ( newLeft / this.elementBigImage.clientWidth * this.elementLoupeFragment.clientWidth - this.elementBigImage.clientWidth/2 ) + 'px';
-				this.elementLoupeFragment.style.top  = '-' + ( newTop / this.elementBigImage.clientHeight * this.elementLoupeFragment.clientHeight ) + 'px';
+				
+				leftShift = this.elementBigImage.clientWidth / 2
+				            - this.elementLoupeFragment.clientWidth * offsetX / clientWidth;
+				topShift  = this.elementBigImage.clientHeight / 2
+						    -this.elementLoupeFragment.clientHeight * offsetY / clientHeight;
+				leftShift = Math.round( leftShift );
+				topShift  = Math.round( topShift );
+
+				this.elementLoupeFragment.style.left = leftShift.toString() + 'px';
+				this.elementLoupeFragment.style.top  = topShift.toString() + 'px';
+
+				flag = 1;
 			}
 		}
 	}
@@ -172,6 +179,8 @@ export class ItemComponent implements OnInit {
 			this.reEnter = true;			
 			this.offsetX = event.offsetX;
 			this.offsetY = event.offsetY;
+			this.clientWidth = event.target.clientWidth;
+			this.clientHeight = event.target.clientHeight;
 			return;
 		}
 		zeroIndex = this.item.imageList.findIndex( element => element.shift == 0 );

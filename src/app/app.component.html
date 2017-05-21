@@ -6,7 +6,7 @@
 	<div id='additionalWrapper'>
 		<div id='topBar'>
 			<a routerLink='/invitation'>
-			<span class='navButton glBGGreenHover glClickable'>
+			<span id='homeNavButton' class='navButton glBGGreenHover glClickable'>
 				<i class='fa fa-home'></i>
 				<span>Home</span>
 			</span>
@@ -15,7 +15,7 @@
 				<i class='fa fa-mail-reply'></i>
 				<span>Back</span>
 			</span>
-			<span class='navButton glBGGreenHover glClickable' (click)='forward()'>
+			<span id='forwardNavButton'  class='navButton glBGGreenHover glClickable' (click)='forward()'>
 				<i class='fa fa-mail-forward'></i>
 				<span>Forward</span>
 			</span>
@@ -26,7 +26,7 @@
 		</div>
 		<div id='searchBar'>
 			<form ngNativeValidate (ngSubmit)='searchItem(searchKey.value)'>
-				<input type='text' placeholder='Search term...' #searchKey required>
+				<input id='searchInput' type='text' placeholder='Search term...' #searchKey required>
 				<button type=submit><i class='fa fa-search glClickable'></i></button>
 			</form>
 		</div>

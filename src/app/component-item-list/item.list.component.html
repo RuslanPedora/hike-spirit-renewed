@@ -37,9 +37,9 @@
 			<div class='fixedInner'>
 				<i id='leftArrow' class='fa fa-chevron-left glCGreen glClickable' (click)='scrollImage(item,false)'></i>
 				<i id='rightArrow' class='fa fa-chevron-right glCGreen glClickable' (click)='scrollImage(item,true)'></i>
-				<div id='newDiv' *ngIf='item.newItem'>
-					NEW
-				</div>
+				<span id='newDiv' *ngIf='item.newItem'>
+					New
+				</span>
 				<div id='discountDiv' *ngIf='item.discount>0'>
 					-{{item.discount}}%
 				</div>

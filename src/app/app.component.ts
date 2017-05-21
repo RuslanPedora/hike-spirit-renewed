@@ -1,6 +1,7 @@
 import { Component, 
 	     OnInit,
-	     OnDestroy }         from '@angular/core';
+	     OnDestroy,
+	     AfterContentInit } from '@angular/core';
 import { Router,
 		 ActivatedRoute } from '@angular/router';
 import { Subscription }   from 'rxjs/Subscription';
@@ -20,7 +21,7 @@ import { Category } from 'hs_core/category';
   	}	
 })
 //-----------------------------------------------------------------------------
-export class ApplicationComponent implements OnInit, OnDestroy {
+export class ApplicationComponent implements OnInit, OnDestroy, AfterContentInit {
 	private routerListener: Subscription;
 	private basketListener: Subscription;
 	private pathListener: Subscription;
@@ -54,10 +55,11 @@ export class ApplicationComponent implements OnInit, OnDestroy {
 				}
 			}
 		);				
-
-
-
 		this.total = this.dataService.getBasketTotal();
+	}
+	//-----------------------------------------------------------------------------
+	ngAfterContentInit() {
+		this.onResize( undefined );
 	}
 	//-----------------------------------------------------------------------------
 	ngOnDestroy() {
@@ -69,18 +71,30 @@ export class ApplicationComponent implements OnInit, OnDestroy {
 	goPath( pathElelement: any ) {
 		let parObject = {};
 		if( pathElelement[ 'mainImage' ] != undefined ) {
-			parObject[ 'id' + this.dataService.getItemPrefix() ] = pathElelement.id;		
-			this.router.navigate( [ '/item' ], { queryParams: parObject } );
+			//parObject[ 'id' + this.dataService.getItemPrefix() ] = pathElelement.id;		
+			//this.router.navigate( [ '/item' ], { queryParams: parObject } );
 		}
 		else {
 			parObject[ 'categoryId' + this.dataService.getItemPrefix() ] = pathElelement.id;		
 			this.router.navigate( [ '/item-list' ], { queryParams: parObject } );
 		}
-
 	}
 	//-----------------------------------------------------------------------------
 	onResize( event: any ): void {
-   	}
+		let homeButton: any;
+		let forwardButton: any;
+		let searchInput: any;
+		searchInput = document.getElementById( 'searchInput' );
+		if ( window.innerWidth <= 749 ) {
+			homeButton = document.getElementById( 'homeNavButton' );
+			forwardButton = document.getElementById( 'forwardNavButton' );
+			
+			searchInput.style.width = ( forwardButton.offsetLeft + forwardButton.clientWidth - homeButton.offsetLeft - 40 ).toString() + 'px';
+		}
+		else {
+			searchInput.style.width = '318px';
+		}
+ 	}
    	//-----------------------------------------------------------------------------
    	gotoBasket(): void {
    		this.router.navigate( [ '/basket' ] );

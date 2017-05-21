@@ -2,16 +2,17 @@
 	<div id='leftSide'>
 		<i id='leftArrow' class='fa fa-chevron-left glCGreen glClickable' (click)='scrollBigImage(false)'></i>
 		<i id='rightArrow' class='fa fa-chevron-right glCGreen glClickable' (click)='scrollBigImage(true)'></i>
-		<div id='bigImageDiv' 
-			(mouseleave)='mouseLeave($event)'
-		    (mouseenter)='mouseEnter($event)'
-			(mousemove)='mouseMove($event)'>
+		<div id='bigImageDiv'>
 			<div id='loupe'>
 			</div>
 			<div *ngFor='let image of item.imageList; let i=index;' 
 				 style.left='{{image.shift}}%'
 			     class='bigImageWrapper'>
-			     	<img src='images/{{image.mediumImage}}' class='itemImage'>
+			     	<img src='images/{{image.mediumImage}}' class='itemImage'
+						(mouseleave)='mouseLeave($event)'
+					    (mouseenter)='mouseEnter($event)'
+						(mousemove)='mouseMove($event)'
+			     	>
 			</div>
 		</div>	
 		<div id='imageList'>

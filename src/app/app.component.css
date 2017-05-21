@@ -37,7 +37,7 @@
 	width: 170px;
 	color: white;
 	border: 1px solid;
-	padding: 5px 15px;
+	padding: 15px 0px;
 	display: inline-block;
 	margin-left: 15px;
 	margin-top: 2px;
@@ -83,7 +83,7 @@
 	display: inline-block;
 	/*border: 1px solid white;*/
 	vertical-align: bottom;
-	padding: 0px 5px 5px 5px;	
+	padding: 0px 17px 5px 5px;	
 	float: right;
 }
 #basketBar i {
@@ -94,7 +94,7 @@
 	transform: scale( 1.15 );
 }	
 #pathDiv {
-	margin: auto;
+	margin: 0 auto;
 	max-width: 1000px;
 	padding: 10px;	
 	text-align: left;
@@ -338,8 +338,57 @@ h1, h2, h3, h4, h5, h6, { font-family:Georgia, "Times New Roman", Times, serif;}
 :host /deep/ .inspace-30{padding:30px;}
 :host /deep/ .inspace-50{padding:50px;}
 :host /deep/ .inspace-80{padding:80px;}
-@media only screen and (max-width: 500px) {
-	#basketBar {
-		float: none;
+@media only screen and (max-width: 1010px) {
+	.navButton {
+		width: 15%;
+		padding: 15px 0px;
+	}	
+}	
+@media only screen and (max-width: 750px) {
+	#panelDiv {
+		padding: 5px;
+	}
+	#logoWrapper {
+		display: none;
+	}
+	#additionalWrapper {
+		margin:  0px;
+		padding: 0px;
+		height: auto;
+	}
+	#searchBar {
+		margin: 0 0 0 5px;
+	}
+	#topBar {
+		height: auto;
+		padding-bottom: 5px;
+	}
+	.navButton {
+		width: 24%;
+		margin: 0% .5% 0% 0%;
+		margin: auto;
+		padding: 5px 15px;
+	}
+}
+@media only screen and (max-width: 530px) {
+	#panelDiv {
+		padding: 2px;
+	}	
+	#searchBar {
+		margin: 0 0 0 5px;
+	}	
+	.navButton {
+		width: 23.5%;
+	}
+	.navButton span {
+		display: none;
+	}	
+	#basketBar span {
+		display: none;
+	}
+}	
+@media only screen and (max-width: 315px) {
+	.navButton {
+		width: 23%;
 	}
 }

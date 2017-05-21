@@ -21,25 +21,23 @@
 	position: absolute;
 	top: 5%;
 	left: 5%;
-	cursor: zoom-in;
+
 	border: 1px solid #D7D7D7;
 }
+#bigImageDiv img {
+	cursor: zoom-in;
+}	
 #loupe {
 	width: 30%;
 	height: 30%;
 	position: absolute;
-/*	top: 0%;
-	left: 0%;
-*/	border: 1px solid grey;
+	border: 1px solid grey;
 	z-index: 20;
 	display: none;
 	background-color: white;
 	opacity: .2;	
 }
-/*#bigImageDiv:hover #loupe {
-	display: initial;
-}	
-*/#leftArrow {
+#leftArrow {
 	position: absolute;
 	left: 3px;
 	top: 38%;
@@ -240,4 +238,10 @@
 		padding-top: 100%;
 		display: block;		
 	}	
+	#smallCompareList {
+		display: initial;
+	}
+	#bigCompareList {
+		display: none;		
+	}
 }

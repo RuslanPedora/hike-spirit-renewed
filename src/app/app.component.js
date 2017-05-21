@@ -44,6 +44,10 @@ var ApplicationComponent = (function () {
         this.total = this.dataService.getBasketTotal();
     };
     //-----------------------------------------------------------------------------
+    ApplicationComponent.prototype.ngAfterContentInit = function () {
+        this.onResize(undefined);
+    };
+    //-----------------------------------------------------------------------------
     ApplicationComponent.prototype.ngOnDestroy = function () {
         this.routerListener.unsubscribe();
         this.basketListener.unsubscribe();
@@ -53,8 +57,6 @@ var ApplicationComponent = (function () {
     ApplicationComponent.prototype.goPath = function (pathElelement) {
         var parObject = {};
         if (pathElelement['mainImage'] != undefined) {
-            parObject['id' + this.dataService.getItemPrefix()] = pathElelement.id;
-            this.router.navigate(['/item'], { queryParams: parObject });
         }
         else {
             parObject['categoryId' + this.dataService.getItemPrefix()] = pathElelement.id;
@@ -63,6 +65,18 @@ var ApplicationComponent = (function () {
     };
     //-----------------------------------------------------------------------------
     ApplicationComponent.prototype.onResize = function (event) {
+        var homeButton;
+        var forwardButton;
+        var searchInput;
+        searchInput = document.getElementById('searchInput');
+        if (window.innerWidth <= 749) {
+            homeButton = document.getElementById('homeNavButton');
+            forwardButton = document.getElementById('forwardNavButton');
+            searchInput.style.width = (forwardButton.offsetLeft + forwardButton.clientWidth - homeButton.offsetLeft - 40).toString() + 'px';
+        }
+        else {
+            searchInput.style.width = '318px';
+        }
     };
     //-----------------------------------------------------------------------------
     ApplicationComponent.prototype.gotoBasket = function () {
