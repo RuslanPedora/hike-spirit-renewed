@@ -91,8 +91,7 @@ export class ApplicationComponent implements OnInit, OnDestroy, AfterContentInit
 		basketBar   = document.getElementById( 'basketBar' );
 
 		forwardButton = document.getElementById( 'forwardNavButton' );			
-		searchInput.style.width = ( forwardButton.offsetLeft + forwardButton.clientWidth - homeButton.offsetLeft - 40 ).toString() + 'px';
-		basketBar.style.width = forwardButton.clientWidth;
+		searchInput.style.width = ( forwardButton.offsetLeft + forwardButton.clientWidth - homeButton.offsetLeft - 40 + 1 ).toString() + 'px';
  	}
    	//-----------------------------------------------------------------------------
    	gotoBasket(): void {

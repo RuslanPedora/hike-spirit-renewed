@@ -73,8 +73,7 @@ var ApplicationComponent = (function () {
         homeButton = document.getElementById('homeNavButton');
         basketBar = document.getElementById('basketBar');
         forwardButton = document.getElementById('forwardNavButton');
-        searchInput.style.width = (forwardButton.offsetLeft + forwardButton.clientWidth - homeButton.offsetLeft - 40).toString() + 'px';
-        basketBar.style.width = forwardButton.clientWidth;
+        searchInput.style.width = (forwardButton.offsetLeft + forwardButton.clientWidth - homeButton.offsetLeft - 40 + 1).toString() + 'px';
     };
     //-----------------------------------------------------------------------------
     ApplicationComponent.prototype.gotoBasket = function () {
