@@ -48,7 +48,8 @@ export class ItemComponent implements OnInit {
 					this.getItemProperties( Number.parseInt( itemId ) );
 				}
 			}
-		);				
+		);	
+		window.scrollTo( 0, 0 );			
 	}
 	//-----------------------------------------------------------------------------
 	getItem( itemId: number ):void {

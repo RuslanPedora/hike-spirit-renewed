@@ -20,6 +20,10 @@
 	color: #888888;
 	transition: background-color 1s;
 }
+#mainTable tr td img {
+	max-width: 100%;
+}
+
 #mainTable tr input {
 	width: 50px;
 	font-size: 20px;

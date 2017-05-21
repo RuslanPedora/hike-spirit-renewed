@@ -361,7 +361,7 @@ function newItemListResponse( request, response ) {
                 FROM items\
                 INNER JOIN newItems\
                 ON id = itemId\
-                ORDER BY name\
+                ORDER BY startDate DESC\
                 LIMIT 3';
 
     logRequest( request.url );    
