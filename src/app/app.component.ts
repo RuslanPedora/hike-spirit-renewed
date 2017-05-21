@@ -84,16 +84,15 @@ export class ApplicationComponent implements OnInit, OnDestroy, AfterContentInit
 		let homeButton: any;
 		let forwardButton: any;
 		let searchInput: any;
+		let basketBar: any;
+
 		searchInput = document.getElementById( 'searchInput' );
-		if ( window.innerWidth <= 749 ) {
-			homeButton = document.getElementById( 'homeNavButton' );
-			forwardButton = document.getElementById( 'forwardNavButton' );
-			
-			searchInput.style.width = ( forwardButton.offsetLeft + forwardButton.clientWidth - homeButton.offsetLeft - 40 ).toString() + 'px';
-		}
-		else {
-			searchInput.style.width = '318px';
-		}
+		homeButton  = document.getElementById( 'homeNavButton' );
+		basketBar   = document.getElementById( 'basketBar' );
+
+		forwardButton = document.getElementById( 'forwardNavButton' );			
+		searchInput.style.width = ( forwardButton.offsetLeft + forwardButton.clientWidth - homeButton.offsetLeft - 40 ).toString() + 'px';
+		basketBar.style.width = forwardButton.clientWidth;
  	}
    	//-----------------------------------------------------------------------------
    	gotoBasket(): void {

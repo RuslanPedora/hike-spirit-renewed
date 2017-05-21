@@ -242,3 +242,11 @@ header li span {
 	max-width: 100%;
 	height: 100%;
 }
+@media only screen and (max-width: 570px) {
+	header {
+		padding-top: 10px;
+	}
+	header li {
+		display: block;
+	}	
+}	

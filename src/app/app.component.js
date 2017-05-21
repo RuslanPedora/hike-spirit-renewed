@@ -68,15 +68,13 @@ var ApplicationComponent = (function () {
         var homeButton;
         var forwardButton;
         var searchInput;
+        var basketBar;
         searchInput = document.getElementById('searchInput');
-        if (window.innerWidth <= 749) {
-            homeButton = document.getElementById('homeNavButton');
-            forwardButton = document.getElementById('forwardNavButton');
-            searchInput.style.width = (forwardButton.offsetLeft + forwardButton.clientWidth - homeButton.offsetLeft - 40).toString() + 'px';
-        }
-        else {
-            searchInput.style.width = '318px';
-        }
+        homeButton = document.getElementById('homeNavButton');
+        basketBar = document.getElementById('basketBar');
+        forwardButton = document.getElementById('forwardNavButton');
+        searchInput.style.width = (forwardButton.offsetLeft + forwardButton.clientWidth - homeButton.offsetLeft - 40).toString() + 'px';
+        basketBar.style.width = forwardButton.clientWidth;
     };
     //-----------------------------------------------------------------------------
     ApplicationComponent.prototype.gotoBasket = function () {
