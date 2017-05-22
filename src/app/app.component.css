@@ -91,6 +91,18 @@
 #basketBar:hover i {
 	transform: scale( 1.15 );
 }	
+#categoryTree {
+	max-width: 1000px;
+	margin: 0 auto;
+	background-color: black;
+}
+.mainCategorySpan {
+	padding: 10px;
+	color: white;
+	display: inline-block;
+	text-transform: capitalize;
+	transition: .7s, box-shadow .7s;
+}
 #pathDiv {
 	margin: 0 auto;
 	max-width: 1000px;

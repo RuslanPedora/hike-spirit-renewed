@@ -38,6 +38,7 @@ appExpress.get( "/getItemProperties", itemPropertiesResponse );
 appExpress.get( "/getCarrierList", carrierListResponse );
 appExpress.get( "/getComparedProperties", comparePropertiesResponse );
 appExpress.get( "/getCategoryPath", categoryPathResponse );
+appExpress.get( "/getCategoryTreeData", categoryCategoryTreeDataResponse );
 
 appExpress.post( "/order", orderResponse );
 
@@ -346,6 +347,27 @@ function comparePropertiesResponse( request, response ) {
 
     makeResponseOnDBData( querySQL, request, response );
 }
+//-----------------------------------------------------------------------------
+function categoryCategoryTreeDataResponse( request, response ) {
+    querySQL = 'SELECT categoryTree.categoryId AS categoryId,\
+                       categories.name AS categoryName,\
+                       IFNULL( categoryTree.parentId, 0 ) AS parentId,\
+                       categoryTree.itemCount\
+                FROM\
+                (SELECT categoryHierarchy.categoryId AS categoryId, parentId,\
+                        COUNT( items.id ) AS itemCount\
+                 FROM categoryHierarchy\
+                 LEFT JOIN items\
+                 ON categoryHierarchy.categoryId = items.categoryId\
+                 GROUP BY\
+                 categoryId, parentId ) AS categoryTree\
+                INNER JOIN categories\
+                ON categoryTree.categoryId = categories.id';
+
+    logRequest( request.url );    
+
+    makeResponseOnDBData( querySQL, request, response );
+}  
 //-----------------------------------------------------------------------------
 function carrierListResponse( request, response ) {
 

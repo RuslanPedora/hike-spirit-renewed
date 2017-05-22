@@ -43,6 +43,7 @@ var DataService = (function () {
         this.itemPropertiesUrl = this.hostUrl + '/getItemProperties';
         this.comparedPropertiesUrl = this.hostUrl + '/getComparedProperties';
         this.categoryPathUrl = this.hostUrl + '/getCategoryPath';
+        this.categoryTreeDataUrl = this.hostUrl + '/getCategoryTreeData';
         this.restoreFromLocalStorage();
     }
     //-----------------------------------------------------------------------------
@@ -147,6 +148,15 @@ var DataService = (function () {
     //-----------------------------------------------------------------------------
     DataService.prototype.getCategoryList = function () {
         return this.http.get(this.categoryUrl)
+            .toPromise()
+            .then(function (response) { return response.json(); })
+            .catch(function (error) {
+            return console.log(error);
+        });
+    };
+    //-----------------------------------------------------------------------------
+    DataService.prototype.getCategoryTreeData = function () {
+        return this.http.get(this.categoryTreeDataUrl)
             .toPromise()
             .then(function (response) { return response.json(); })
             .catch(function (error) {

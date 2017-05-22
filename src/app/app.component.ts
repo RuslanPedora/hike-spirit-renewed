@@ -7,9 +7,10 @@ import { Router,
 import { Subscription }   from 'rxjs/Subscription';
 import { Location }       from '@angular/common';
 
-import { DataService } from 'hs_services/data.service';
-import { Item } from 'hs_core/item';
-import { Category } from 'hs_core/category';
+import { DataService }  from 'hs_services/data.service';
+import { Item }         from 'hs_core/item';
+import { Category }     from 'hs_core/category';
+import { CategoryNode } from 'hs_core/category.node';
 
 @Component({
 	moduleId: module.id,
@@ -27,6 +28,7 @@ export class ApplicationComponent implements OnInit, OnDestroy, AfterContentInit
 	private pathListener: Subscription;
 	private total: number = 0;
 	private categoryPath: any[] = [];
+	private categoryNodes: CategoryNode[] = [];
 	//-----------------------------------------------------------------------------
 	constructor( private router: Router,
 				 private activatedRoute: ActivatedRoute,
@@ -55,6 +57,7 @@ export class ApplicationComponent implements OnInit, OnDestroy, AfterContentInit
 				}
 			}
 		);				
+		this.dataService.getCategoryTreeData().then( treeData => { this.categoryNodes = this.buildCategoryTree( treeData, 0 ) } );
 		this.total = this.dataService.getBasketTotal();
 	}
 	//-----------------------------------------------------------------------------
@@ -68,11 +71,46 @@ export class ApplicationComponent implements OnInit, OnDestroy, AfterContentInit
 		this.pathListener.unsubscribe();
 	}
 	//-----------------------------------------------------------------------------
+	buildCategoryTree( treeData: any[], level: number, parentId?: number ): any[] {
+		let tempArray:any[] = [];
+		let nodeArray:CategoryNode[] = [];		
+		let currentNode: CategoryNode;
+		if( level == 0 ) {
+			tempArray = treeData.filter( element => element.parentId == 0 );
+			for( let i in tempArray ) {
+				currentNode = new CategoryNode( new Category( tempArray[ i ].categoryId, tempArray[ i ].categoryName, '' ), 
+					                                          tempArray[ i ].itemCount, 
+					                                          level )
+				currentNode.nodes = this.buildCategoryTree( treeData, level + 1, currentNode.category.id );
+				currentNode.itemCount = this.calculateItemCount( currentNode );
+				nodeArray.push( currentNode );				
+			}
+			return nodeArray;
+		}
+		else {
+			tempArray = treeData.filter( element => element.parentId == parentId );
+			for( let i in tempArray ) {
+				currentNode = new CategoryNode( new Category( tempArray[ i ].categoryId, tempArray[ i ].categoryName, '' ), 
+					                                          tempArray[ i ].itemCount, 
+					                                          level )
+				currentNode.nodes = this.buildCategoryTree( treeData, level + 1, currentNode.category.id );
+				nodeArray.push( currentNode );				
+			}
+			return nodeArray;
+		}
+	}
+	//-----------------------------------------------------------------------------
+	calculateItemCount( categoryNode: CategoryNode ): number {
+		let result = 0;
+		result += categoryNode.itemCount;
+		for( let i in categoryNode.nodes )
+			result += this.calculateItemCount( categoryNode.nodes[ i ] );
+		return result;
+	}
+	//-----------------------------------------------------------------------------
 	goPath( pathElelement: any ) {
 		let parObject = {};
-		if( pathElelement[ 'mainImage' ] != undefined ) {
-			//parObject[ 'id' + this.dataService.getItemPrefix() ] = pathElelement.id;		
-			//this.router.navigate( [ '/item' ], { queryParams: parObject } );
+		if( pathElelement.hasOwnProperty( 'mainImage' ) ) {
 		}
 		else {
 			parObject[ 'categoryId' + this.dataService.getItemPrefix() ] = pathElelement.id;		

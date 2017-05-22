@@ -27,6 +27,7 @@ export class DataService {
 	private itemPropertiesUrl: string;
 	private comparedPropertiesUrl: string;
 	private categoryPathUrl: string;
+	private categoryTreeDataUrl: string;
 	//-----------------------------------------------------------------------------
 	private itemPrefix: string = '_IT';
 	//-----------------------------------------------------------------------------
@@ -47,13 +48,14 @@ export class DataService {
 		if( this.hostUrl.indexOf( 'localhost' ) >= 0 ) {
 			this.hostUrl = this.hostUrl.replace( '3000', '8081' );
 		}
-		this.categoryUrl = this.hostUrl + '/getCategoryList';
-		this.itemUrl = this.hostUrl + '/getItemList';
-		this.newItemUrl = this.hostUrl + '/getNewItemList';
-		this.carrierUrl = this.hostUrl + '/getCarrierList';
-		this.itemPropertiesUrl = this.hostUrl + '/getItemProperties';
+		this.categoryUrl           = this.hostUrl + '/getCategoryList';
+		this.itemUrl               = this.hostUrl + '/getItemList';
+		this.newItemUrl            = this.hostUrl + '/getNewItemList';
+		this.carrierUrl            = this.hostUrl + '/getCarrierList';
+		this.itemPropertiesUrl     = this.hostUrl + '/getItemProperties';
 		this.comparedPropertiesUrl = this.hostUrl + '/getComparedProperties';
-		this.categoryPathUrl = this.hostUrl + '/getCategoryPath';
+		this.categoryPathUrl       = this.hostUrl + '/getCategoryPath';
+		this.categoryTreeDataUrl   = this.hostUrl + '/getCategoryTreeData';
 
 		this.restoreFromLocalStorage();
 	}
@@ -167,6 +169,18 @@ export class DataService {
 		           .toPromise()
 		           .then( 
 		           		response => response.json() as Category[]
+		           	)
+		           .catch( 
+		           		error => 
+		           			console.log( error )
+		           	);
+	}	
+	//-----------------------------------------------------------------------------
+	getCategoryTreeData(): Promise<any[]> {
+		return this.http.get( this.categoryTreeDataUrl )
+		           .toPromise()
+		           .then( 
+		           		response => response.json()
 		           	)
 		           .catch( 
 		           		error => 

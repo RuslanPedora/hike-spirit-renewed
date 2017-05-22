@@ -12,6 +12,8 @@ var core_1 = require("@angular/core");
 var router_1 = require("@angular/router");
 var common_1 = require("@angular/common");
 var data_service_1 = require("hs_services/data.service");
+var category_1 = require("hs_core/category");
+var category_node_1 = require("hs_core/category.node");
 var ApplicationComponent = (function () {
     //-----------------------------------------------------------------------------
     function ApplicationComponent(router, activatedRoute, dataService, location) {
@@ -21,6 +23,7 @@ var ApplicationComponent = (function () {
         this.location = location;
         this.total = 0;
         this.categoryPath = [];
+        this.categoryNodes = [];
     }
     //-----------------------------------------------------------------------------
     ApplicationComponent.prototype.ngOnInit = function () {
@@ -41,6 +44,7 @@ var ApplicationComponent = (function () {
                 _this.dataService.buildPath({ id: Number.parseInt(categoryIdPar) });
             }
         });
+        this.dataService.getCategoryTreeData().then(function (treeData) { _this.categoryNodes = _this.buildCategoryTree(treeData, 0); });
         this.total = this.dataService.getBasketTotal();
     };
     //-----------------------------------------------------------------------------
@@ -54,9 +58,42 @@ var ApplicationComponent = (function () {
         this.pathListener.unsubscribe();
     };
     //-----------------------------------------------------------------------------
+    ApplicationComponent.prototype.buildCategoryTree = function (treeData, level, parentId) {
+        var tempArray = [];
+        var nodeArray = [];
+        var currentNode;
+        if (level == 0) {
+            tempArray = treeData.filter(function (element) { return element.parentId == 0; });
+            for (var i in tempArray) {
+                currentNode = new category_node_1.CategoryNode(new category_1.Category(tempArray[i].categoryId, tempArray[i].categoryName, ''), tempArray[i].itemCount, level);
+                currentNode.nodes = this.buildCategoryTree(treeData, level + 1, currentNode.category.id);
+                currentNode.itemCount = this.calculateItemCount(currentNode);
+                nodeArray.push(currentNode);
+            }
+            return nodeArray;
+        }
+        else {
+            tempArray = treeData.filter(function (element) { return element.parentId == parentId; });
+            for (var i in tempArray) {
+                currentNode = new category_node_1.CategoryNode(new category_1.Category(tempArray[i].categoryId, tempArray[i].categoryName, ''), tempArray[i].itemCount, level);
+                currentNode.nodes = this.buildCategoryTree(treeData, level + 1, currentNode.category.id);
+                nodeArray.push(currentNode);
+            }
+            return nodeArray;
+        }
+    };
+    //-----------------------------------------------------------------------------
+    ApplicationComponent.prototype.calculateItemCount = function (categoryNode) {
+        var result = 0;
+        result += categoryNode.itemCount;
+        for (var i in categoryNode.nodes)
+            result += this.calculateItemCount(categoryNode.nodes[i]);
+        return result;
+    };
+    //-----------------------------------------------------------------------------
     ApplicationComponent.prototype.goPath = function (pathElelement) {
         var parObject = {};
-        if (pathElelement['mainImage'] != undefined) {
+        if (pathElelement.hasOwnProperty('mainImage')) {
         }
         else {
             parObject['categoryId' + this.dataService.getItemPrefix()] = pathElelement.id;

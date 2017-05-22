@@ -38,7 +38,12 @@
 			<i class='fa fa-cart-arrow-down glCGreenHover' *ngIf='total>0'></i>
 		</div>
 	</div>	
- </div>
+</div>
+<div id='categoryTree'>
+	<span *ngFor='let categoryNode of categoryNodes;' class='mainCategorySpan glClickable glBGGreenHover'>
+		{{categoryNode.category.name}}-{{categoryNode.itemCount}} |
+	</span>
+</div>
 <div id='pathDiv' class='glBgGrey' *ngIf='categoryPath.length>0' >
 	<span *ngFor='let pathElement of categoryPath;let i=index;'>
 		<i class='fa fa-angle-double-right' *ngIf='i>0'></i>
