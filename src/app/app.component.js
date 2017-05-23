@@ -14,6 +14,7 @@ var common_1 = require("@angular/common");
 var data_service_1 = require("hs_services/data.service");
 var category_1 = require("hs_core/category");
 var category_node_1 = require("hs_core/category.node");
+var property_1 = require("hs_core/property");
 var ApplicationComponent = (function () {
     //-----------------------------------------------------------------------------
     function ApplicationComponent(router, activatedRoute, dataService, location) {
@@ -24,6 +25,8 @@ var ApplicationComponent = (function () {
         this.total = 0;
         this.categoryPath = [];
         this.categoryNodes = [];
+        this.propertyList = [];
+        this.selectedProperties = [];
     }
     //-----------------------------------------------------------------------------
     ApplicationComponent.prototype.ngOnInit = function () {
@@ -39,9 +42,13 @@ var ApplicationComponent = (function () {
             return _this.categoryPath = eventValue;
         });
         this.activatedRoute.queryParams.subscribe(function (queryParams) {
-            var categoryIdPar = queryParams['categoryId' + _this.dataService.getItemPrefix()];
+            var categoryIdPar = queryParams['categoryId'];
             if (categoryIdPar != undefined) {
                 _this.dataService.buildPath({ id: Number.parseInt(categoryIdPar) });
+                _this.dataService.getProperties(categoryIdPar).then(function (data) { return _this.fillPropertyList(data); });
+            }
+            else {
+                _this.dataService.getProperties(0).then(function (data) { return _this.fillPropertyList(data); });
             }
         });
         this.dataService.getCategoryTreeData().then(function (treeData) { _this.categoryNodes = _this.buildCategoryTree(treeData, 0); });
@@ -56,6 +63,34 @@ var ApplicationComponent = (function () {
         this.routerListener.unsubscribe();
         this.basketListener.unsubscribe();
         this.pathListener.unsubscribe();
+    };
+    //-----------------------------------------------------------------------------
+    ApplicationComponent.prototype.addToFilter = function (property, value) {
+        var tempArray = [value];
+        var tempProperty = new property_1.Property(property.id, property.name, tempArray);
+        value.selected = !value.selected;
+        this.selectedProperties.push(tempProperty);
+    };
+    //-----------------------------------------------------------------------------
+    ApplicationComponent.prototype.fillPropertyList = function (data) {
+        var id = 0;
+        var name = '';
+        var tempArray;
+        this.propertyList = [];
+        for (var i in data) {
+            if (id != data[i].id) {
+                if (id != 0) {
+                    this.propertyList.push(new property_1.Property(id, name, tempArray));
+                }
+                tempArray = [];
+                id = data[i].id;
+                name = data[i].name;
+            }
+            tempArray.push({ value: data[i].value, selected: false });
+        }
+        if (id != 0) {
+            this.propertyList.push(new property_1.Property(id, name, tempArray));
+        }
     };
     //-----------------------------------------------------------------------------
     ApplicationComponent.prototype.buildCategoryTree = function (treeData, level, parentId) {
@@ -85,9 +120,12 @@ var ApplicationComponent = (function () {
     //-----------------------------------------------------------------------------
     ApplicationComponent.prototype.calculateItemCount = function (categoryNode) {
         var result = 0;
-        result += categoryNode.itemCount;
         for (var i in categoryNode.nodes)
             result += this.calculateItemCount(categoryNode.nodes[i]);
+        if (categoryNode.nodes.length > 0)
+            categoryNode.itemCount = result;
+        else
+            result = categoryNode.itemCount;
         return result;
     };
     //-----------------------------------------------------------------------------
@@ -96,7 +134,7 @@ var ApplicationComponent = (function () {
         if (pathElelement.hasOwnProperty('mainImage')) {
         }
         else {
-            parObject['categoryId' + this.dataService.getItemPrefix()] = pathElelement.id;
+            parObject['categoryId'] = pathElelement.id;
             this.router.navigate(['/item-list'], { queryParams: parObject });
         }
     };
@@ -123,22 +161,26 @@ var ApplicationComponent = (function () {
         var elementCopyRights;
         var elementPanelDiv;
         var elementBGImage;
+        var elementCategoryTree;
         elementOutlet = document.getElementById('outlerDiv');
         elementContacts = document.getElementById('contactDiv');
         elementCopyRights = document.getElementById('copyright');
         elementPanelDiv = document.getElementById('panelDiv');
         elementBGImage = document.getElementById('mainBgImage');
+        elementCategoryTree = document.getElementById('categoryTree');
         if (event.url.indexOf('invitation') >= 0 || event.url == '/') {
             elementOutlet.style.maxWidth = '100%';
             elementContacts.style.maxWidth = '100%';
             elementCopyRights.style.maxWidth = '100%';
             elementPanelDiv.style.display = 'none';
+            elementCategoryTree.style.display = 'none';
         }
         else {
             elementOutlet.style.maxWidth = '1000px';
             elementContacts.style.maxWidth = '1000px';
             elementCopyRights.style.maxWidth = '1000px';
             elementPanelDiv.style.display = 'block';
+            elementCategoryTree.style.display = 'block';
         }
         if (event.url.indexOf('category-list') >= 0) {
             elementBGImage.style.opacity = '.8';
@@ -179,6 +221,12 @@ var ApplicationComponent = (function () {
     //-----------------------------------------------------------------------------
     ApplicationComponent.prototype.forwar = function () {
         this.location.forward();
+    };
+    //-----------------------------------------------------------------------------
+    ApplicationComponent.prototype.gotoCategory = function (selectedCategory) {
+        var parObject = {};
+        parObject['categoryId'] = selectedCategory.id;
+        this.router.navigate(['/item-list'], { queryParams: parObject });
     };
     return ApplicationComponent;
 }());

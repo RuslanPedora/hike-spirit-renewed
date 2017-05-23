@@ -39,6 +39,7 @@ appExpress.get( "/getCarrierList", carrierListResponse );
 appExpress.get( "/getComparedProperties", comparePropertiesResponse );
 appExpress.get( "/getCategoryPath", categoryPathResponse );
 appExpress.get( "/getCategoryTreeData", categoryCategoryTreeDataResponse );
+appExpress.get( "/getProperties", propertiesResponse );
 
 appExpress.post( "/order", orderResponse );
 
@@ -291,6 +292,46 @@ function makeResponseOnDBData( querySQL, request, response, postProcessor ) {
     logRequest( request.url, 'connection is closed' );
 }
 //-----------------------------------------------------------------------------
+function propertiesResponse( request, response ) {
+    var querySQL = '';
+    var queryInputString = '';
+    var indexOfQueryString = '';
+    var queryObject = {};
+
+    indexOfQueryString = request.url.indexOf( '/?' );
+    if ( indexOfQueryString > 0 )
+      queryInputString = request.url.slice( indexOfQueryString + 2 , request.url.length );
+    else 
+      queryInputString = '';
+
+    queryObject   = JSON.parse( decodeQuotes( queryInputString ) );
+    categoryValue = queryObject.categoryId;
+
+     querySQL = '\
+        SELECT DISTINCT itemProperties.propertyId AS id,\
+               properties.name,\
+               value\
+        FROM itemProperties\
+        JOIN properties\
+        ON itemProperties.propertyId = properties.id\
+        WHERE itemId IN\
+        ( SELECT items.id\
+          FROM items AS items\
+          LEFT JOIN categoryhierarchy AS parents\
+          ON items.categoryId = parents.categoryId\
+          LEFT JOIN categoryhierarchy AS grandParents\
+          ON parents.parentId = grandParents.categoryId\
+          WHERE\
+          ( items.categoryId = ' + categoryValue + ' OR parents.parentId = ' + categoryValue + ' OR grandParents.parentId = ' + categoryValue + ')\
+        )\
+        ORDER BY properties.name, value';
+
+    logRequest( request.url );    
+
+    makeResponseOnDBData( querySQL, request, response );
+
+}
+//-----------------------------------------------------------------------------
 function comparePropertiesResponse( request, response ) {
     var querySQL = '';
     var queryInputString = '';
@@ -431,6 +472,8 @@ function itemListResponse( request, response ) {
     var querySQL;
     var queryInputString;
     var indexOfQueryString;
+    var queryObject;
+    var categoryValue;
 
     indexOfQueryString = request.url.indexOf( '/?' );
     if ( indexOfQueryString > 0 )
@@ -487,11 +530,28 @@ function itemListResponse( request, response ) {
         \
         LEFT JOIN categories\
         ON items.categoryId = categories.id) as itemSelection\
+        \
+      LEFT JOIN categoryhierarchy AS parents\
+      ON itemSelection.categoryId = parents.categoryId\
+      LEFT JOIN categoryhierarchy AS grandParents\
+      ON parents.parentId = grandParents.categoryId\
+      \
       conditionInjection\
       ORDER BY name';
 
     conditionInjection = constructSQLCondition( decodeQuotes( queryInputString ), ITEM_TABLE_PREFIX );
     conditionInjection = conditionInjection.replace( 'AND (searchId', 'OR (id' );
+
+    queryObject = JSON.parse( decodeQuotes( queryInputString ) );
+    if( queryObject.hasOwnProperty( 'categoryId' ) ) {
+      if( conditionInjection == '' ) 
+        conditionInjection = ' WHERE '
+      else
+        conditionInjection = ' AND '
+      categoryValue = queryObject.categoryId;
+      conditionInjection += '( itemSelection.categoryId = ' + categoryValue + ' OR parents.parentId = ' + categoryValue + ' OR grandParents.parentId = ' + categoryValue + ')';
+    }    
+
     querySQL = querySQL.replace( 'conditionInjection', conditionInjection );
 
     makeResponseOnDBData( querySQL, request, response, imageListBinder );

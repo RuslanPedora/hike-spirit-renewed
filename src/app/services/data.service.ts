@@ -28,6 +28,7 @@ export class DataService {
 	private comparedPropertiesUrl: string;
 	private categoryPathUrl: string;
 	private categoryTreeDataUrl: string;
+	private propertiesUrl: string;
 	//-----------------------------------------------------------------------------
 	private itemPrefix: string = '_IT';
 	//-----------------------------------------------------------------------------
@@ -56,6 +57,7 @@ export class DataService {
 		this.comparedPropertiesUrl = this.hostUrl + '/getComparedProperties';
 		this.categoryPathUrl       = this.hostUrl + '/getCategoryPath';
 		this.categoryTreeDataUrl   = this.hostUrl + '/getCategoryTreeData';
+		this.propertiesUrl         = this.hostUrl + '/getProperties';
 
 		this.restoreFromLocalStorage();
 	}
@@ -163,6 +165,19 @@ export class DataService {
 			}
 		}
 	}	
+	//-----------------------------------------------------------------------------
+	getProperties( categoryId: number ): Promise<any[]>  {
+		return this.http.get( this.propertiesUrl + '/?' + JSON.stringify( { 'categoryId': categoryId } ) )
+		           .toPromise()
+		           .then( 
+		           		response => response.json()
+		           	)
+		           .catch( 
+		           		error => 
+		           			console.log( error )
+		           	);
+
+	}
 	//-----------------------------------------------------------------------------
 	getCategoryList(): Promise<Category[]> {
 		return this.http.get( this.categoryUrl )

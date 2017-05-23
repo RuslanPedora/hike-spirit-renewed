@@ -11,6 +11,7 @@ import { DataService }  from 'hs_services/data.service';
 import { Item }         from 'hs_core/item';
 import { Category }     from 'hs_core/category';
 import { CategoryNode } from 'hs_core/category.node';
+import { Property }     from 'hs_core/property';
 
 @Component({
 	moduleId: module.id,
@@ -29,6 +30,8 @@ export class ApplicationComponent implements OnInit, OnDestroy, AfterContentInit
 	private total: number = 0;
 	private categoryPath: any[] = [];
 	private categoryNodes: CategoryNode[] = [];
+	private propertyList: Property[] = [];
+	private selectedProperties: Property[] = [];
 	//-----------------------------------------------------------------------------
 	constructor( private router: Router,
 				 private activatedRoute: ActivatedRoute,
@@ -51,9 +54,13 @@ export class ApplicationComponent implements OnInit, OnDestroy, AfterContentInit
 		)
 		this.activatedRoute.queryParams.subscribe(
 			queryParams => {				
-				let categoryIdPar = queryParams [ 'categoryId' + this.dataService.getItemPrefix() ];
+				let categoryIdPar = queryParams [ 'categoryId' ];
 				if( categoryIdPar != undefined ) {
 					this.dataService.buildPath( { id: Number.parseInt( categoryIdPar ) } );
+					this.dataService.getProperties( categoryIdPar ).then( data => this.fillPropertyList( data ) );
+				}
+				else {
+					this.dataService.getProperties( 0 ).then( data => this.fillPropertyList( data ) );
 				}
 			}
 		);				
@@ -69,6 +76,34 @@ export class ApplicationComponent implements OnInit, OnDestroy, AfterContentInit
 		this.routerListener.unsubscribe();
 		this.basketListener.unsubscribe();
 		this.pathListener.unsubscribe();
+	}
+	//-----------------------------------------------------------------------------
+	addToFilter( property: Property, value: any ) {
+		let tempArray = [ value ];
+		let tempProperty = new Property( property.id, property.name, tempArray );
+		value.selected = !value.selected;
+		this.selectedProperties.push( tempProperty );
+	}
+	//-----------------------------------------------------------------------------
+	fillPropertyList( data: any[] ) {
+		let id: number = 0;
+		let name: string = '';
+		let tempArray: any[];
+		this.propertyList = [];
+		for( let i in data ) {
+			if( id != data[ i ].id ) {
+				if( id != 0 ) {
+					this.propertyList.push( new Property( id, name, tempArray ) );
+				}
+				tempArray = [];
+				id = data[ i ].id;
+				name = data[ i ].name;
+			}
+			tempArray.push( { value: data[ i ].value, selected: false } )
+		}
+		if( id != 0 ) {
+			this.propertyList.push( new Property( id, name, tempArray ) );
+		}		
 	}
 	//-----------------------------------------------------------------------------
 	buildCategoryTree( treeData: any[], level: number, parentId?: number ): any[] {
@@ -102,9 +137,12 @@ export class ApplicationComponent implements OnInit, OnDestroy, AfterContentInit
 	//-----------------------------------------------------------------------------
 	calculateItemCount( categoryNode: CategoryNode ): number {
 		let result = 0;
-		result += categoryNode.itemCount;
 		for( let i in categoryNode.nodes )
 			result += this.calculateItemCount( categoryNode.nodes[ i ] );
+		if( categoryNode.nodes.length > 0 )
+			categoryNode.itemCount = result;
+		else	
+			result = categoryNode.itemCount;
 		return result;
 	}
 	//-----------------------------------------------------------------------------
@@ -113,7 +151,7 @@ export class ApplicationComponent implements OnInit, OnDestroy, AfterContentInit
 		if( pathElelement.hasOwnProperty( 'mainImage' ) ) {
 		}
 		else {
-			parObject[ 'categoryId' + this.dataService.getItemPrefix() ] = pathElelement.id;		
+			parObject[ 'categoryId' ] = pathElelement.id;		
 			this.router.navigate( [ '/item-list' ], { queryParams: parObject } );
 		}
 	}
@@ -142,23 +180,27 @@ export class ApplicationComponent implements OnInit, OnDestroy, AfterContentInit
    		let elementCopyRights: any;
    		let elementPanelDiv: any;
    		let elementBGImage: any;
+   		let elementCategoryTree: any;
 
    		elementOutlet     = document.getElementById( 'outlerDiv' );
    		elementContacts   = document.getElementById( 'contactDiv' );
    		elementCopyRights = document.getElementById( 'copyright' );
    		elementPanelDiv = document.getElementById( 'panelDiv' );
    		elementBGImage = document.getElementById( 'mainBgImage' );
+   		elementCategoryTree = document.getElementById( 'categoryTree' );
    		if( event.url.indexOf( 'invitation' ) >= 0 || event.url == '/') {
 			elementOutlet.style.maxWidth = '100%';
 			elementContacts.style.maxWidth = '100%';
 			elementCopyRights.style.maxWidth = '100%';
 			elementPanelDiv.style.display = 'none';
+			elementCategoryTree.style.display = 'none';
    		}
 		else {
 			elementOutlet.style.maxWidth = '1000px';
 			elementContacts.style.maxWidth = '1000px';
 			elementCopyRights.style.maxWidth = '1000px';
 			elementPanelDiv.style.display = 'block';
+			elementCategoryTree.style.display = 'block';
 		}
    		if( event.url.indexOf( 'category-list' ) >= 0 ) {
 			elementBGImage.style.opacity = '.8';
@@ -201,5 +243,11 @@ export class ApplicationComponent implements OnInit, OnDestroy, AfterContentInit
  	forwar():void {
 		this.location.forward();
  	}
+	//-----------------------------------------------------------------------------
+	gotoCategory( selectedCategory: Category ) {
+		let parObject = {};
+		parObject[ 'categoryId' ] = selectedCategory.id;
+		this.router.navigate( [ '/item-list' ], { queryParams: parObject } );
+	}
 	//-----------------------------------------------------------------------------
 }

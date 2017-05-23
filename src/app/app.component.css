@@ -97,11 +97,94 @@
 	background-color: black;
 }
 .mainCategorySpan {
-	padding: 10px;
-	color: white;
 	display: inline-block;
+	color: white;
+	position: relative;
+}
+.mainCategorySpan:last-child {
+	float: right;
+}
+.mainCategorySpan:last-child i {
+	font-size: 20px;
+}
+.mainCategoryInnerSpan {
+	padding: 10px;
+	display: inline-block;
+	color: white;
 	text-transform: capitalize;
+	position: relative;
 	transition: .7s, box-shadow .7s;
+}
+.subMenuContainer {
+	position: absolute;
+	top: 100%;
+	left: 0%;
+	display: none;
+	z-index: 20;
+	overflow: auto;
+	border-top: 10px solid #82A800;
+	vertical-align: top;
+}
+.whiteColor {
+	color: white;
+}
+.mainCategorySpan:hover .subMenuContainer {
+	display: initial;
+}
+.subMenuContainer ul {
+	list-style-type: none;
+}
+.subMenuContainer li {
+	text-align: left;
+	font-size: .8rem;
+}	
+.subMenu {
+	width: 200px;
+	position: relative;	
+	padding: 5px;
+	text-align: left;
+	display: inline-block;	
+	border-right: 1px solid grey;
+	/*border: 1px solid red;*/
+}
+#filterdiv .subMenuContainer {
+	width: 500px;
+	left: -400px;
+	right: 0%;
+	text-align: left;
+}
+.valueRow {
+	position: relative;
+	padding-left: 20px;
+}
+.valueRow span {	
+	width: 20px;
+	height: 20px;
+	position: absolute;
+	top: 0%;
+	left: 0%;
+	display: inline-block;
+}
+.valueRow .tobeSelected {
+	display: none;
+}
+.valueRow .tobeUnSelected {
+	display: none;
+}
+.valueRow:hover .tobeSelected {
+	display: initial;
+}
+.valueRow:hover .tobeUnSelected {
+	display: initial;
+}
+.valueRow:hover .isSelected {
+	display: none;
+}
+
+#selectedProperties {
+	max-width: 1000px;
+	margin: auto;
+	border-bottom: 1px solid #D7D7D7;
 }
 #pathDiv {
 	margin: 0 auto;

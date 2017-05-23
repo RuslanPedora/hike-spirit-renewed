@@ -32,8 +32,7 @@ var ItemListComponent = (function () {
         var tempItemList = [];
         var paramName;
         for (paramName in params) {
-            if (paramName.indexOf('category') < 0)
-                queryObject[paramName] = params[paramName];
+            queryObject[paramName] = params[paramName];
         }
         if (Object.keys(queryObject).length > 0)
             queryString = '/?' + JSON.stringify(queryObject);

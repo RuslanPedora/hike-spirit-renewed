@@ -40,8 +40,56 @@
 	</div>	
 </div>
 <div id='categoryTree'>
-	<span *ngFor='let categoryNode of categoryNodes;' class='mainCategorySpan glClickable glBGGreenHover'>
-		{{categoryNode.category.name}}-{{categoryNode.itemCount}} |
+	<span *ngFor='let categoryNode of categoryNodes;' class='mainCategorySpan'>
+		<span class='glClickable glBGGreenHover mainCategoryInnerSpan' (click)='gotoCategory(categoryNode.category)'>
+			{{categoryNode.category.name}}
+		</span>
+		<div class='subMenuContainer glBgGrey'  style.width='{{202*categoryNode.nodes.length}}px'>
+			<div *ngFor='let subCategory of categoryNode.nodes;' class='subMenu'>
+				<span class='glClickable' (click)='gotoCategory(subCategory.category)'>
+					{{subCategory.category.name}} ({{subCategory.itemCount}})
+				</span>
+				<ul>
+					<li *ngFor='let lowCategory of subCategory.nodes;' 
+					    [ngClass]="{'lowMenuItem': true, 'glClickable': true, 'whiteColor':lowCategory.itemCount>0 }"
+					    (click)='gotoCategory(lowCategory.category)'>
+						{{lowCategory.category.name}} ({{lowCategory.itemCount}})
+					</li>
+				</ul>
+				<br>
+			</div>
+		</div>		
+	</span>
+	<span id='filterdiv' class='mainCategorySpan'>
+		<span class='glBGGreenHover mainCategoryInnerSpan'>
+			<i class='fa fa-filter whiteColor'></i>
+		</span>	
+		<div class='subMenuContainer glBgGrey'>
+			<div *ngFor='let property of propertyList;'>
+				{{property.id}}-{{property.name}}:
+				<div *ngFor='let value of property.values;' class='glClickable valueRow' (click)='addToFilter(property,value)'>
+					<span  *ngIf='value.selected'>
+						<i class='fa fa-check-square glCGreen isSelected'></i>
+					</span>	
+					<span  *ngIf='!value.selected'>
+						<i class='fa fa-plus-square glCGreen tobeSelected'></i>
+					</span>	
+					<span  *ngIf='value.selected'>
+						<i class='fa fa-minus-square glCGreen tobeUnSelected'></i>
+					</span>							
+					{{value.value}}
+				</div>
+			</div>
+		</div>
+	</span>
+</div>
+<div id='selectedProperties' class='glBgGrey' *ngIf='selectedProperties.length>0'>
+	<span *ngFor='let selectedProperty of selectedProperties;'>
+		{{selectedProperty.name}}:
+		<span class='glClickable' *ngFor='let selectedValue of selectedProperty.values;'>
+			<i class='fa fa-times-rectangle glCGreen'></i>
+			{{selectedValue.value}}
+		</span>
 	</span>
 </div>
 <div id='pathDiv' class='glBgGrey' *ngIf='categoryPath.length>0' >

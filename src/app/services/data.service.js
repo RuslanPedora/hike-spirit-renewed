@@ -44,6 +44,7 @@ var DataService = (function () {
         this.comparedPropertiesUrl = this.hostUrl + '/getComparedProperties';
         this.categoryPathUrl = this.hostUrl + '/getCategoryPath';
         this.categoryTreeDataUrl = this.hostUrl + '/getCategoryTreeData';
+        this.propertiesUrl = this.hostUrl + '/getProperties';
         this.restoreFromLocalStorage();
     }
     //-----------------------------------------------------------------------------
@@ -144,6 +145,15 @@ var DataService = (function () {
                 data[i].imageList[k].smallShift = 20 * k;
             }
         }
+    };
+    //-----------------------------------------------------------------------------
+    DataService.prototype.getProperties = function (categoryId) {
+        return this.http.get(this.propertiesUrl + '/?' + JSON.stringify({ 'categoryId': categoryId }))
+            .toPromise()
+            .then(function (response) { return response.json(); })
+            .catch(function (error) {
+            return console.log(error);
+        });
     };
     //-----------------------------------------------------------------------------
     DataService.prototype.getCategoryList = function () {
