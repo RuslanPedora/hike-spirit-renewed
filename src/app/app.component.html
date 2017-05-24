@@ -46,7 +46,8 @@
 		</span>
 		<div class='subMenuContainer glBgGrey'  style.width='{{202*categoryNode.nodes.length}}px'>
 			<div *ngFor='let subCategory of categoryNode.nodes;' class='subMenu'>
-				<span class='glClickable' (click)='gotoCategory(subCategory.category)'>
+				<span (click)='gotoCategory(subCategory.category)'
+					  [ngClass]="{'glClickable': true, 'whiteColor':subCategory.itemCount>0 }">
 					{{subCategory.category.name}} ({{subCategory.itemCount}})
 				</span>
 				<ul>
@@ -67,7 +68,7 @@
 		<div class='subMenuContainer glBgGrey'>
 			<div *ngFor='let property of propertyList;'>
 				{{property.id}}-{{property.name}}:
-				<div *ngFor='let value of property.values;' class='glClickable valueRow' (click)='addToFilter(property,value)'>
+				<div *ngFor='let value of property.values;' class='glClickable valueRow' (click)='toggleFilter(property,value)'>
 					<span  *ngIf='value.selected'>
 						<i class='fa fa-check-square glCGreen isSelected'></i>
 					</span>	
@@ -84,11 +85,11 @@
 	</span>
 </div>
 <div id='selectedProperties' class='glBgGrey' *ngIf='selectedProperties.length>0'>
-	<span *ngFor='let selectedProperty of selectedProperties;'>
+	<span *ngFor='let selectedProperty of selectedProperties;' class='selectedProperty'>
 		{{selectedProperty.name}}:
-		<span class='glClickable' *ngFor='let selectedValue of selectedProperty.values;'>
-			<i class='fa fa-times-rectangle glCGreen'></i>
+		<span class='glClickable selectedValue' *ngFor='let selectedValue of selectedProperty.values;' (click)='cleanSelectedValue(selectedProperty,selectedValue)'>
 			{{selectedValue.value}}
+			<i class='fa fa-times-rectangle glCGreen'></i>			
 		</span>
 	</span>
 </div>

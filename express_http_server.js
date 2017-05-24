@@ -324,6 +324,7 @@ function propertiesResponse( request, response ) {
           WHERE\
           ( items.categoryId = ' + categoryValue + ' OR parents.parentId = ' + categoryValue + ' OR grandParents.parentId = ' + categoryValue + ')\
         )\
+        AND properties.filter\
         ORDER BY properties.name, value';
 
     logRequest( request.url );    
@@ -474,6 +475,7 @@ function itemListResponse( request, response ) {
     var indexOfQueryString;
     var queryObject;
     var categoryValue;
+    var propertyCondition = '';
 
     indexOfQueryString = request.url.indexOf( '/?' );
     if ( indexOfQueryString > 0 )
@@ -552,6 +554,35 @@ function itemListResponse( request, response ) {
       conditionInjection += '( itemSelection.categoryId = ' + categoryValue + ' OR parents.parentId = ' + categoryValue + ' OR grandParents.parentId = ' + categoryValue + ')';
     }    
 
+    for( var property in queryObject ) {
+      if( property.indexOf( 'propertyId' ) >= 0 ) {
+         if( propertyCondition == '' )
+            propertyCondition += ' WHERE ';
+         if( propertyCondition != ' WHERE ' )
+            propertyCondition += ' AND '
+         propertyCondition += '( propertyId = ' + queryObject[ property ] + ' AND (';
+
+         valueFieldName = 'value' + property.replace( 'propertyId', '' );
+
+         if ( queryObject[ valueFieldName ] instanceof Array )
+            valueArray = queryObject[ valueFieldName ];
+         else 
+            valueArray = queryObject[ valueFieldName ].split( ',' );
+         for( var j in valueArray ) {
+            propertyCondition += ( j == 0 ? '' : ' OR ' ) + ' value = \'' + valueArray[ j ] +'\' ';
+         }
+         propertyCondition += ' ) ) '
+      }
+    }
+
+    if( propertyCondition != '' ) {
+      if( conditionInjection == '' )      
+        conditionInjection += ' WHERE ';
+      else 
+        conditionInjection += ' AND ';
+      conditionInjection += ' id IN ( SELECT itemId FROM itemProperties ' + propertyCondition + ' ) ';
+    }
+
     querySQL = querySQL.replace( 'conditionInjection', conditionInjection );
 
     makeResponseOnDBData( querySQL, request, response, imageListBinder );
@@ -602,7 +633,9 @@ function imageListBinder( request, response, innerResults ) {
 }
 //-----------------------------------------------------------------------------
 function decodeQuotes( inputString ) {
-  return inputString.replace( /%22/g, '"' );
+  var resultStr = inputString.replace( /%22/g, '"' );
+  resultStr = resultStr.replace( /%20/g, ' ' );     
+  return resultStr;
 }
 //-----------------------------------------------------------------------------
 function constructSQLCondition( queryString, mask ) {

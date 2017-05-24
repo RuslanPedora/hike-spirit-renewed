@@ -32,6 +32,8 @@ export class ApplicationComponent implements OnInit, OnDestroy, AfterContentInit
 	private categoryNodes: CategoryNode[] = [];
 	private propertyList: Property[] = [];
 	private selectedProperties: Property[] = [];
+	private selectedCategory: number = 0;
+	private paramsToParse: any = undefined;
 	//-----------------------------------------------------------------------------
 	constructor( private router: Router,
 				 private activatedRoute: ActivatedRoute,
@@ -56,12 +58,18 @@ export class ApplicationComponent implements OnInit, OnDestroy, AfterContentInit
 			queryParams => {				
 				let categoryIdPar = queryParams [ 'categoryId' ];
 				if( categoryIdPar != undefined ) {
-					this.dataService.buildPath( { id: Number.parseInt( categoryIdPar ) } );
-					this.dataService.getProperties( categoryIdPar ).then( data => this.fillPropertyList( data ) );
+					this.dataService.buildPath( { id: Number.parseInt( categoryIdPar ) } );					
+					this.selectedCategory = categoryIdPar;
+					if( this.selectedProperties.length == 0 ) {
+						this.paramsToParse = queryParams;
+						this.dataService.getProperties( categoryIdPar ).then( data => this.fillPropertyList( data ) );
+					}
 				}
 				else {
-					this.dataService.getProperties( 0 ).then( data => this.fillPropertyList( data ) );
-				}
+					this.selectedCategory = 0;
+					this.propertyList = [];
+					this.selectedProperties = [];
+				}				
 			}
 		);				
 		this.dataService.getCategoryTreeData().then( treeData => { this.categoryNodes = this.buildCategoryTree( treeData, 0 ) } );
@@ -78,17 +86,53 @@ export class ApplicationComponent implements OnInit, OnDestroy, AfterContentInit
 		this.pathListener.unsubscribe();
 	}
 	//-----------------------------------------------------------------------------
-	addToFilter( property: Property, value: any ) {
+	toggleFilter( property: Property, value: any ) {
 		let tempArray = [ value ];
 		let tempProperty = new Property( property.id, property.name, tempArray );
+		let neededPropertry: Property;
+
+		neededPropertry = this.selectedProperties.find( element => element.id == property.id );
+		if( value.selected ) {
+			neededPropertry.values = neededPropertry.values.filter( element => element.value != value.value );
+			if( neededPropertry.values.length == 0 )
+				this.selectedProperties = this.selectedProperties.filter( element => element.id != neededPropertry.id );
+		}
+		else {
+			if( neededPropertry == undefined )
+				this.selectedProperties.push( tempProperty );
+			else
+				neededPropertry.values.push( value );
+		}
 		value.selected = !value.selected;
-		this.selectedProperties.push( tempProperty );
+		this.filterByPropertis();
 	}
-	//-----------------------------------------------------------------------------
+	//--------------------------+---------------------------------------------------
+	cleanSelectedValue( selectedProperty: Property, selectedValue: any ) {
+		let neededPropertry: Property;
+		let neededValue: any;
+
+		neededPropertry = this.selectedProperties.find( element => element.id == selectedProperty.id );
+		if( neededPropertry != undefined ) {
+			neededPropertry.values = neededPropertry.values.filter( element => element.value != selectedValue.value );
+			if( neededPropertry.values.length == 0 )
+				this.selectedProperties = this.selectedProperties.filter( element => element.id != neededPropertry.id );
+		}
+		neededPropertry = this.propertyList.find( element => element.id == selectedProperty.id );
+		if( neededPropertry != undefined ) {
+			neededValue = neededPropertry.values.find( element => element.value == selectedValue.value );
+			neededValue.selected = false;
+		}
+		this.filterByPropertis();
+	}
+	//--------------------------+---------------------------------------------------
 	fillPropertyList( data: any[] ) {
 		let id: number = 0;
 		let name: string = '';
 		let tempArray: any[];
+		let tempId: number = 0;
+		let valueRef: string = '';		
+		let propertryRef: Property;
+
 		this.propertyList = [];
 		for( let i in data ) {
 			if( id != data[ i ].id ) {
@@ -103,7 +147,25 @@ export class ApplicationComponent implements OnInit, OnDestroy, AfterContentInit
 		}
 		if( id != 0 ) {
 			this.propertyList.push( new Property( id, name, tempArray ) );
-		}		
+		}
+
+		if( this.paramsToParse != undefined ){
+			for( let property in this.paramsToParse )	{
+				if ( property.indexOf( 'propertyId' ) >= 0 ) {
+					tempId = Number.parseInt( this.paramsToParse[ property ] );
+					propertryRef = this.propertyList.find( element => element.id == tempId );
+					if( this.paramsToParse[ 'value' + property.replace( 'propertyId', '' ) ] instanceof Array )
+						tempArray = this.paramsToParse[ 'value' + property.replace( 'propertyId', '' ) ];
+					else	
+						tempArray = this.paramsToParse[ 'value' + property.replace( 'propertyId', '' ) ].split( ',' );
+					for( let i in tempArray ) {
+						valueRef = propertryRef.values.find( element => element.value == tempArray[ i ] );
+						this.toggleFilter( propertryRef, valueRef );
+					}
+				}
+			}
+			this.paramsToParse = undefined;
+		}
 	}
 	//-----------------------------------------------------------------------------
 	buildCategoryTree( treeData: any[], level: number, parentId?: number ): any[] {
@@ -208,6 +270,10 @@ export class ApplicationComponent implements OnInit, OnDestroy, AfterContentInit
 		else {
 			elementBGImage.style.opacity = '1';
 		}
+		if( event.url.indexOf( 'item-list' ) < 0 ) {
+			this.selectedProperties = [];
+			this.propertyList = [];
+		}	
    	}
    	//-----------------------------------------------------------------------------
    	scrollTop():void {
@@ -240,7 +306,7 @@ export class ApplicationComponent implements OnInit, OnDestroy, AfterContentInit
 		this.location.back();
  	}
  	//-----------------------------------------------------------------------------
- 	forwar():void {
+ 	forward():void {
 		this.location.forward();
  	}
 	//-----------------------------------------------------------------------------
@@ -248,6 +314,22 @@ export class ApplicationComponent implements OnInit, OnDestroy, AfterContentInit
 		let parObject = {};
 		parObject[ 'categoryId' ] = selectedCategory.id;
 		this.router.navigate( [ '/item-list' ], { queryParams: parObject } );
+		this.selectedProperties = [];
+		this.propertyList = [];
 	}
 	//-----------------------------------------------------------------------------
+	filterByPropertis(): void {
+		let parObject = {};
+		let tempArray: any[] = [];
+		parObject[ 'categoryId' ] = this.selectedCategory;
+		for( let i in this.selectedProperties ) {
+			tempArray = [];
+			for( let j in this.selectedProperties[ i ].values )
+				tempArray.push( this.selectedProperties[ i ].values[ j ].value );
+			parObject[ 'propertyId' + i ] = this.selectedProperties[ i ].id;
+			parObject[ 'value' + i ] = tempArray;
+		}
+		this.router.navigate( [ '/item-list' ], { queryParams: parObject } );
+
+	}
 }

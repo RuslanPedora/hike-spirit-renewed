@@ -21,6 +21,7 @@ var DataService = (function () {
         this.localStorageService = localStorageService;
         //-----------------------------------------------------------------------------
         this.itemPrefix = '_IT';
+        this.propertyPrefix = '_IP';
         //-----------------------------------------------------------------------------
         this.lastViewItems = [];
         this.maxViewItems = 5;
@@ -252,6 +253,10 @@ var DataService = (function () {
     //-----------------------------------------------------------------------------
     DataService.prototype.getLastViewedItems = function () {
         return this.lastViewItems;
+    };
+    //-----------------------------------------------------------------------------
+    DataService.prototype.getPropertryPrefix = function () {
+        return this.propertyPrefix;
     };
     //-----------------------------------------------------------------------------
     DataService.prototype.getItemPrefix = function () {

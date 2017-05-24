@@ -31,6 +31,7 @@ export class DataService {
 	private propertiesUrl: string;
 	//-----------------------------------------------------------------------------
 	private itemPrefix: string = '_IT';
+	private propertyPrefix: string = '_IP';
 	//-----------------------------------------------------------------------------
 	private lastViewItems: Item[] = [];
 	private maxViewItems: number = 5;
@@ -300,8 +301,12 @@ export class DataService {
 		return this.lastViewItems;
 	}
 	//-----------------------------------------------------------------------------
+	getPropertryPrefix(): string {
+		return this.propertyPrefix;
+	}
+	//-----------------------------------------------------------------------------
 	getItemPrefix(): string {
-		return this.itemPrefix
+		return this.itemPrefix;
 	}
 	//-----------------------------------------------------------------------------
 	buildPath( parObject: any): void {

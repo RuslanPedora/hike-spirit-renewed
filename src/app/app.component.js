@@ -27,6 +27,8 @@ var ApplicationComponent = (function () {
         this.categoryNodes = [];
         this.propertyList = [];
         this.selectedProperties = [];
+        this.selectedCategory = 0;
+        this.paramsToParse = undefined;
     }
     //-----------------------------------------------------------------------------
     ApplicationComponent.prototype.ngOnInit = function () {
@@ -45,10 +47,16 @@ var ApplicationComponent = (function () {
             var categoryIdPar = queryParams['categoryId'];
             if (categoryIdPar != undefined) {
                 _this.dataService.buildPath({ id: Number.parseInt(categoryIdPar) });
-                _this.dataService.getProperties(categoryIdPar).then(function (data) { return _this.fillPropertyList(data); });
+                _this.selectedCategory = categoryIdPar;
+                if (_this.selectedProperties.length == 0) {
+                    _this.paramsToParse = queryParams;
+                    _this.dataService.getProperties(categoryIdPar).then(function (data) { return _this.fillPropertyList(data); });
+                }
             }
             else {
-                _this.dataService.getProperties(0).then(function (data) { return _this.fillPropertyList(data); });
+                _this.selectedCategory = 0;
+                _this.propertyList = [];
+                _this.selectedProperties = [];
             }
         });
         this.dataService.getCategoryTreeData().then(function (treeData) { _this.categoryNodes = _this.buildCategoryTree(treeData, 0); });
@@ -65,17 +73,50 @@ var ApplicationComponent = (function () {
         this.pathListener.unsubscribe();
     };
     //-----------------------------------------------------------------------------
-    ApplicationComponent.prototype.addToFilter = function (property, value) {
+    ApplicationComponent.prototype.toggleFilter = function (property, value) {
         var tempArray = [value];
         var tempProperty = new property_1.Property(property.id, property.name, tempArray);
+        var neededPropertry;
+        neededPropertry = this.selectedProperties.find(function (element) { return element.id == property.id; });
+        if (value.selected) {
+            neededPropertry.values = neededPropertry.values.filter(function (element) { return element.value != value.value; });
+            if (neededPropertry.values.length == 0)
+                this.selectedProperties = this.selectedProperties.filter(function (element) { return element.id != neededPropertry.id; });
+        }
+        else {
+            if (neededPropertry == undefined)
+                this.selectedProperties.push(tempProperty);
+            else
+                neededPropertry.values.push(value);
+        }
         value.selected = !value.selected;
-        this.selectedProperties.push(tempProperty);
+        this.filterByPropertis();
     };
-    //-----------------------------------------------------------------------------
+    //--------------------------+---------------------------------------------------
+    ApplicationComponent.prototype.cleanSelectedValue = function (selectedProperty, selectedValue) {
+        var neededPropertry;
+        var neededValue;
+        neededPropertry = this.selectedProperties.find(function (element) { return element.id == selectedProperty.id; });
+        if (neededPropertry != undefined) {
+            neededPropertry.values = neededPropertry.values.filter(function (element) { return element.value != selectedValue.value; });
+            if (neededPropertry.values.length == 0)
+                this.selectedProperties = this.selectedProperties.filter(function (element) { return element.id != neededPropertry.id; });
+        }
+        neededPropertry = this.propertyList.find(function (element) { return element.id == selectedProperty.id; });
+        if (neededPropertry != undefined) {
+            neededValue = neededPropertry.values.find(function (element) { return element.value == selectedValue.value; });
+            neededValue.selected = false;
+        }
+        this.filterByPropertis();
+    };
+    //--------------------------+---------------------------------------------------
     ApplicationComponent.prototype.fillPropertyList = function (data) {
         var id = 0;
         var name = '';
         var tempArray;
+        var tempId = 0;
+        var valueRef = '';
+        var propertryRef;
         this.propertyList = [];
         for (var i in data) {
             if (id != data[i].id) {
@@ -90,6 +131,23 @@ var ApplicationComponent = (function () {
         }
         if (id != 0) {
             this.propertyList.push(new property_1.Property(id, name, tempArray));
+        }
+        if (this.paramsToParse != undefined) {
+            for (var property in this.paramsToParse) {
+                if (property.indexOf('propertyId') >= 0) {
+                    tempId = Number.parseInt(this.paramsToParse[property]);
+                    propertryRef = this.propertyList.find(function (element) { return element.id == tempId; });
+                    if (this.paramsToParse['value' + property.replace('propertyId', '')] instanceof Array)
+                        tempArray = this.paramsToParse['value' + property.replace('propertyId', '')];
+                    else
+                        tempArray = this.paramsToParse['value' + property.replace('propertyId', '')].split(',');
+                    for (var i in tempArray) {
+                        valueRef = propertryRef.values.find(function (element) { return element.value == tempArray[i]; });
+                        this.toggleFilter(propertryRef, valueRef);
+                    }
+                }
+            }
+            this.paramsToParse = undefined;
         }
     };
     //-----------------------------------------------------------------------------
@@ -188,6 +246,10 @@ var ApplicationComponent = (function () {
         else {
             elementBGImage.style.opacity = '1';
         }
+        if (event.url.indexOf('item-list') < 0) {
+            this.selectedProperties = [];
+            this.propertyList = [];
+        }
     };
     //-----------------------------------------------------------------------------
     ApplicationComponent.prototype.scrollTop = function () {
@@ -219,13 +281,29 @@ var ApplicationComponent = (function () {
         this.location.back();
     };
     //-----------------------------------------------------------------------------
-    ApplicationComponent.prototype.forwar = function () {
+    ApplicationComponent.prototype.forward = function () {
         this.location.forward();
     };
     //-----------------------------------------------------------------------------
     ApplicationComponent.prototype.gotoCategory = function (selectedCategory) {
         var parObject = {};
         parObject['categoryId'] = selectedCategory.id;
+        this.router.navigate(['/item-list'], { queryParams: parObject });
+        this.selectedProperties = [];
+        this.propertyList = [];
+    };
+    //-----------------------------------------------------------------------------
+    ApplicationComponent.prototype.filterByPropertis = function () {
+        var parObject = {};
+        var tempArray = [];
+        parObject['categoryId'] = this.selectedCategory;
+        for (var i in this.selectedProperties) {
+            tempArray = [];
+            for (var j in this.selectedProperties[i].values)
+                tempArray.push(this.selectedProperties[i].values[j].value);
+            parObject['propertyId' + i] = this.selectedProperties[i].id;
+            parObject['value' + i] = tempArray;
+        }
         this.router.navigate(['/item-list'], { queryParams: parObject });
     };
     return ApplicationComponent;

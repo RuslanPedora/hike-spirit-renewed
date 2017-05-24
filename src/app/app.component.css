@@ -95,8 +95,9 @@
 	max-width: 1000px;
 	margin: 0 auto;
 	background-color: black;
+	text-align: left;
 }
-.mainCategorySpan {
+.mainCategorySpan {	
 	display: inline-block;
 	color: white;
 	position: relative;
@@ -118,12 +119,10 @@
 .subMenuContainer {
 	position: absolute;
 	top: 100%;
-	left: 0%;
 	display: none;
 	z-index: 20;
 	overflow: auto;
 	border-top: 10px solid #82A800;
-	vertical-align: top;
 }
 .whiteColor {
 	color: white;
@@ -144,13 +143,13 @@
 	padding: 5px;
 	text-align: left;
 	display: inline-block;	
-	border-right: 1px solid grey;
+	vertical-align: top;	
 	/*border: 1px solid red;*/
 }
 #filterdiv .subMenuContainer {
-	width: 500px;
-	left: -400px;
-	right: 0%;
+	width: 250px;
+	top: 0%;
+	right: 0%;	
 	text-align: left;
 }
 .valueRow {
@@ -185,6 +184,18 @@
 	max-width: 1000px;
 	margin: auto;
 	border-bottom: 1px solid #D7D7D7;
+	text-align: left;
+}
+.selectedProperty {
+	padding: 5px;
+	display: inline-block;
+}
+.selectedValue {
+	display: inline-block;
+	padding: 3px 7px 3px 7px;	
+	border-radius: 5px;
+	margin-left: 5px;
+	background-color: rgba( 0, 0, 0, .5 );
 }
 #pathDiv {
 	margin: 0 auto;
