@@ -67,6 +67,12 @@ var ApplicationComponent = (function () {
         this.onResize(undefined);
     };
     //-----------------------------------------------------------------------------
+    ApplicationComponent.prototype.ngAfterViewInit = function () {
+    };
+    //-----------------------------------------------------------------------------
+    ApplicationComponent.prototype.ngAfterViewChecked = function () {
+    };
+    //-----------------------------------------------------------------------------
     ApplicationComponent.prototype.ngOnDestroy = function () {
         this.routerListener.unsubscribe();
         this.basketListener.unsubscribe();
@@ -139,8 +145,10 @@ var ApplicationComponent = (function () {
                     propertryRef = this.propertyList.find(function (element) { return element.id == tempId; });
                     if (this.paramsToParse['value' + property.replace('propertyId', '')] instanceof Array)
                         tempArray = this.paramsToParse['value' + property.replace('propertyId', '')];
-                    else
-                        tempArray = this.paramsToParse['value' + property.replace('propertyId', '')].split(',');
+                    else {
+                        tempArray = [];
+                        tempArray.push(this.paramsToParse['value' + property.replace('propertyId', '')]);
+                    }
                     for (var i in tempArray) {
                         valueRef = propertryRef.values.find(function (element) { return element.value == tempArray[i]; });
                         this.toggleFilter(propertryRef, valueRef);
@@ -238,7 +246,11 @@ var ApplicationComponent = (function () {
             elementContacts.style.maxWidth = '1000px';
             elementCopyRights.style.maxWidth = '1000px';
             elementPanelDiv.style.display = 'block';
-            elementCategoryTree.style.display = 'block';
+            if (event.url.indexOf('category-list') >= 0 || event.url == '/') {
+                elementCategoryTree.style.display = 'none';
+            }
+            else
+                elementCategoryTree.style.display = 'block';
         }
         if (event.url.indexOf('category-list') >= 0) {
             elementBGImage.style.opacity = '.8';

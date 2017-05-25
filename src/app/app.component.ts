@@ -1,7 +1,9 @@
 import { Component, 
 	     OnInit,
 	     OnDestroy,
-	     AfterContentInit } from '@angular/core';
+	     AfterContentInit,
+	     AfterViewInit,
+	     AfterViewChecked } from '@angular/core';
 import { Router,
 		 ActivatedRoute } from '@angular/router';
 import { Subscription }   from 'rxjs/Subscription';
@@ -23,7 +25,7 @@ import { Property }     from 'hs_core/property';
   	}	
 })
 //-----------------------------------------------------------------------------
-export class ApplicationComponent implements OnInit, OnDestroy, AfterContentInit {
+export class ApplicationComponent implements OnInit, OnDestroy, AfterContentInit, AfterViewInit {
 	private routerListener: Subscription;
 	private basketListener: Subscription;
 	private pathListener: Subscription;
@@ -41,7 +43,7 @@ export class ApplicationComponent implements OnInit, OnDestroy, AfterContentInit
 				 private location: Location ) {
 	}
 	//-----------------------------------------------------------------------------
-	ngOnInit() {
+	ngOnInit(): void {
 		this.routerListener = this.router.events.subscribe( event => {
 			this.categoryPath = [];
 			this.resizeOutlet( event );		
@@ -76,8 +78,14 @@ export class ApplicationComponent implements OnInit, OnDestroy, AfterContentInit
 		this.total = this.dataService.getBasketTotal();
 	}
 	//-----------------------------------------------------------------------------
-	ngAfterContentInit() {
+	ngAfterContentInit(): void {
 		this.onResize( undefined );
+	}
+	//-----------------------------------------------------------------------------
+	ngAfterViewInit(): void {
+	}
+	//-----------------------------------------------------------------------------
+	ngAfterViewChecked(): void {
 	}
 	//-----------------------------------------------------------------------------
 	ngOnDestroy() {
@@ -156,8 +164,10 @@ export class ApplicationComponent implements OnInit, OnDestroy, AfterContentInit
 					propertryRef = this.propertyList.find( element => element.id == tempId );
 					if( this.paramsToParse[ 'value' + property.replace( 'propertyId', '' ) ] instanceof Array )
 						tempArray = this.paramsToParse[ 'value' + property.replace( 'propertyId', '' ) ];
-					else	
-						tempArray = this.paramsToParse[ 'value' + property.replace( 'propertyId', '' ) ].split( ',' );
+					else {	
+						tempArray = [];
+						tempArray.push( this.paramsToParse[ 'value' + property.replace( 'propertyId', '' ) ] );
+					}	
 					for( let i in tempArray ) {
 						valueRef = propertryRef.values.find( element => element.value == tempArray[ i ] );
 						this.toggleFilter( propertryRef, valueRef );
@@ -262,7 +272,11 @@ export class ApplicationComponent implements OnInit, OnDestroy, AfterContentInit
 			elementContacts.style.maxWidth = '1000px';
 			elementCopyRights.style.maxWidth = '1000px';
 			elementPanelDiv.style.display = 'block';
-			elementCategoryTree.style.display = 'block';
+			if( event.url.indexOf( 'category-list' ) >= 0 || event.url == '/') {
+				elementCategoryTree.style.display = 'none';
+			else
+				elementCategoryTree.style.display = 'block';
+
 		}
    		if( event.url.indexOf( 'category-list' ) >= 0 ) {
 			elementBGImage.style.opacity = '.8';

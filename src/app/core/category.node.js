@@ -8,6 +8,7 @@ var CategoryNode = (function () {
         this.level = level;
         this.itemCount = itemCount;
         this.nodes = [];
+        this.nodeOffset = 0;
     }
     return CategoryNode;
 }());

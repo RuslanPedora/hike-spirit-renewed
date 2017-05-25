@@ -2,13 +2,18 @@
 	min-height: 100vh;
 	text-align: left;
 }
-#sortingBar {
-	/*border-bottom: 1px solid #D7D7D7;	*/
+#sortingBar {	
 	padding: 7px;	
 	text-align: left;
 	color: white;
 	font-size: 15px;
 	color: #888888;
+	/*background-color: rgba(31,31,31,.75);*/
+	/*background-color: rgba( 0, 0, 0, .55 );	*/
+	background-color: transparent;
+}
+#sortingBar {
+	color: white;
 }
 #sortingBar select {
 	padding: 3px;
@@ -17,7 +22,8 @@
 	font-family: 'FontAwesome', 'sans-serif';
 	font-size: 15px;
 	color: white;
-	outline: none;
+	outline: none;	
+	background-color: rgba(31,31,31,1);	
 }	
 #emptyListMessage {
 	padding: 10px;

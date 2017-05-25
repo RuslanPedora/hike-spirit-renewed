@@ -9,6 +9,9 @@
 }
 #mainTableWrapper {
 	overflow: auto;
+	/*border: 1px solid red;*/
+	margin-top: 1px;
+	padding: 0;
 }
 #mainTable {
 	border-collapse: collapse; 		

@@ -566,8 +566,10 @@ function itemListResponse( request, response ) {
 
          if ( queryObject[ valueFieldName ] instanceof Array )
             valueArray = queryObject[ valueFieldName ];
-         else 
-            valueArray = queryObject[ valueFieldName ].split( ',' );
+         else {
+            valueArray = [];
+            valueArray.push( queryObject[ valueFieldName ] );
+         }
          for( var j in valueArray ) {
             propertyCondition += ( j == 0 ? '' : ' OR ' ) + ' value = \'' + valueArray[ j ] +'\' ';
          }

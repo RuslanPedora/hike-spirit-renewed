@@ -39,22 +39,26 @@
 		</div>
 	</div>	
 </div>
-<div id='categoryTree'>
-	<span *ngFor='let categoryNode of categoryNodes;' class='mainCategorySpan'>
-		<span class='glClickable glBGGreenHover mainCategoryInnerSpan' (click)='gotoCategory(categoryNode.category)'>
+<div id='categoryTree' #treeElement>
+	<span *ngFor='let categoryNode of categoryNodes;' class='mainCategorySpan glBGGreenHover' #nodeElement>
+		<span class='glClickable mainCategoryInnerSpan' (click)='gotoCategory(categoryNode.category)'>
 			{{categoryNode.category.name}}
 		</span>
-		<div class='subMenuContainer glBgGrey'  style.width='{{202*categoryNode.nodes.length}}px'>
+		<div class='subMenuContainer'  
+			style.width='{{202*categoryNode.nodes.length}}px'
+			style.left='-{{(nodeElement.offsetLeft-treeElement.offsetLeft+202*categoryNode.nodes.length<1000?0:(nodeElement.offsetLeft-treeElement.offsetLeft+202*categoryNode.nodes.length-1000))}}px'
+		>
 			<div *ngFor='let subCategory of categoryNode.nodes;' class='subMenu'>
 				<span (click)='gotoCategory(subCategory.category)'
-					  [ngClass]="{'glClickable': true, 'whiteColor':subCategory.itemCount>0 }">
-					{{subCategory.category.name}} ({{subCategory.itemCount}})
+					  [ngClass]="{'glClickable': true, 'indColor':subCategory.itemCount>0 }">
+					  {{subCategory.category.name}} <ng-container *ngIf='subCategory.itemCount>0'>({{subCategory.itemCount}})</ng-container>					  
 				</span>
 				<ul>
 					<li *ngFor='let lowCategory of subCategory.nodes;' 
-					    [ngClass]="{'lowMenuItem': true, 'glClickable': true, 'whiteColor':lowCategory.itemCount>0 }"
+					    [ngClass]="{'lowMenuItem': true, 'glClickable': true, 'indColor':lowCategory.itemCount>0 }"
 					    (click)='gotoCategory(lowCategory.category)'>
-						{{lowCategory.category.name}} ({{lowCategory.itemCount}})
+						{{lowCategory.category.id}}_{{lowCategory.category.name}}
+						<ng-container *ngIf='lowCategory.itemCount>0'>({{lowCategory.itemCount}})</ng-container>
 					</li>
 				</ul>
 				<br>
@@ -62,12 +66,12 @@
 		</div>		
 	</span>
 	<span id='filterdiv' class='mainCategorySpan'>
-		<span class='glBGGreenHover mainCategoryInnerSpan'>
-			<i class='fa fa-filter whiteColor'></i>
+		<span id='filterSign' class='glBGGreenHover mainCategoryInnerSpan'>
+			<i class='fa fa-filter'></i>
 		</span>	
-		<div class='subMenuContainer glBgGrey'>
+		<div class='subMenuContainer' *ngIf='propertyList.length>0'>
 			<div *ngFor='let property of propertyList;'>
-				{{property.id}}-{{property.name}}:
+				{{property.name}}:
 				<div *ngFor='let value of property.values;' class='glClickable valueRow' (click)='toggleFilter(property,value)'>
 					<span  *ngIf='value.selected'>
 						<i class='fa fa-check-square glCGreen isSelected'></i>
@@ -78,7 +82,7 @@
 					<span  *ngIf='value.selected'>
 						<i class='fa fa-minus-square glCGreen tobeUnSelected'></i>
 					</span>							
-					{{value.value}}
+					<cite>{{value.value}}</cite>
 				</div>
 			</div>
 		</div>

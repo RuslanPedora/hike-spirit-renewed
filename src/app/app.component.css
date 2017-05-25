@@ -84,6 +84,9 @@
 	padding: 0px 17px 5px 5px;	
 	float: right;
 }
+#basketBar span {
+	font-size: 17px;
+}	
 #basketBar i {
 	font-size: 30px;
 	transition: color .5s, transform .5s;
@@ -118,39 +121,62 @@
 }
 .subMenuContainer {
 	position: absolute;
-	top: 100%;
+	/*top: 100%;*/
 	display: none;
 	z-index: 20;
 	overflow: auto;
 	border-top: 10px solid #82A800;
+	box-shadow: 3px 3px 3px 3px black;
+	background-color: rgba( 255, 255, 255, .95 );
+	color: rgb( 50, 50, 50 );
+    animation: submenuMove .8s;
+    animation-fill-mode: forwards;
+    opacity: 0;	
 }
-.whiteColor {
-	color: white;
+@keyframes submenuMove {
+    from { opacity: 0; top: 110%;}
+    to { opacity: 1; top: 95%;}
+}
+.indColor {
+	color: black;
+	font-weight: bold;
 }
 .mainCategorySpan:hover .subMenuContainer {
 	display: initial;
 }
 .subMenuContainer ul {
 	list-style-type: none;
+	padding-left: 10px;
 }
 .subMenuContainer li {
 	text-align: left;
 	font-size: .8rem;
+	padding: 3px;
+}	
+.subMenuContainer span:hover {
+	text-decoration: underline;
+}	
+.subMenuContainer li:hover {
+	text-decoration: underline;
 }	
 .subMenu {
 	width: 200px;
 	position: relative;	
-	padding: 5px;
+	padding: 10px;
 	text-align: left;
 	display: inline-block;	
 	vertical-align: top;	
 	/*border: 1px solid red;*/
 }
 #filterdiv .subMenuContainer {
-	width: 250px;
-	top: 0%;
+	min-width: 180px;
+	padding: 10px;
+	top: 100%;
 	right: 0%;	
 	text-align: left;
+}
+#filterSign i {
+	color: white;
 }
 .valueRow {
 	position: relative;
@@ -170,6 +196,9 @@
 .valueRow .tobeUnSelected {
 	display: none;
 }
+.valueRow:hover cite {
+	text-decoration: underline;
+}
 .valueRow:hover .tobeSelected {
 	display: initial;
 }
@@ -183,7 +212,7 @@
 #selectedProperties {
 	max-width: 1000px;
 	margin: auto;
-	border-bottom: 1px solid #D7D7D7;
+	border-bottom: 1px solid #82A800;
 	text-align: left;
 }
 .selectedProperty {
@@ -202,7 +231,6 @@
 	max-width: 1000px;
 	padding: 10px;	
 	text-align: left;
-	border-bottom: 1px solid #D7D7D7;
 	transition: color .5s;
 }
 #pathDiv span:first-child span {
