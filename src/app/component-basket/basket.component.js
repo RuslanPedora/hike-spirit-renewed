@@ -68,7 +68,7 @@ var BasketComponent = (function () {
     };
     //-----------------------------------------------------------------------------
     BasketComponent.prototype.postOrder = function () {
-        alert('Your order has been posted');
+        this.dataService.showMessage('Your order has been posted');
     };
     return BasketComponent;
 }());

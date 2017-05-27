@@ -50,7 +50,7 @@ var InvitationComponent = (function () {
     };
     //-----------------------------------------------------------------------------
     InvitationComponent.prototype.articles = function () {
-        alert('Articles will be added a little bit later...');
+        this.dataService.showMessage('Articles will be added a little bit later...');
     };
     //-----------------------------------------------------------------------------
     InvitationComponent.prototype.scrollToQuote = function () {

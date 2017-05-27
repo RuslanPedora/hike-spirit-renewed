@@ -54,7 +54,7 @@ export class InvitationComponent implements OnInit {
  	}
  	//-----------------------------------------------------------------------------
  	articles(): void {
- 		alert( 'Articles will be added a little bit later...' );
+ 		this.dataService.showMessage( 'Articles will be added a little bit later...' );
  	}
  	//-----------------------------------------------------------------------------
  	scrollToQuote(): void {

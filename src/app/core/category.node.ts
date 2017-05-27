@@ -10,6 +10,5 @@ export class CategoryNode {
 		this.level = level;
 		this.itemCount = itemCount;
 		this.nodes = [];
-		this.nodeOffset = 0;
 	}
 }

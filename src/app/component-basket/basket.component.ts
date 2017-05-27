@@ -69,7 +69,7 @@ export class BasketComponent implements OnInit {
 	}
 	//-----------------------------------------------------------------------------
 	postOrder(): void {
-		alert( 'Your order has been posted' );
+		this.dataService.showMessage( 'Your order has been posted' );
 	}
 	//-----------------------------------------------------------------------------
 }

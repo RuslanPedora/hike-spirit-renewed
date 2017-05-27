@@ -93,7 +93,7 @@
 		{{selectedProperty.name}}:
 		<span class='glClickable selectedValue' *ngFor='let selectedValue of selectedProperty.values;' (click)='cleanSelectedValue(selectedProperty,selectedValue)'>
 			{{selectedValue.value}}
-			<i class='fa fa-times-rectangle glCGreen'></i>			
+			<i class='fa fa-times-rectangle glCGreen'></i>
 		</span>
 	</span>
 </div>
@@ -148,12 +148,17 @@
 	      <form ngNativeValidate (ngSubmit)='subscribe()'>
 	        <fieldset>
 	          <input class="btmspace-15" type="text" value="" placeholder="Name" required>
-	          <input class="btmspace-15" type="text" value="" placeholder="Email" required>
+	          <input class="btmspace-15" type="email" value="" placeholder="Email" required>
 	          <button type="submit" value="submit" class='glBgGreen'>Subscribe</button>
 	        </fieldset>
 	      </form>
 	    </div>
 	</div>
+</div>
+<!-- ################################################################################ -->
+<div id='messageBox' class='glBgWhite' *ngIf='messageShown'>
+	<i class='fa fa-times-rectangle glCGreen glClickable' (click)='hideMessage()'></i>
+	<span>{{message}}</span>
 </div>
 <!-- ################################################################################ -->
 <div id="copyright" class='glContainer'> 

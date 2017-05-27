@@ -43,6 +43,8 @@ export class DataService {
 	basketEventSource: Observable<string> = this.basketEventEmitter.asObservable();
 	private pathEventEmitter = new Subject<any[]>(); 
 	pathEventSource: Observable<any[]> = this.pathEventEmitter.asObservable();
+	private messenger = new Subject<string>(); 
+	messageSource: Observable<string> = this.messenger.asObservable();
 	//-----------------------------------------------------------------------------
 	constructor( private http: Http,
 	             private localStorageService: LocalStorageService ) {
@@ -308,6 +310,10 @@ export class DataService {
 	getItemPrefix(): string {
 		return this.itemPrefix;
 	}
+	//-----------------------------------------------------------------------------
+	showMessage( text: string ) : void {
+		this.messenger.next( text );
+	}	
 	//-----------------------------------------------------------------------------
 	buildPath( parObject: any): void {
 		let query: string = '/?';

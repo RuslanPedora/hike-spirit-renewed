@@ -33,6 +33,8 @@ var DataService = (function () {
         this.basketEventSource = this.basketEventEmitter.asObservable();
         this.pathEventEmitter = new Subject_1.Subject();
         this.pathEventSource = this.pathEventEmitter.asObservable();
+        this.messenger = new Subject_1.Subject();
+        this.messageSource = this.messenger.asObservable();
         this.hostUrl = window.location.origin;
         if (this.hostUrl.indexOf('localhost') >= 0) {
             this.hostUrl = this.hostUrl.replace('3000', '8081');
@@ -261,6 +263,10 @@ var DataService = (function () {
     //-----------------------------------------------------------------------------
     DataService.prototype.getItemPrefix = function () {
         return this.itemPrefix;
+    };
+    //-----------------------------------------------------------------------------
+    DataService.prototype.showMessage = function (text) {
+        this.messenger.next(text);
     };
     //-----------------------------------------------------------------------------
     DataService.prototype.buildPath = function (parObject) {

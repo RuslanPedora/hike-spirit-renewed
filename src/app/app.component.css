@@ -375,6 +375,31 @@ fieldset {
 #backtotop:hover { 
 	opacity: 1;
 }
+#messageBox {	
+	padding: 30px;	
+	min-width: 30vw;
+	max-width: 90vw;
+	overflow: auto;
+	z-index: 99;
+	position: fixed;
+	left: 30vw;
+	border-radius: 4px;	
+    animation: messageMove .8s;
+    animation-fill-mode: forwards;
+    /*opacity: 0;	*/
+    box-shadow: 3px 3px 3px 3px black;
+    background-color: rgba( 255, 255, 255, .85 );
+}
+@keyframes messageMove {
+    from { opacity: 0; top: 0px; }
+    to { opacity: 1; top: 100px; }
+}
+#messageBox i {
+	font-size: 23px;	
+	right: 5px; 
+	top: 5px;
+	position: absolute;
+}
 :host /deep/ .headerFont {
 	font-weight: normal;
 	font-family: Georgia, "Times New Roman", Times, serif;

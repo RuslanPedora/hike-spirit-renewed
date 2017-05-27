@@ -29,6 +29,8 @@ var ApplicationComponent = (function () {
         this.selectedProperties = [];
         this.selectedCategory = 0;
         this.paramsToParse = undefined;
+        this.message = '';
+        this.messageShown = false;
     }
     //-----------------------------------------------------------------------------
     ApplicationComponent.prototype.ngOnInit = function () {
@@ -43,6 +45,7 @@ var ApplicationComponent = (function () {
         this.pathListener = this.dataService.pathEventSource.subscribe(function (eventValue) {
             return _this.categoryPath = eventValue;
         });
+        this.messageListener = this.dataService.messageSource.subscribe(function (message) { return _this.showMessage(message); });
         this.activatedRoute.queryParams.subscribe(function (queryParams) {
             var categoryIdPar = queryParams['categoryId'];
             if (categoryIdPar != undefined) {
@@ -77,6 +80,24 @@ var ApplicationComponent = (function () {
         this.routerListener.unsubscribe();
         this.basketListener.unsubscribe();
         this.pathListener.unsubscribe();
+        this.messageListener.unsubscribe();
+    };
+    //-----------------------------------------------------------------------------
+    ApplicationComponent.prototype.showMessage = function (message) {
+        var element;
+        var _this;
+        this.message = message;
+        this.messageShown = true;
+        //element = document.getElementById( 'messageBox' );
+        //_this = this;
+        // setTimeout( function() { _this.hideMessage();
+        // 					   }, 
+        // 	        10000
+        // 	      );
+    };
+    //-----------------------------------------------------------------------------
+    ApplicationComponent.prototype.hideMessage = function () {
+        this.messageShown = false;
     };
     //-----------------------------------------------------------------------------
     ApplicationComponent.prototype.toggleFilter = function (property, value) {
@@ -246,9 +267,8 @@ var ApplicationComponent = (function () {
             elementContacts.style.maxWidth = '1000px';
             elementCopyRights.style.maxWidth = '1000px';
             elementPanelDiv.style.display = 'block';
-            if (event.url.indexOf('category-list') >= 0 || event.url == '/') {
+            if (event.url.indexOf('category-list') >= 0 || event.url == '/')
                 elementCategoryTree.style.display = 'none';
-            }
             else
                 elementCategoryTree.style.display = 'block';
         }
@@ -269,7 +289,7 @@ var ApplicationComponent = (function () {
     };
     //-----------------------------------------------------------------------------
     ApplicationComponent.prototype.subscribe = function () {
-        alert('You have subscribed');
+        this.showMessage('You have subscribed');
     };
     //-----------------------------------------------------------------------------
     ApplicationComponent.prototype.searchItem = function (searchKey) {

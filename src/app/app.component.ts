@@ -29,6 +29,7 @@ export class ApplicationComponent implements OnInit, OnDestroy, AfterContentInit
 	private routerListener: Subscription;
 	private basketListener: Subscription;
 	private pathListener: Subscription;
+	private messageListener: Subscription;
 	private total: number = 0;
 	private categoryPath: any[] = [];
 	private categoryNodes: CategoryNode[] = [];
@@ -36,6 +37,8 @@ export class ApplicationComponent implements OnInit, OnDestroy, AfterContentInit
 	private selectedProperties: Property[] = [];
 	private selectedCategory: number = 0;
 	private paramsToParse: any = undefined;
+	private message: string = '';
+	private messageShown: boolean = false;
 	//-----------------------------------------------------------------------------
 	constructor( private router: Router,
 				 private activatedRoute: ActivatedRoute,
@@ -56,6 +59,7 @@ export class ApplicationComponent implements OnInit, OnDestroy, AfterContentInit
 										  eventValue => 
 										   this.categoryPath = eventValue
 		)
+		this.messageListener = this.dataService.messageSource.subscribe( message => this.showMessage( message ) );
 		this.activatedRoute.queryParams.subscribe(
 			queryParams => {				
 				let categoryIdPar = queryParams [ 'categoryId' ];
@@ -92,6 +96,25 @@ export class ApplicationComponent implements OnInit, OnDestroy, AfterContentInit
 		this.routerListener.unsubscribe();
 		this.basketListener.unsubscribe();
 		this.pathListener.unsubscribe();
+		this.messageListener.unsubscribe();
+	}
+	//-----------------------------------------------------------------------------
+	showMessage( message: string ): void {
+		let element: any;
+		let _this: any;
+
+		this.message = message;
+		this.messageShown = true;
+		//element = document.getElementById( 'messageBox' );
+		//_this = this;
+		// setTimeout( function() { _this.hideMessage();
+		// 					   }, 
+		// 	        10000
+		// 	      );
+	}
+	//-----------------------------------------------------------------------------
+	hideMessage(): void {
+		this.messageShown = false;
 	}
 	//-----------------------------------------------------------------------------
 	toggleFilter( property: Property, value: any ) {
@@ -272,7 +295,7 @@ export class ApplicationComponent implements OnInit, OnDestroy, AfterContentInit
 			elementContacts.style.maxWidth = '1000px';
 			elementCopyRights.style.maxWidth = '1000px';
 			elementPanelDiv.style.display = 'block';
-			if( event.url.indexOf( 'category-list' ) >= 0 || event.url == '/') {
+			if( event.url.indexOf( 'category-list' ) >= 0 || event.url == '/')
 				elementCategoryTree.style.display = 'none';
 			else
 				elementCategoryTree.style.display = 'block';
@@ -295,7 +318,7 @@ export class ApplicationComponent implements OnInit, OnDestroy, AfterContentInit
     }
     //-----------------------------------------------------------------------------
     subscribe(): void {
-         alert( 'You have subscribed' );   		
+         this.showMessage( 'You have subscribed' );   		
     }
     //-----------------------------------------------------------------------------
     searchItem( searchKey: string ): void {
