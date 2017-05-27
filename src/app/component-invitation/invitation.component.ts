@@ -36,7 +36,7 @@ export class InvitationComponent implements OnInit {
 	//-----------------------------------------------------------------------------
 	gotoItemList( selectedCategory: Category ) {
 		let parObject = {};
-		parObject[ 'categoryId' + this.dataService.getItemPrefix() ] = selectedCategory.id;
+		parObject[ 'categoryId' ] = selectedCategory.id;
 		this.router.navigate( [ '/item-list' ], { queryParams: parObject } );
 	}
 	//-----------------------------------------------------------------------------

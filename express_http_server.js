@@ -476,6 +476,7 @@ function itemListResponse( request, response ) {
     var queryObject;
     var categoryValue;
     var propertyCondition = '';
+    var propertryCount = 0;
 
     indexOfQueryString = request.url.indexOf( '/?' );
     if ( indexOfQueryString > 0 )
@@ -549,17 +550,19 @@ function itemListResponse( request, response ) {
       if( conditionInjection == '' ) 
         conditionInjection = ' WHERE '
       else
-        conditionInjection = ' AND '
+        conditionInjection += ' AND '
       categoryValue = queryObject.categoryId;
       conditionInjection += '( itemSelection.categoryId = ' + categoryValue + ' OR parents.parentId = ' + categoryValue + ' OR grandParents.parentId = ' + categoryValue + ')';
     }    
 
     for( var property in queryObject ) {
       if( property.indexOf( 'propertyId' ) >= 0 ) {
+         propertryCount = propertryCount +1;
+
          if( propertyCondition == '' )
             propertyCondition += ' WHERE ';
          if( propertyCondition != ' WHERE ' )
-            propertyCondition += ' AND '
+            propertyCondition += ' OR '
          propertyCondition += '( propertyId = ' + queryObject[ property ] + ' AND (';
 
          valueFieldName = 'value' + property.replace( 'propertyId', '' );
@@ -582,7 +585,7 @@ function itemListResponse( request, response ) {
         conditionInjection += ' WHERE ';
       else 
         conditionInjection += ' AND ';
-      conditionInjection += ' id IN ( SELECT itemId FROM itemProperties ' + propertyCondition + ' ) ';
+      conditionInjection += ' id IN ( SELECT itemId FROM itemProperties ' + propertyCondition + ' GROUP BY itemId HAVING COUNT( propertyId ) = ' + propertryCount + ' ) ';
     }
 
     querySQL = querySQL.replace( 'conditionInjection', conditionInjection );

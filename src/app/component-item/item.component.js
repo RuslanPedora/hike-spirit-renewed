@@ -55,6 +55,7 @@ var ItemComponent = (function () {
                     _this.mouseEntered = true;
                     _this.posBigImage(_this.offsetX, _this.offsetY, _this.clientWidth, _this.clientHeight);
                 }
+                window.scrollTo(0, 0);
             }
         });
     };

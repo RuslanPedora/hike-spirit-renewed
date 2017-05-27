@@ -39,6 +39,12 @@ export class ApplicationComponent implements OnInit, OnDestroy, AfterContentInit
 	private paramsToParse: any = undefined;
 	private message: string = '';
 	private messageShown: boolean = false;
+	private colWidth: number = 200;
+	private mainAreaWidth:number = 1000;
+
+	private lowPrice: number = 0;
+	private highPrice: number = 0;
+	private showFilter: boolean;
 	//-----------------------------------------------------------------------------
 	constructor( private router: Router,
 				 private activatedRoute: ActivatedRoute,
@@ -69,12 +75,20 @@ export class ApplicationComponent implements OnInit, OnDestroy, AfterContentInit
 					if( this.selectedProperties.length == 0 ) {
 						this.paramsToParse = queryParams;
 						this.dataService.getProperties( categoryIdPar ).then( data => this.fillPropertyList( data ) );
+						let lowPrice = queryParams[ 'lowPrice' + this.dataService.getItemPrefix() ];
+						if( lowPrice != undefined )
+							this.lowPrice = lowPrice;
+						let highPrice = queryParams[ 'highPrice' + this.dataService.getItemPrefix() ];
+						if( highPrice != undefined )
+							this.highPrice = highPrice;
 					}
 				}
 				else {
 					this.selectedCategory = 0;
 					this.propertyList = [];
 					this.selectedProperties = [];
+					this.lowPrice = 0;
+					this.highPrice = 0;
 				}				
 			}
 		);				
@@ -105,12 +119,6 @@ export class ApplicationComponent implements OnInit, OnDestroy, AfterContentInit
 
 		this.message = message;
 		this.messageShown = true;
-		//element = document.getElementById( 'messageBox' );
-		//_this = this;
-		// setTimeout( function() { _this.hideMessage();
-		// 					   }, 
-		// 	        10000
-		// 	      );
 	}
 	//-----------------------------------------------------------------------------
 	hideMessage(): void {
@@ -256,10 +264,15 @@ export class ApplicationComponent implements OnInit, OnDestroy, AfterContentInit
 		let forwardButton: any;
 		let searchInput: any;
 		let basketBar: any;
+		let elementPanelDiv: any;
 
 		searchInput = document.getElementById( 'searchInput' );
 		homeButton  = document.getElementById( 'homeNavButton' );
 		basketBar   = document.getElementById( 'basketBar' );
+		
+		elementPanelDiv = document.getElementById( 'panelDiv' );
+		if( elementPanelDiv != undefined )
+			this.mainAreaWidth = elementPanelDiv.clientWidth;
 
 		forwardButton = document.getElementById( 'forwardNavButton' );			
 		searchInput.style.width = ( forwardButton.offsetLeft + forwardButton.clientWidth - homeButton.offsetLeft - 40 + 1 ).toString() + 'px';
@@ -283,12 +296,14 @@ export class ApplicationComponent implements OnInit, OnDestroy, AfterContentInit
    		elementPanelDiv = document.getElementById( 'panelDiv' );
    		elementBGImage = document.getElementById( 'mainBgImage' );
    		elementCategoryTree = document.getElementById( 'categoryTree' );
+
    		if( event.url.indexOf( 'invitation' ) >= 0 || event.url == '/') {
 			elementOutlet.style.maxWidth = '100%';
 			elementContacts.style.maxWidth = '100%';
 			elementCopyRights.style.maxWidth = '100%';
 			elementPanelDiv.style.display = 'none';
 			elementCategoryTree.style.display = 'none';
+			this.categoryPath = [];
    		}
 		else {
 			elementOutlet.style.maxWidth = '1000px';
@@ -310,7 +325,10 @@ export class ApplicationComponent implements OnInit, OnDestroy, AfterContentInit
 		if( event.url.indexOf( 'item-list' ) < 0 ) {
 			this.selectedProperties = [];
 			this.propertyList = [];
+			this.showFilter = false;
 		}	
+		else
+			this.showFilter = true; 
    	}
    	//-----------------------------------------------------------------------------
    	scrollTop():void {
@@ -359,6 +377,10 @@ export class ApplicationComponent implements OnInit, OnDestroy, AfterContentInit
 		let parObject = {};
 		let tempArray: any[] = [];
 		parObject[ 'categoryId' ] = this.selectedCategory;
+		if( this.lowPrice > 0 )
+			parObject[ 'lowPrice' + this.dataService.getItemPrefix() ] = this.lowPrice;
+		if( this.highPrice > 0 )
+			parObject[ 'highPrice' + this.dataService.getItemPrefix() ] = this.highPrice;
 		for( let i in this.selectedProperties ) {
 			tempArray = [];
 			for( let j in this.selectedProperties[ i ].values )
@@ -367,6 +389,16 @@ export class ApplicationComponent implements OnInit, OnDestroy, AfterContentInit
 			parObject[ 'value' + i ] = tempArray;
 		}
 		this.router.navigate( [ '/item-list' ], { queryParams: parObject } );
-
 	}
+	//-----------------------------------------------------------------------------
+	cleanLowPrice(): void {
+		this.lowPrice = 0;
+		this.filterByPropertis();
+	}
+	//-----------------------------------------------------------------------------
+	cleanHighPrice(): void {
+		this.highPrice = 0;
+		this.filterByPropertis();
+	}
+	//-----------------------------------------------------------------------------
 }

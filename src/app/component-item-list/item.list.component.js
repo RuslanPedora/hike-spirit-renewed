@@ -23,6 +23,7 @@ var ItemListComponent = (function () {
     ItemListComponent.prototype.ngOnInit = function () {
         var _this = this;
         this.activatedRoute.queryParams.subscribe(function (queryParams) { return _this.getItemList(queryParams); });
+        window.scrollTo(0, 0);
     };
     //-----------------------------------------------------------------------------
     ItemListComponent.prototype.getItemList = function (params) {
@@ -39,6 +40,7 @@ var ItemListComponent = (function () {
         this.dataService.getItemList(queryString).then(function (itemList) {
             tempItemList = itemList;
             _this.dataService.converRate(tempItemList);
+            _this.itemList = [];
             _this.itemList = tempItemList;
         });
     };

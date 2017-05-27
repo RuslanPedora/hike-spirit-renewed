@@ -105,12 +105,6 @@
 	color: white;
 	position: relative;
 }
-.mainCategorySpan:last-child {
-	float: right;
-}
-.mainCategorySpan:last-child i {
-	font-size: 20px;
-}
 .mainCategoryInnerSpan {
 	padding: 10px;
 	display: inline-block;
@@ -168,15 +162,31 @@
 	vertical-align: top;	
 	/*border: 1px solid red;*/
 }
+#filterdiv {
+	margin-bottom: -2px;
+}
+#filterdiv input {
+	width: 43px;
+	padding: 3px;
+	text-align: right;
+}	
+input[type="number"]::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
 #filterdiv .subMenuContainer {
 	min-width: 180px;
 	padding: 10px;
-	top: 100%;
-	right: 0%;	
 	text-align: left;
+	display: initial;
+	top: 100%;
+	left: 100%;
 }
-#filterSign i {
-	color: white;
+#filterdiv {
+	float: right;
+}
+#filterdiv i {
+	font-size: 20px;
 }
 .valueRow {
 	position: relative;
@@ -495,6 +505,16 @@ h1, h2, h3, h4, h5, h6, { font-family:Georgia, "Times New Roman", Times, serif;}
 :host /deep/ .inspace-30{padding:30px;}
 :host /deep/ .inspace-50{padding:50px;}
 :host /deep/ .inspace-80{padding:80px;}
+
+@media only screen and (max-width: 1400px) {
+	#filterdiv .subMenuContainer {
+		display: none;
+		left: -143px;
+	}
+	#filterdiv:hover .subMenuContainer {
+		display: initial;
+	}
+}
 @media only screen and (max-width: 1010px) {
 	.navButton {
 		width: 15%;

@@ -50,14 +50,14 @@ export class ItemComponent implements OnInit {
 				}
 			}
 		);	
-		window.scrollTo( 0, 0 );			
+		window.scrollTo( 0, 0 );
 	}
 	//-----------------------------------------------------------------------------
 	getItem( itemId: number ):void {
 		let tempList: Item[];
 		this.dataService.getItemList( '/?' + JSON.stringify( { id_IT: itemId } ) )
 		                .then( itemList => { tempList = itemList;
-			                                 this.dataService.converRate( tempList );
+			                                 this.dataService.converRate( tempList );			                                 
 			                                 if( tempList.length > 0 ) {
 			                                     this.item = tempList[0];
 			                                     this.dataService.addToViewItem( this.item );
@@ -67,7 +67,7 @@ export class ItemComponent implements OnInit {
 			                                     	this.mouseEntered = true;
 			                                     	this.posBigImage( this.offsetX, this.offsetY, this.clientWidth, this.clientHeight );
 			                                     }
-
+											  window.scrollTo( 0, 0 );
 			                                 }
 		} ); 
 	}

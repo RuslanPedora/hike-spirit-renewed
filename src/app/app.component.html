@@ -39,16 +39,17 @@
 		</div>
 	</div>	
 </div>
+{{mainAreaWidth}}
 <div id='categoryTree' #treeElement>
 	<span *ngFor='let categoryNode of categoryNodes;' class='mainCategorySpan glBGGreenHover' #nodeElement>
 		<span class='glClickable mainCategoryInnerSpan' (click)='gotoCategory(categoryNode.category)'>
 			{{categoryNode.category.name}}
 		</span>
 		<div class='subMenuContainer'  
-			style.width='{{202*categoryNode.nodes.length}}px'
-			style.left='-{{(nodeElement.offsetLeft-treeElement.offsetLeft+202*categoryNode.nodes.length<1000?0:(nodeElement.offsetLeft-treeElement.offsetLeft+202*categoryNode.nodes.length-1000))}}px'
+			style.width='{{colWidth*categoryNode.nodes.length}}px'
+			style.left='-{{(nodeElement.offsetLeft-treeElement.offsetLeft+colWidth*categoryNode.nodes.length<mainAreaWidth?0:(nodeElement.offsetLeft-treeElement.offsetLeft+colWidth*categoryNode.nodes.length-mainAreaWidth))}}px'
 		>
-			<div *ngFor='let subCategory of categoryNode.nodes;' class='subMenu'>
+			<div *ngFor='let subCategory of categoryNode.nodes;' class='subMenu' style='{{colWidth-3}}px'>
 				<span (click)='gotoCategory(subCategory.category)'
 					  [ngClass]="{'glClickable': true, 'indColor':subCategory.itemCount>0 }">
 					  {{subCategory.category.name}} <ng-container *ngIf='subCategory.itemCount>0'>({{subCategory.itemCount}})</ng-container>					  
@@ -65,11 +66,15 @@
 			</div>
 		</div>		
 	</span>
-	<span id='filterdiv' class='mainCategorySpan'>
+	<span id='filterdiv' class='mainCategorySpan' *ngIf='showFilter'>
 		<span id='filterSign' class='glBGGreenHover mainCategoryInnerSpan'>
 			<i class='fa fa-filter'></i>
-		</span>	
-		<div class='subMenuContainer' *ngIf='propertyList.length>0'>
+		</span>
+		<div class='subMenuContainer'>
+			Price:
+			<input type='number' [(ngModel)]='lowPrice' (change)='filterByPropertis()'>	
+			-
+			<input type='number' [(ngModel)]='highPrice' (change)='filterByPropertis()'>	
 			<div *ngFor='let property of propertyList;'>
 				{{property.name}}:
 				<div *ngFor='let value of property.values;' class='glClickable valueRow' (click)='toggleFilter(property,value)'>
@@ -88,7 +93,19 @@
 		</div>
 	</span>
 </div>
-<div id='selectedProperties' class='glBgGrey' *ngIf='selectedProperties.length>0'>
+<div id='selectedProperties' class='glBgGrey' *ngIf='selectedProperties.length>0||lowPrice>0||highPrice>0'>
+	<span class='selectedProperty'>
+		<span class='glClickable selectedValue' *ngIf='lowPrice>0' (click)='cleanLowPrice()'>
+			{{lowPrice}}<=Price
+			<i class='fa fa-times-rectangle glCGreen'></i>	
+		</span>
+	</span>
+	<span class='selectedProperty'>
+		<span class='glClickable selectedValue' *ngIf='highPrice>0' (click)='cleanHighPrice()'>
+			Price<={{highPrice}}
+			<i class='fa fa-times-rectangle glCGreen'></i>	
+		</span>
+	</span>
 	<span *ngFor='let selectedProperty of selectedProperties;' class='selectedProperty'>
 		{{selectedProperty.name}}:
 		<span class='glClickable selectedValue' *ngFor='let selectedValue of selectedProperty.values;' (click)='cleanSelectedValue(selectedProperty,selectedValue)'>

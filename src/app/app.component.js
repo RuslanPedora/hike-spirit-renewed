@@ -31,6 +31,10 @@ var ApplicationComponent = (function () {
         this.paramsToParse = undefined;
         this.message = '';
         this.messageShown = false;
+        this.colWidth = 200;
+        this.mainAreaWidth = 1000;
+        this.lowPrice = 0;
+        this.highPrice = 0;
     }
     //-----------------------------------------------------------------------------
     ApplicationComponent.prototype.ngOnInit = function () {
@@ -54,12 +58,20 @@ var ApplicationComponent = (function () {
                 if (_this.selectedProperties.length == 0) {
                     _this.paramsToParse = queryParams;
                     _this.dataService.getProperties(categoryIdPar).then(function (data) { return _this.fillPropertyList(data); });
+                    var lowPrice = queryParams['lowPrice' + _this.dataService.getItemPrefix()];
+                    if (lowPrice != undefined)
+                        _this.lowPrice = lowPrice;
+                    var highPrice = queryParams['highPrice' + _this.dataService.getItemPrefix()];
+                    if (highPrice != undefined)
+                        _this.highPrice = highPrice;
                 }
             }
             else {
                 _this.selectedCategory = 0;
                 _this.propertyList = [];
                 _this.selectedProperties = [];
+                _this.lowPrice = 0;
+                _this.highPrice = 0;
             }
         });
         this.dataService.getCategoryTreeData().then(function (treeData) { _this.categoryNodes = _this.buildCategoryTree(treeData, 0); });
@@ -88,12 +100,6 @@ var ApplicationComponent = (function () {
         var _this;
         this.message = message;
         this.messageShown = true;
-        //element = document.getElementById( 'messageBox' );
-        //_this = this;
-        // setTimeout( function() { _this.hideMessage();
-        // 					   }, 
-        // 	        10000
-        // 	      );
     };
     //-----------------------------------------------------------------------------
     ApplicationComponent.prototype.hideMessage = function () {
@@ -231,9 +237,13 @@ var ApplicationComponent = (function () {
         var forwardButton;
         var searchInput;
         var basketBar;
+        var elementPanelDiv;
         searchInput = document.getElementById('searchInput');
         homeButton = document.getElementById('homeNavButton');
         basketBar = document.getElementById('basketBar');
+        elementPanelDiv = document.getElementById('panelDiv');
+        if (elementPanelDiv != undefined)
+            this.mainAreaWidth = elementPanelDiv.clientWidth;
         forwardButton = document.getElementById('forwardNavButton');
         searchInput.style.width = (forwardButton.offsetLeft + forwardButton.clientWidth - homeButton.offsetLeft - 40 + 1).toString() + 'px';
     };
@@ -261,6 +271,7 @@ var ApplicationComponent = (function () {
             elementCopyRights.style.maxWidth = '100%';
             elementPanelDiv.style.display = 'none';
             elementCategoryTree.style.display = 'none';
+            this.categoryPath = [];
         }
         else {
             elementOutlet.style.maxWidth = '1000px';
@@ -281,7 +292,10 @@ var ApplicationComponent = (function () {
         if (event.url.indexOf('item-list') < 0) {
             this.selectedProperties = [];
             this.propertyList = [];
+            this.showFilter = false;
         }
+        else
+            this.showFilter = true;
     };
     //-----------------------------------------------------------------------------
     ApplicationComponent.prototype.scrollTop = function () {
@@ -329,6 +343,10 @@ var ApplicationComponent = (function () {
         var parObject = {};
         var tempArray = [];
         parObject['categoryId'] = this.selectedCategory;
+        if (this.lowPrice > 0)
+            parObject['lowPrice' + this.dataService.getItemPrefix()] = this.lowPrice;
+        if (this.highPrice > 0)
+            parObject['highPrice' + this.dataService.getItemPrefix()] = this.highPrice;
         for (var i in this.selectedProperties) {
             tempArray = [];
             for (var j in this.selectedProperties[i].values)
@@ -337,6 +355,16 @@ var ApplicationComponent = (function () {
             parObject['value' + i] = tempArray;
         }
         this.router.navigate(['/item-list'], { queryParams: parObject });
+    };
+    //-----------------------------------------------------------------------------
+    ApplicationComponent.prototype.cleanLowPrice = function () {
+        this.lowPrice = 0;
+        this.filterByPropertis();
+    };
+    //-----------------------------------------------------------------------------
+    ApplicationComponent.prototype.cleanHighPrice = function () {
+        this.highPrice = 0;
+        this.filterByPropertis();
     };
     return ApplicationComponent;
 }());

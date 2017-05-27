@@ -26,6 +26,7 @@ export class ItemListComponent implements OnInit {
 	//-----------------------------------------------------------------------------
 	ngOnInit() {
 		this.activatedRoute.queryParams.subscribe( queryParams => this.getItemList( queryParams ) );		
+		window.scrollTo( 0, 0 );
 	}
 	//-----------------------------------------------------------------------------
 	getItemList( params: any ): void {
@@ -42,6 +43,7 @@ export class ItemListComponent implements OnInit {
 
 		this.dataService.getItemList( queryString ).then( itemList => { tempItemList = itemList;
 			                                                   this.dataService.converRate( tempItemList );
+			                                                   this.itemList = [];
 			                                                   this.itemList = tempItemList;
 		} );
 	}
