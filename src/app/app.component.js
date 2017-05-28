@@ -57,6 +57,8 @@ var ApplicationComponent = (function () {
                 _this.selectedCategory = categoryIdPar;
                 if (_this.selectedProperties.length == 0) {
                     _this.paramsToParse = queryParams;
+                    _this.lowPrice = 0;
+                    _this.highPrice = 0;
                     _this.dataService.getProperties(categoryIdPar).then(function (data) { return _this.fillPropertyList(data); });
                     var lowPrice = queryParams['lowPrice' + _this.dataService.getItemPrefix()];
                     if (lowPrice != undefined)
@@ -74,7 +76,10 @@ var ApplicationComponent = (function () {
                 _this.highPrice = 0;
             }
         });
-        this.dataService.getCategoryTreeData().then(function (treeData) { _this.categoryNodes = _this.buildCategoryTree(treeData, 0); });
+        this.dataService.getCategoryTreeData().then(function (treeData) {
+            _this.categoryNodes = _this.buildCategoryTree(treeData, 0);
+            _this.resizeSubmenu();
+        });
         this.total = this.dataService.getBasketTotal();
     };
     //-----------------------------------------------------------------------------
@@ -246,6 +251,16 @@ var ApplicationComponent = (function () {
             this.mainAreaWidth = elementPanelDiv.clientWidth;
         forwardButton = document.getElementById('forwardNavButton');
         searchInput.style.width = (forwardButton.offsetLeft + forwardButton.clientWidth - homeButton.offsetLeft - 40 + 1).toString() + 'px';
+        this.resizeSubmenu();
+    };
+    //-----------------------------------------------------------------------------
+    ApplicationComponent.prototype.resizeSubmenu = function () {
+        var maxSubmenuCol = 0;
+        this.mainAreaWidth = Math.min(window.innerWidth, 1000);
+        maxSubmenuCol = Math.floor(this.mainAreaWidth / this.colWidth);
+        for (var i in this.categoryNodes) {
+            this.categoryNodes[i].submenuWidth = Math.min(maxSubmenuCol, this.categoryNodes[i].nodes.length) * this.colWidth;
+        }
     };
     //-----------------------------------------------------------------------------
     ApplicationComponent.prototype.gotoBasket = function () {

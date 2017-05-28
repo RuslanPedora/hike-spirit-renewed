@@ -39,15 +39,14 @@
 		</div>
 	</div>	
 </div>
-{{mainAreaWidth}}
 <div id='categoryTree' #treeElement>
 	<span *ngFor='let categoryNode of categoryNodes;' class='mainCategorySpan glBGGreenHover' #nodeElement>
 		<span class='glClickable mainCategoryInnerSpan' (click)='gotoCategory(categoryNode.category)'>
 			{{categoryNode.category.name}}
 		</span>
 		<div class='subMenuContainer'  
-			style.width='{{colWidth*categoryNode.nodes.length}}px'
-			style.left='-{{(nodeElement.offsetLeft-treeElement.offsetLeft+colWidth*categoryNode.nodes.length<mainAreaWidth?0:(nodeElement.offsetLeft-treeElement.offsetLeft+colWidth*categoryNode.nodes.length-mainAreaWidth))}}px'
+			style.width='{{categoryNode.submenuWidth}}px'
+			style.left='-{{(nodeElement.offsetLeft-treeElement.offsetLeft+categoryNode.submenuWidth<mainAreaWidth?0:(nodeElement.offsetLeft-treeElement.offsetLeft+categoryNode.submenuWidth-mainAreaWidth))}}px'
 		>
 			<div *ngFor='let subCategory of categoryNode.nodes;' class='subMenu' style='{{colWidth-3}}px'>
 				<span (click)='gotoCategory(subCategory.category)'
@@ -55,11 +54,20 @@
 					  {{subCategory.category.name}} <ng-container *ngIf='subCategory.itemCount>0'>({{subCategory.itemCount}})</ng-container>					  
 				</span>
 				<ul>
-					<li *ngFor='let lowCategory of subCategory.nodes;' 
+					<li *ngFor='let lowCategory of subCategory.nodes;'						
+
+						style.height='{{(lowCategory.itemCount>0||mainAreaWidth>=1000?"initial":"0px")}}'
+						style.padding='{{(lowCategory.itemCount>0||mainAreaWidth>=1000?"initial":"0px")}}'
+						style.margin='{{(lowCategory.itemCount>0||mainAreaWidth>=1000?"initial":"0px")}}'
+
 					    [ngClass]="{'lowMenuItem': true, 'glClickable': true, 'indColor':lowCategory.itemCount>0 }"
-					    (click)='gotoCategory(lowCategory.category)'>
-						{{lowCategory.category.id}}_{{lowCategory.category.name}}
-						<ng-container *ngIf='lowCategory.itemCount>0'>({{lowCategory.itemCount}})</ng-container>
+					    (click)='gotoCategory(lowCategory.category)'					    
+					    >
+
+						<ng-container *ngIf='lowCategory.itemCount>0||mainAreaWidth>=1000'>
+							{{lowCategory.category.name}}
+							<ng-container *ngIf='lowCategory.itemCount>0'>({{lowCategory.itemCount}})</ng-container>
+						</ng-container>	
 					</li>
 				</ul>
 				<br>
@@ -75,7 +83,7 @@
 			<input type='number' [(ngModel)]='lowPrice' (change)='filterByPropertis()'>	
 			-
 			<input type='number' [(ngModel)]='highPrice' (change)='filterByPropertis()'>	
-			<div *ngFor='let property of propertyList;'>
+			<div *ngFor='let property of propertyList;' class='propertyName'>
 				{{property.name}}:
 				<div *ngFor='let value of property.values;' class='glClickable valueRow' (click)='toggleFilter(property,value)'>
 					<span  *ngIf='value.selected'>

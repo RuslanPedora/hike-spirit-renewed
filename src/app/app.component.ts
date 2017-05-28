@@ -74,6 +74,8 @@ export class ApplicationComponent implements OnInit, OnDestroy, AfterContentInit
 					this.selectedCategory = categoryIdPar;
 					if( this.selectedProperties.length == 0 ) {
 						this.paramsToParse = queryParams;
+						this.lowPrice = 0;
+						this.highPrice = 0;
 						this.dataService.getProperties( categoryIdPar ).then( data => this.fillPropertyList( data ) );
 						let lowPrice = queryParams[ 'lowPrice' + this.dataService.getItemPrefix() ];
 						if( lowPrice != undefined )
@@ -92,7 +94,10 @@ export class ApplicationComponent implements OnInit, OnDestroy, AfterContentInit
 				}				
 			}
 		);				
-		this.dataService.getCategoryTreeData().then( treeData => { this.categoryNodes = this.buildCategoryTree( treeData, 0 ) } );
+		this.dataService.getCategoryTreeData().then( treeData => { 
+			                                                       this.categoryNodes = this.buildCategoryTree( treeData, 0 );
+			                                                       this.resizeSubmenu(); 
+        } );
 		this.total = this.dataService.getBasketTotal();
 	}
 	//-----------------------------------------------------------------------------
@@ -276,7 +281,17 @@ export class ApplicationComponent implements OnInit, OnDestroy, AfterContentInit
 
 		forwardButton = document.getElementById( 'forwardNavButton' );			
 		searchInput.style.width = ( forwardButton.offsetLeft + forwardButton.clientWidth - homeButton.offsetLeft - 40 + 1 ).toString() + 'px';
+		this.resizeSubmenu();
  	}
+   	//-----------------------------------------------------------------------------
+   	resizeSubmenu(): void {
+   		let maxSubmenuCol = 0;
+   		this.mainAreaWidth = Math.min( window.innerWidth, 1000 );
+   		maxSubmenuCol = Math.floor( this.mainAreaWidth / this.colWidth );
+   		for( let i in this.categoryNodes ) {
+   			this.categoryNodes[ i ].submenuWidth = Math.min( maxSubmenuCol, this.categoryNodes[ i ].nodes.length ) * this.colWidth;
+   		}
+   	}
    	//-----------------------------------------------------------------------------
    	gotoBasket(): void {
    		this.router.navigate( [ '/basket' ] );

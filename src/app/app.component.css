@@ -100,6 +100,9 @@
 	background-color: black;
 	text-align: left;
 }
+#categoryTree li {
+	/*border: 1px solid;*/
+}	
 .mainCategorySpan {	
 	display: inline-block;
 	color: white;
@@ -186,7 +189,16 @@ input[type="number"]::-webkit-inner-spin-button {
 	float: right;
 }
 #filterdiv i {
-	font-size: 20px;
+	font-size: 20px;	
+}
+#filterSign {
+	visibility: hidden;
+}
+#filterSign:hover {
+	background-color: transparent;
+}
+.propertyName {
+	font-weight: bold;
 }
 .valueRow {
 	position: relative;
@@ -206,6 +218,11 @@ input[type="number"]::-webkit-inner-spin-button {
 .valueRow .tobeUnSelected {
 	display: none;
 }
+.valueRow cite {
+	text-decoration: none;
+	font-style: normal;
+	font-weight: normal;
+}	
 .valueRow:hover cite {
 	text-decoration: underline;
 }
@@ -514,6 +531,12 @@ h1, h2, h3, h4, h5, h6, { font-family:Georgia, "Times New Roman", Times, serif;}
 	#filterdiv:hover .subMenuContainer {
 		display: initial;
 	}
+	#filterSign:hover {
+		background-color: #82A800;
+	}	
+	#filterdiv i {
+		visibility: initial;
+	}	
 }
 @media only screen and (max-width: 1010px) {
 	.navButton {
