@@ -29,6 +29,7 @@ export class DataService {
 	private categoryPathUrl: string;
 	private categoryTreeDataUrl: string;
 	private propertiesUrl: string;
+	private orderUrl: string;
 	//-----------------------------------------------------------------------------
 	private itemPrefix: string = '_IT';
 	private propertyPrefix: string = '_IP';
@@ -61,6 +62,7 @@ export class DataService {
 		this.categoryPathUrl       = this.hostUrl + '/getCategoryPath';
 		this.categoryTreeDataUrl   = this.hostUrl + '/getCategoryTreeData';
 		this.propertiesUrl         = this.hostUrl + '/getProperties';
+		this.orderUrl              = this.hostUrl + '/postOrder';
 
 		this.restoreFromLocalStorage();
 	}
@@ -265,6 +267,20 @@ export class DataService {
 		           			console.log( error )
 		           	);
 	}		
+	//-----------------------------------------------------------------------------
+	postOrder( orderObject: any ): Promise<string> {
+		let headers = new Headers( { 'Content-Type': 'application/json' } );
+		let options = new RequestOptions( { headers: headers } );		
+		return this.http.post( this.orderUrl, JSON.stringify( orderObject ), options )
+		           .toPromise()
+		           .then( 
+		           		response => response.json()
+		           	)
+		           .catch( 
+		           		error => 
+		           			console.log( error )
+		           	);
+	}
 	//-----------------------------------------------------------------------------
 	addToComapreItem( item: Item ): void {
 		let index: number;

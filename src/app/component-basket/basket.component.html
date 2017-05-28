@@ -31,19 +31,19 @@
 <form id='orderForm' ngNativeValidate (ngSubmit)='postOrder()'>
   <div class='fieldDiv'>
     <label for="name">Name <span>*</span></label>
-    <input type='text' required placeholder='Your name...' required name='fieldName'>
+    <input type='text' [(ngModel)]='firstName' required placeholder='Your name...' required name='fieldName'>
   </div>
   <div class='fieldDiv'>
     <label for='email'>Mail <span>*</span></label>
-    <input type='email' name='email' required placeholder='E-mail...'>
+    <input type='email' [(ngModel)]='email' name='email' required placeholder='E-mail...'>
   </div>
   <div class='fieldDiv'>
     <label for='phone'>Phone <span>*</span></label>
-    <input type='text' name='phone' required placeholder='Phone number...'>
+    <input type='text' [(ngModel)]='phoneNumber' name='phone' required placeholder='Phone number...'>
   </div>
   <div id='areaDiv'>
     <label for="comment">Your Comment</label>
-    <textarea name='comment' id='comment' cols='25' rows='5' placeholder='Any your comment...'></textarea>
+    <textarea name='comment' [(ngModel)]='comment' id='comment' cols='25' rows='5' placeholder='Any your comment...'></textarea>
   </div>
   <div id='addData'>
   	<div class='dataBlock'>

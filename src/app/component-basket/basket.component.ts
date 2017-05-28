@@ -23,6 +23,9 @@ export class BasketComponent implements OnInit {
 	private selectedCarrier: Carrier = new Carrier();
 	private paymentType: string = 'card';
 	private firstName: string = '';
+	private email: string = '';
+	private phoneNumber: string = '';
+	private comment: string = '';
 	//-----------------------------------------------------------------------------
 	constructor( private router: Router, 
 		         private dataService: DataService ) {
@@ -69,7 +72,23 @@ export class BasketComponent implements OnInit {
 	}
 	//-----------------------------------------------------------------------------
 	postOrder(): void {
-		this.dataService.showMessage( 'Your order has been posted' );
+		let orderObject = {};
+
+		orderObject[ 'total' ] = this.total;
+		orderObject[ 'totalPlusShipment' ] = this.totalPlusShipment;
+		orderObject[ 'firstName' ]         = this.firstName;
+		orderObject[ 'secondName' ]        = '';
+		orderObject[ 'email' ]             = this.email;
+		orderObject[ 'phoneNumber' ]       = this.phoneNumber;
+		orderObject[ 'paymnetType' ]       = this.paymentType;
+		orderObject[ 'carrier' ]           = this.selectedCarrier;
+		orderObject[ 'orderRows' ]         = this.orderRows;
+		orderObject[ 'comment' ]           = this.comment;
+
+		this.dataService.postOrder( orderObject ).then(
+			result =>
+				this.dataService.showMessage( 'Your order #' + result[ 'orderNumber' ] + ' has been posted' )
+		);
 	}
 	//-----------------------------------------------------------------------------
 }

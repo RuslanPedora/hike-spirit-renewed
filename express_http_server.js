@@ -41,7 +41,7 @@ appExpress.get( "/getCategoryPath", categoryPathResponse );
 appExpress.get( "/getCategoryTreeData", categoryCategoryTreeDataResponse );
 appExpress.get( "/getProperties", propertiesResponse );
 
-appExpress.post( "/order", orderResponse );
+appExpress.post( "/postOrder", orderResponse );
 
 appExpress.use( '/images/', express.static( path.join( __dirname, 'src/images' ) ) );
 appExpress.use( '/icons-logos/', express.static( path.join( __dirname, 'src/images' ) ) );
@@ -123,20 +123,20 @@ function sendOrderEmail( orderNumber, orderData ) {
     let transporter = nodemailer.createTransport({
         service: 'gmail',
         auth: {
-            user: 'demo.shop.a2@gmail.com',
-            pass: 'ltvjijg2017'
+            user: 'hike.spirit@gmail.com',
+            pass: 'hike.spirit17'
         }
     });
     let mailOptions = {
-        from: 'demo.shop.a2@gmail.com',
+        from: 'hike.spirit@gmail.com',
         to: '' + orderData.email,
-        subject: 'Order ' + orderNumber + ' from demo.shop.a2 (this is demo purpose mail)',
+        subject: 'Order ' + orderNumber + ' from Hike Spirit (this is demo purpose mail)',
         text: 'zzz',
         html: '+++'
     };
 
-    messageText = 'Hello ' + orderData.firstName + ' ' + orderData.secondName +
-                  '<br><br>You have placed an order # ' + orderNumber + ' on our site demo-shop-a2.herokuapp.com, but this is not true e-shop,' +
+    messageText = 'Hello ' + orderData.firstName + 
+                  '<br><br>You have placed an order # ' + orderNumber + ' on our site hile-spirit.herokuapp.com, but this is not true e-shop,' +
                   ' our shop assistant will not contact you.<br>' + 
                   'This is demo purpose mail only<br><br>';
     messageHtml = '<p>' + messageText;
@@ -146,17 +146,17 @@ function sendOrderEmail( orderNumber, orderData ) {
     messageHtml +='<tr>'
     messageHtml +='<th style="text-align:center;border:1px solid black;padding:5px;">Item'
     messageHtml +='</th>'    
-    messageHtml +='<th style="text-align:center;border:1px solid black;padding:5px;">qty.'
+    messageHtml +='<th style="text-align:center;border:1px solid black;padding:5px;">Qty.'
     messageHtml +='</th>'    
-    messageHtml +='<th style="text-align:center;border:1px solid black;padding:5px;">price'
+    messageHtml +='<th style="text-align:center;border:1px solid black;padding:5px;">Price'
     messageHtml +='</th>'    
-    messageHtml +='<th style="text-align:center;border:1px solid black;padding:5px;">total'
+    messageHtml +='<th style="text-align:center;border:1px solid black;padding:5px;">Total'
     messageHtml +='</th>'    
     messageHtml +='</tr>'
 
     for( let i in orderData.orderRows ) {
       if( i%2 > 0 ) 
-        colorStyle = "background-color:#A3E4D7;";
+        colorStyle = "background-color:rgb(200,200,200);";
       else  
         colorStyle = "";
       messageHtml +='<tr>'
@@ -197,7 +197,7 @@ function sendOrderEmail( orderNumber, orderData ) {
     messageHtml += '<br>'
 
 
-    messageHtml += '<br><br><p>Kind regards.<br><br>demo-shop-a2.herokuapp.com team.</p>';
+    messageHtml += '<br><br><p>Kind regards.<br><br>hike-spirit.herokuapp.com team.</p>';
 
     mailOptions.text = messageText;
     mailOptions.html = messageHtml;

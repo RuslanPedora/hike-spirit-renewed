@@ -48,6 +48,7 @@ var DataService = (function () {
         this.categoryPathUrl = this.hostUrl + '/getCategoryPath';
         this.categoryTreeDataUrl = this.hostUrl + '/getCategoryTreeData';
         this.propertiesUrl = this.hostUrl + '/getProperties';
+        this.orderUrl = this.hostUrl + '/postOrder';
         this.restoreFromLocalStorage();
     }
     //-----------------------------------------------------------------------------
@@ -215,6 +216,17 @@ var DataService = (function () {
     //-----------------------------------------------------------------------------
     DataService.prototype.getComparedProperties = function (query) {
         return this.http.get(this.comparedPropertiesUrl + query)
+            .toPromise()
+            .then(function (response) { return response.json(); })
+            .catch(function (error) {
+            return console.log(error);
+        });
+    };
+    //-----------------------------------------------------------------------------
+    DataService.prototype.postOrder = function (orderObject) {
+        var headers = new http_1.Headers({ 'Content-Type': 'application/json' });
+        var options = new http_1.RequestOptions({ headers: headers });
+        return this.http.post(this.orderUrl, JSON.stringify(orderObject), options)
             .toPromise()
             .then(function (response) { return response.json(); })
             .catch(function (error) {

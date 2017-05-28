@@ -24,6 +24,9 @@ var BasketComponent = (function () {
         this.selectedCarrier = new carrier_1.Carrier();
         this.paymentType = 'card';
         this.firstName = '';
+        this.email = '';
+        this.phoneNumber = '';
+        this.comment = '';
     }
     //-----------------------------------------------------------------------------
     BasketComponent.prototype.ngOnInit = function () {
@@ -68,7 +71,21 @@ var BasketComponent = (function () {
     };
     //-----------------------------------------------------------------------------
     BasketComponent.prototype.postOrder = function () {
-        this.dataService.showMessage('Your order has been posted');
+        var _this = this;
+        var orderObject = {};
+        orderObject['total'] = this.total;
+        orderObject['totalPlusShipment'] = this.totalPlusShipment;
+        orderObject['firstName'] = this.firstName;
+        orderObject['secondName'] = '';
+        orderObject['email'] = this.email;
+        orderObject['phoneNumber'] = this.phoneNumber;
+        orderObject['paymnetType'] = this.paymentType;
+        orderObject['carrier'] = this.selectedCarrier;
+        orderObject['orderRows'] = this.orderRows;
+        orderObject['comment'] = this.comment;
+        this.dataService.postOrder(orderObject).then(function (result) {
+            return _this.dataService.showMessage('Your order #' + result['orderNumber'] + ' has been posted');
+        });
     };
     return BasketComponent;
 }());
