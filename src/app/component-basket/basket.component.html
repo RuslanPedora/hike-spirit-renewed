@@ -76,6 +76,7 @@
 				<td>
 					<input type='radio' name='paymentType'
 						   [checked]='paymentType=="card"'
+						   (click)='setPaymentType("card")'
 					       value='card'>
 					<i class='fa fa-cc-visa glCGreen'></i>
 					/
@@ -87,6 +88,7 @@
 				<td>
 					<input type='radio' name='paymentType'
 						   [checked]='paymentType=="payPal"'
+						   (click)='setPaymentType("payPal")'
 					       value='payPal'>
 					<i class='fa fa-cc-paypal glCGreen'></i>
 					PayPal
@@ -96,6 +98,7 @@
 				<td>
 					<input type='radio' name='paymentType'
 						   [checked]='paymentType=="cash"'
+						   (click)='setPaymentType("cash")'
 					       value='cash'>
 					<i class='fa fa-money glCGreen'></i>
 					Cash

@@ -91,4 +91,8 @@ export class BasketComponent implements OnInit {
 		);
 	}
 	//-----------------------------------------------------------------------------
+	setPaymentType( paymentType: string ): void {
+		this.paymentType = paymentType;
+	}
+	//-----------------------------------------------------------------------------
 }

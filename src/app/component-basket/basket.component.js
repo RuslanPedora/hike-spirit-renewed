@@ -87,6 +87,10 @@ var BasketComponent = (function () {
             return _this.dataService.showMessage('Your order #' + result['orderNumber'] + ' has been posted');
         });
     };
+    //-----------------------------------------------------------------------------
+    BasketComponent.prototype.setPaymentType = function (paymentType) {
+        this.paymentType = paymentType;
+    };
     return BasketComponent;
 }());
 BasketComponent = __decorate([
