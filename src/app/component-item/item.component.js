@@ -36,7 +36,6 @@ var ItemComponent = (function () {
                 _this.getItemProperties(Number.parseInt(itemId));
             }
         });
-        window.scrollTo(0, 0);
     };
     //-----------------------------------------------------------------------------
     ItemComponent.prototype.getItem = function (itemId) {

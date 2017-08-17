@@ -50,7 +50,6 @@ export class ItemComponent implements OnInit {
 				}
 			}
 		);	
-		window.scrollTo( 0, 0 );
 	}
 	//-----------------------------------------------------------------------------
 	getItem( itemId: number ):void {

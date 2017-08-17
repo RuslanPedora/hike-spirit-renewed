@@ -51,16 +51,17 @@ export class DataService {
 	             private localStorageService: LocalStorageService ) {
 		this.hostUrl = window.location.origin;
 		if( this.hostUrl.indexOf( 'localhost' ) >= 0 ) {
-			this.hostUrl = this.hostUrl.replace( '3000', '8081' );
+			this.hostUrl = this.hostUrl.replace( '3000', '8888' );
 		}
-		this.categoryUrl           = this.hostUrl + '/getCategoryList';
-		this.itemUrl               = this.hostUrl + '/getItemList';
-		this.newItemUrl            = this.hostUrl + '/getNewItemList';
-		this.carrierUrl            = this.hostUrl + '/getCarrierList';
+		this.categoryUrl           = this.hostUrl + '/categories';
+		this.categoryTreeDataUrl   = this.hostUrl + '/categories-tree';
+		this.carrierUrl            = this.hostUrl + '/carriers';
+		this.newItemUrl            = this.hostUrl + '/items-new';
+		this.itemUrl               = this.hostUrl + '/items';		
+
 		this.itemPropertiesUrl     = this.hostUrl + '/getItemProperties';
 		this.comparedPropertiesUrl = this.hostUrl + '/getComparedProperties';
-		this.categoryPathUrl       = this.hostUrl + '/getCategoryPath';
-		this.categoryTreeDataUrl   = this.hostUrl + '/getCategoryTreeData';
+		this.categoryPathUrl       = this.hostUrl + '/getCategoryPath';		
 		this.propertiesUrl         = this.hostUrl + '/getProperties';
 		this.orderUrl              = this.hostUrl + '/postOrder';
 
