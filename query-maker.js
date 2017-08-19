@@ -46,6 +46,8 @@ function getItemListQuery(request) {
     let propertyCondition = '';
     let propertryCount = 0;
     let conditionInjection;
+    let valueFieldName;
+    let valueArray;
 
     indexOfQueryString = request.url.indexOf( '/?' );
     if ( indexOfQueryString > 0 )
@@ -159,12 +161,155 @@ function getItemListQuery(request) {
     return querySQL;
 }
 //--------------------------------------------------------------------------------
+function getItemPropertiesQuery(itemId) {
+    return `SELECT propertyId AS id, name AS name, value AS value\
+            FROM itemProperties\
+            JOIN\
+            properties\
+            ON itemProperties.propertyId = properties.id\
+            WHERE itemId = ${itemId} ORDER BY name`;
+}
+//--------------------------------------------------------------------------------
+function getPropertyComparisonQuery(request) {
+    var querySQL = '';
+    var queryInputString = '';
+    var indexOfQueryString = '';
+    var queryObject = {};
+    var idArray = [];
+    var conditionInjection = '';
+    
+
+    indexOfQueryString = request.url.indexOf( '/?' );
+    if ( indexOfQueryString > 0 )
+      queryInputString = request.url.slice( indexOfQueryString + 2 , request.url.length );
+    else 
+      queryInputString = '';
+
+    queryObject = JSON.parse( decodeQuotes( queryInputString ) );
+    idArray = queryObject.id;
+
+    querySQL = 'SELECT * FROM carriers';
+
+    conditionInjection += ' WHERE ( ';
+    for( var i in idArray ) 
+        conditionInjection += ( i > 0 ? ' OR ' : '' ) + ' id = ' + idArray[ i ];
+    conditionInjection += ' ) ';
+
+
+    querySQL = 'SELECT allPares.propertyId AS propertyId,\
+                       allPares.propertyName AS propertyName,\
+                       allPares.itemId AS itemId,\
+                       propertyValues.value\
+                FROM\
+                ( SELECT propertyId, propertyName, itemIds.itemId\
+                  FROM\
+                  ( SELECT DISTINCT itemProperties.propertyId AS propertyId, properties.name AS propertyName\
+                    FROM itemProperties\
+                    INNER JOIN properties\
+                    ON itemProperties.propertyId = properties.id\
+                    propCondition\
+                  ) AS allProperties\
+                  INNER JOIN\
+                  ( SELECT id AS itemId FROM items conditionInjection ) AS itemIds\
+                  ON 1=1\
+                ) AS allPares\
+                LEFT JOIN\
+                ( SELECT * FROM itemProperties propCondition ) AS propertyValues\
+                ON allPares.itemId = propertyValues.itemId AND\
+                   allPares.propertyId = propertyValues.propertyId';
+
+    querySQL = querySQL.replace( new RegExp( 'conditionInjection', 'g' ), conditionInjection );
+    conditionInjection = conditionInjection.replace( new RegExp( 'id', 'g' ), 'itemId' );    
+    querySQL = querySQL.replace( new RegExp( 'propCondition', 'g' ), conditionInjection );
+
+    return querySQL;   
+}
+//--------------------------------------------------------------------------------
+function getPropertiesFilterQuery(request) {
+    var querySQL = '';
+    var queryInputString = '';
+    var indexOfQueryString = '';
+    var queryObject = {};
+    let categoryValue;
+
+    indexOfQueryString = request.url.indexOf( '/?' );
+    if ( indexOfQueryString > 0 )
+      queryInputString = request.url.slice( indexOfQueryString + 2 , request.url.length );
+    else 
+      queryInputString = '';
+
+    queryObject   = JSON.parse( decodeQuotes( queryInputString ) );
+    categoryValue = queryObject.categoryId;
+
+     querySQL = '\
+        SELECT DISTINCT itemProperties.propertyId AS id,\
+               properties.name,\
+               value\
+        FROM itemProperties\
+        JOIN properties\
+        ON itemProperties.propertyId = properties.id\
+        WHERE itemId IN\
+        ( SELECT items.id\
+          FROM items AS items\
+          LEFT JOIN categoryhierarchy AS parents\
+          ON items.categoryId = parents.categoryId\
+          LEFT JOIN categoryhierarchy AS grandParents\
+          ON parents.parentId = grandParents.categoryId\
+          WHERE\
+          ( items.categoryId = ' + categoryValue + ' OR parents.parentId = ' + categoryValue + ' OR grandParents.parentId = ' + categoryValue + ')\
+        )\
+        AND properties.filter\
+        ORDER BY properties.name, value';
+    return querySQL;
+}
+//--------------------------------------------------------------------------------
+function getCategoryPathQuery() {
+    return 'SELECT categoryId, categories.name AS categoryName,\
+                    categories.image AS categoryImage,\
+                    parentId\
+            FROM categoryhierarchy\
+            INNER JOIN categories\
+            ON categoryId = id';
+}
+//--------------------------------------------------------------------------------
+function getPostOrderQuery(body) {
+    let querySQL = `START TRANSACTION;\
+                    INSERT INTO orders (orderDate,user) VALUES ( now(), \'${body.email}\' ); `;  
+
+    for (let row of body.orderRows )  {
+        querySQL += `INSERT INTO orderItems\
+                     ( orderId, itemId, sum) VALUES\
+                     ( ( SELECT MAX(id) FROM orders ), ${row.item.id},${row.total});`;
+    }
+    querySQL += 'SELECT MAX(id) AS orderNumber FROM orders;';
+    querySQL += 'COMMIT;';
+
+    return querySQL;
+}
+//--------------------------------------------------------------------------------
+function getImageListQuery(data) {
+  let querySQL = 'SELECT * FROM images WHERE ';
+  
+  for (let i in data) {
+    querySQL += (i == 0 ? ' ' : ' OR ') + ' itemId = ' + data[ i ].id;
+  }
+  querySQL += ' ORDER BY itemId';
+
+  return querySQL;
+}
+//--------------------------------------------------------------------------------
 module.exports = {
     getCategoryListQuery,
     getCategoryTreeQuery,
     getCarrierListQuery,
     getNewItemsQuery,
-    getItemListQuery
+    getItemListQuery,
+    getItemPropertiesQuery,
+    getPropertyComparisonQuery,
+    getPropertiesFilterQuery,
+    getCategoryPathQuery,
+    getPostOrderQuery,
+    getImageListQuery
 }
 //--------------------------------------------------------------------------------
 //all code bellow must be refactoried

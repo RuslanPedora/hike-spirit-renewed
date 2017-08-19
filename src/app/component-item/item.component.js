@@ -61,10 +61,8 @@ var ItemComponent = (function () {
     //-----------------------------------------------------------------------------
     ItemComponent.prototype.getItemProperties = function (itemId) {
         var _this = this;
-        this.dataService.getItemProperties('/?' + JSON.stringify({ id: itemId }))
-            .then(function (itemProperties) {
-            return _this.itemProperties = itemProperties;
-        });
+        this.dataService.getItemProperties(itemId)
+            .then(function (itemProperties) { return _this.itemProperties = itemProperties; });
     };
     //-----------------------------------------------------------------------------
     ItemComponent.prototype.scrollBigImage = function (forward) {

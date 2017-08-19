@@ -24,7 +24,6 @@ export class DataService {
 	private itemUrl: string;
 	private newItemUrl: string;
 	private carrierUrl: string;
-	private itemPropertiesUrl: string;
 	private comparedPropertiesUrl: string;
 	private categoryPathUrl: string;
 	private categoryTreeDataUrl: string;
@@ -58,12 +57,10 @@ export class DataService {
 		this.carrierUrl            = this.hostUrl + '/carriers';
 		this.newItemUrl            = this.hostUrl + '/items-new';
 		this.itemUrl               = this.hostUrl + '/items';		
-
-		this.itemPropertiesUrl     = this.hostUrl + '/getItemProperties';
-		this.comparedPropertiesUrl = this.hostUrl + '/getComparedProperties';
-		this.categoryPathUrl       = this.hostUrl + '/getCategoryPath';		
-		this.propertiesUrl         = this.hostUrl + '/getProperties';
-		this.orderUrl              = this.hostUrl + '/postOrder';
+		this.comparedPropertiesUrl = this.hostUrl + '/property-comparison';
+		this.propertiesUrl         = this.hostUrl + '/property-filter';
+		this.categoryPathUrl       = this.hostUrl + '/categories';	
+		this.orderUrl              = this.hostUrl + '/orders';
 
 		this.restoreFromLocalStorage();
 	}
@@ -233,16 +230,11 @@ export class DataService {
 		           	);
 	}	
 	//-----------------------------------------------------------------------------
-	getItemProperties( query: string ): Promise<ItemProperty[]> {
-		return this.http.get( this.itemPropertiesUrl + query )
+	getItemProperties(itemId: number): Promise<ItemProperty[]> {
+		return this.http.get(`${this.itemUrl}/${itemId}/properties` )
 		           .toPromise()
-		           .then( 
-		           		response => response.json() as ItemProperty[]
-		           	)
-		           .catch( 
-		           		error => 
-		           			console.log( error )
-		           	);
+		           .then(response => response.json() as ItemProperty[])
+		           .catch(error => console.log( error ));
 	}	
 	//-----------------------------------------------------------------------------
 	getNewItemList(): Promise<Item[]> {
@@ -332,30 +324,25 @@ export class DataService {
 		this.messenger.next( text );
 	}	
 	//-----------------------------------------------------------------------------
-	buildPath( parObject: any): void {
-		let query: string = '/?';
-		let pathArray: any[];
-		let categoryPath: any;
+	buildPath(parObject: any): void {
+		let addPath: string;
 
-		if( parObject[ 'mainImage' ] != undefined )
-			query += JSON.stringify( { 'categoryId': parObject.categoryId } );
-		else
-			query += JSON.stringify( { 'categoryId': parObject.id } );
+		addPath = parObject[ 'mainImage' ] ? `/${parObject.categoryId}/path` :
+			                                 `/${parObject.id}/path`;
 
-		this.http.get( this.categoryPathUrl + query )
+		this.http.get(`${this.categoryPathUrl}${addPath}`)
 		           .toPromise()
-		           .then( 
-		           		response => response.json() as Category[]
-		           	)
-		           .catch( 
-		           		error => 
-		           			console.log( error )
-		           	).then( data => {
-		           		categoryPath = data;
-		           		if( parObject[ 'mainImage' ] != undefined )
+		           .then( data => {
+					    let categoryPath:any = data.json();
+
+		           		if (parObject[ 'mainImage' ]) {
 		           			categoryPath.push( parObject );
-		           		this.pathEventEmitter.next( categoryPath );
-		           	});
+ 					    }	   
+		           		this.pathEventEmitter.next(categoryPath);
+				    })
+		           .catch( 
+		           		error => console.log( error )
+		           	);
 	}
 	//-----------------------------------------------------------------------------
 }

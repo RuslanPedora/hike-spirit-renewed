@@ -44,11 +44,10 @@ var DataService = (function () {
         this.carrierUrl = this.hostUrl + '/carriers';
         this.newItemUrl = this.hostUrl + '/items-new';
         this.itemUrl = this.hostUrl + '/items';
-        this.itemPropertiesUrl = this.hostUrl + '/getItemProperties';
-        this.comparedPropertiesUrl = this.hostUrl + '/getComparedProperties';
-        this.categoryPathUrl = this.hostUrl + '/getCategoryPath';
-        this.propertiesUrl = this.hostUrl + '/getProperties';
-        this.orderUrl = this.hostUrl + '/postOrder';
+        this.comparedPropertiesUrl = this.hostUrl + '/property-comparison';
+        this.propertiesUrl = this.hostUrl + '/property-filter';
+        this.categoryPathUrl = this.hostUrl + '/categories';
+        this.orderUrl = this.hostUrl + '/orders';
         this.restoreFromLocalStorage();
     }
     //-----------------------------------------------------------------------------
@@ -196,13 +195,11 @@ var DataService = (function () {
         });
     };
     //-----------------------------------------------------------------------------
-    DataService.prototype.getItemProperties = function (query) {
-        return this.http.get(this.itemPropertiesUrl + query)
+    DataService.prototype.getItemProperties = function (itemId) {
+        return this.http.get(this.itemUrl + "/" + itemId + "/properties")
             .toPromise()
             .then(function (response) { return response.json(); })
-            .catch(function (error) {
-            return console.log(error);
-        });
+            .catch(function (error) { return console.log(error); });
     };
     //-----------------------------------------------------------------------------
     DataService.prototype.getNewItemList = function () {
@@ -283,24 +280,19 @@ var DataService = (function () {
     //-----------------------------------------------------------------------------
     DataService.prototype.buildPath = function (parObject) {
         var _this = this;
-        var query = '/?';
-        var pathArray;
-        var categoryPath;
-        if (parObject['mainImage'] != undefined)
-            query += JSON.stringify({ 'categoryId': parObject.categoryId });
-        else
-            query += JSON.stringify({ 'categoryId': parObject.id });
-        this.http.get(this.categoryPathUrl + query)
+        var addPath;
+        addPath = parObject['mainImage'] ? "/" + parObject.categoryId + "/path" :
+            "/" + parObject.id + "/path";
+        this.http.get("" + this.categoryPathUrl + addPath)
             .toPromise()
-            .then(function (response) { return response.json(); })
-            .catch(function (error) {
-            return console.log(error);
-        }).then(function (data) {
-            categoryPath = data;
-            if (parObject['mainImage'] != undefined)
+            .then(function (data) {
+            var categoryPath = data.json();
+            if (parObject['mainImage']) {
                 categoryPath.push(parObject);
+            }
             _this.pathEventEmitter.next(categoryPath);
-        });
+        })
+            .catch(function (error) { return console.log(error); });
     };
     return DataService;
 }());

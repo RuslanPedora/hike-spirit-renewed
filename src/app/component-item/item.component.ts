@@ -57,25 +57,23 @@ export class ItemComponent implements OnInit {
 		this.dataService.getItemList( '/?' + JSON.stringify( { id_IT: itemId } ) )
 		                .then( itemList => { tempList = itemList;
 			                                 this.dataService.converRate( tempList );			                                 
-			                                 if( tempList.length > 0 ) {
-			                                     this.item = tempList[0];
-			                                     this.dataService.addToViewItem( this.item );
-			                                     this.dataService.buildPath( this.item );
-			                                     if( this.reEnter && this.item.imageList.length > 0 ) {
+			                                 if (tempList.length > 0) {
+			                                     this.item = tempList[ 0 ];
+			                                     this.dataService.addToViewItem(this.item);
+			                                     this.dataService.buildPath(this.item);
+			                                     if (this.reEnter && this.item.imageList.length > 0) {
 			                                     	this.loupeFragment = this.item.imageList[ 0 ].bigImage;
 			                                     	this.mouseEntered = true;
 			                                     	this.posBigImage( this.offsetX, this.offsetY, this.clientWidth, this.clientHeight );
 			                                     }
-											  window.scrollTo( 0, 0 );
+											     window.scrollTo( 0, 0 );
 			                                 }
 		} ); 
 	}
 	//-----------------------------------------------------------------------------
 	getItemProperties( itemId: number ):void {
-		this.dataService.getItemProperties( '/?' + JSON.stringify( { id: itemId } ) )
-		                .then( itemProperties => 
-		                	                     this.itemProperties = itemProperties 
-		                	 ); 
+		this.dataService.getItemProperties(itemId)
+		                .then(itemProperties => this.itemProperties = itemProperties); 
 	}
 	//-----------------------------------------------------------------------------
 	scrollBigImage( forward: boolean ):void {
