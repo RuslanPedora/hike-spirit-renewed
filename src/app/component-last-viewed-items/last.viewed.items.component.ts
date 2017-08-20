@@ -16,8 +16,8 @@ import { Item } from 'hs_core/item';
 export class LastViewedItems implements OnInit {
 	private lastViewedItems: Item[] = [];
 	//-----------------------------------------------------------------------------
-	constructor( private router: Router,
-				 private dataService: DataService ) {
+	constructor(private router: Router,
+				private dataService: DataService) {
 	}
 	//-----------------------------------------------------------------------------
 	ngOnInit() {
@@ -25,9 +25,7 @@ export class LastViewedItems implements OnInit {
 	}
 	//-----------------------------------------------------------------------------
 	gotoItem( selectedItem: Item ) {
-		let parObject = {};
-		parObject[ 'id' + this.dataService.getItemPrefix() ] = selectedItem.id;		
-		this.router.navigate( [ '/item' ], { queryParams: parObject } );
+		this.router.navigate( [ '/item' ], { queryParams: { id: selectedItem.id } } );
 	}
 	//-----------------------------------------------------------------------------
 }

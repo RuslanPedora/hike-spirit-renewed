@@ -20,9 +20,9 @@ export class CompareItems implements OnInit {
 	private collapse: boolean = true;
 	private compared: boolean = false;
 	//-----------------------------------------------------------------------------
-	constructor( private router: Router,
-				 private activatedRoute: ActivatedRoute,
-				 private dataService: DataService ) {
+	constructor(private router: Router,
+				private activatedRoute: ActivatedRoute,
+				private dataService: DataService) {
 	}
 	//-----------------------------------------------------------------------------
 	ngOnInit() {
@@ -30,25 +30,26 @@ export class CompareItems implements OnInit {
 		this.activatedRoute.queryParams.subscribe(
 			queryParams => {				
 				let collapse = queryParams [ 'collapse' ];
-				this.collapse = ( collapse == undefined );				
+				this.collapse = (collapse == undefined);				
 			}
 		);
 	}
 	//-----------------------------------------------------------------------------
-	processItem( selectedItem: Item ) {
+	processItem(selectedItem: Item): void {
 		let parObject = {};
-		if( this.collapse ) {
+
+		if (this.collapse) {
 			parObject[ 'collapse' ] = false;
-			this.router.navigate( [ '/compare-items' ], { queryParams: parObject } );
+			this.router.navigate([ '/compare-items' ], { queryParams: parObject });
 		}
 		else {
-			parObject[ 'id' + this.dataService.getItemPrefix() ] = selectedItem.id;		
-			this.router.navigate( [ '/item' ], { queryParams: parObject } );
+			parObject[ 'id' ] = selectedItem.id;		
+			this.router.navigate([ '/item' ], { queryParams: parObject });
 		}
 	}
 	//-----------------------------------------------------------------------------
-	removeItem( selectedItem: Item ):void {
-		this.dataService.removeToCompareList( selectedItem );
+	removeItem(selectedItem: Item): void {
+		this.dataService.removeToCompareList(selectedItem);
 		this.compareItems = this.dataService.getCompareList();
 		this.compared = false;
 	}
@@ -61,53 +62,53 @@ export class CompareItems implements OnInit {
 		let propertyValues: any[] = [];
 		let tempArray: any[] = [];
 
-		queryString = '/?' + JSON.stringify( { id: this.compareItems.map( element => element.id ) } );
+		queryString = this.compareItems.map(el => `id=${el.id}`).join('&');
 
-		this.dataService.getComparedProperties( queryString ).then( dataList => {
+		this.dataService.getComparedProperties(queryString).then(dataList => {
 			tempList = dataList;
-			for( let i in this.compareItems ) {
+			for (let i in this.compareItems) {
 				itemId = this.compareItems[ i ].id;
-				dataList.forEach( element => { 
-						if( element.itemId == itemId ) 
+				dataList.forEach(element => { 
+						if (element.itemId == itemId) 
 							element[ 'sortKey' ] = i;
 				});				
 			}
-			dataList.sort( this.comparator );
+			dataList.sort(this.comparator);
 			this.compareProperties = [];
-			for( let i in dataList ) {
-				if( propertyName != dataList[ i ].propertyName ) {
-					if( propertyName != '' ) {
+			for (let i in dataList) {
+				if (propertyName != dataList[ i ].propertyName) {
+					if (propertyName != '') {
 						tempArray = [];
-						tempArray.push( propertyName );
-						for( let j in propertyValues ) {
-							tempArray.push( propertyValues[ j ] );		
+						tempArray.push(propertyName);
+						for (let j in propertyValues) {
+							tempArray.push(propertyValues[ j ]);		
 						}
-						this.compareProperties.push( tempArray );
+						this.compareProperties.push(tempArray);
 					}					
 					propertyValues = [];
 					propertyName = dataList[ i ].propertyName;
 				}
-				propertyValues.push( dataList[ i ].value );
+				propertyValues.push(dataList[ i ].value);
 			}
-			if( propertyName != '' ) {
+			if (propertyName != '') {
 				tempArray = [];
-				tempArray.push( propertyName );
-				for( let j in propertyValues ) {
-					tempArray.push( propertyValues[ j ] );		
+				tempArray.push(propertyName);
+				for (let j in propertyValues) {
+					tempArray.push(propertyValues[ j ]);		
 				}
-				this.compareProperties.push( tempArray );
+				this.compareProperties.push(tempArray);
 			}			
-		} );
+		});
 		this.compared = true;
 	}
 	//-----------------------------------------------------------------------------
-	comparator( a: any, b: any ): number {
-		if( a.propertyName < b.propertyName )
+	comparator(a: any, b: any): number {
+		if (a.propertyName < b.propertyName)
 			return -1;
-		else if( a.propertyName > b.propertyName )
+		else if (a.propertyName > b.propertyName)
 			return 1;
 		else
-			return ( a.sortKey < b.sortKey ? -1 : 1 );
+			return (a.sortKey < b.sortKey ? -1 : 1);
 	}
 	//-----------------------------------------------------------------------------
 }

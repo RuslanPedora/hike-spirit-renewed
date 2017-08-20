@@ -1,14 +1,14 @@
-const ITEM_TABLE_PREFIX = '_IT';
-const PROPERTY_TABLE_PREFIX = '_PT';
+'use strict';
+//--------------------------------------------------------------------------------
 const SERVER_PORT = 8888;
 //--------------------------------------------------------------------------------
-const path = require( 'path' );
-const fs = require( 'fs' );
-const express = require( 'express' );
+const path = require('path');
+const fs = require('fs');
+const express = require('express');
 const appExpress = express();
 const cors = require('cors');
 const bodyParser = require('body-parser');
-const mysql = require( 'mysql' );
+const mysql = require('mysql');
 const nodemailer = require('nodemailer');
 
 const dbAgent = require('./db-agent');
@@ -16,40 +16,46 @@ const queryMaker = require('./query-maker');
 //--------------------------------------------------------------------------------
 appExpress.use(bodyParser.json());
 
+//only for dev environment we allow cors
 if (!process.env.PORT) {
   appExpress.use(cors());
 }
 
-appExpress.use( (req,res,next) => {
+appExpress.use((req,res,next) => {
   console.log(`Path: ${req.path}`)
   next();
 });
 //--------------------------------------------------------------------------------
-appExpress.get('/', loadStartPage);
-appExpress.get('/categories', getCategories);
-appExpress.get('/categories-tree', getCategoryTree);
-appExpress.get('/categories/:categoryId/path', getCategoryPath);
-appExpress.get('/carriers', getCarriers);
-appExpress.get('/items', getItems);
-appExpress.get('/items-new', getNewItems);
-appExpress.get('/items/:itemId/properties', getItemProperties);
-appExpress.get('/property-comparison', getPropertyComparison);
-appExpress.get('/property-filter', getPropertiesFilter);
+appExpress.get('/', safeWrapper(loadStartPage));
+appExpress.get('/categories', safeWrapper(getCategories));
+appExpress.get('/categories-tree', safeWrapper(getCategoryTree));
+appExpress.get('/categories/:categoryId/path', safeWrapper(getCategoryPath));
+appExpress.get('/categories/:categoryId/property-filter', safeWrapper(getPropertiesFilter));
+appExpress.get('/carriers', safeWrapper(getCarriers));
+appExpress.get('/items', safeWrapper(getItems));
+appExpress.get('/items-new', safeWrapper(getNewItems));
+appExpress.get('/items/:itemId/properties', safeWrapper(getItemProperties));
+appExpress.get('/property-comparison', safeWrapper(getPropertyComparison));
 //--------------------------------------------------------------------------------
-appExpress.post('/orders', postOrder );
+appExpress.post('/orders', postOrder);
 //--------------------------------------------------------------------------------
-appExpress.use('/images/', express.static(path.join( __dirname, 'src/images')));
-appExpress.use('/icons-logos/', express.static(path.join( __dirname, 'src/images')));
-appExpress.use('/node_modules/', express.static(path.join( __dirname, 'node_modules')));
+appExpress.use('/images/', express.static(path.join(__dirname, 'src/images')));
+appExpress.use('/icons-logos/', express.static(path.join(__dirname, 'src/images')));
+appExpress.use('/node_modules/', express.static(path.join(__dirname, 'node_modules')));
 appExpress.use('/', express.static(path.join(__dirname, 'src')));
 //--------------------------------------------------------------------------------
-appExpress.use( onError );
+appExpress.use(onError);
 //--------------------------------------------------------------------------------
-server = appExpress.listen( process.env.PORT || SERVER_PORT, function() {
-    var host = server.address().address;
-    var port = server.address().port;
-    console.log( "Server has been started: " + host + " - " + port );
+let server = appExpress.listen(process.env.PORT || SERVER_PORT, function() {
+    console.log('Server has been started: ' + server.address().address + ':' + server.address().port);
 });
+//--------------------------------------------------------------------------------
+function safeWrapper(func) {
+    return (req, res, next) => {
+        new Promise((resolve,reject) => resolve(func(req,res,next)))
+            .catch(err => next(err));
+    };
+}
 //--------------------------------------------------------------------------------
 function loadStartPage(req, res, next) {
     fs.readFile(`${__dirname}/src/index.html`, (err, html) => {
@@ -62,10 +68,11 @@ function loadStartPage(req, res, next) {
 }
 //--------------------------------------------------------------------------------
 async function postOrder(req, res, next) {
-    let data = await dbAgent.executeSQL(queryMaker.getPostOrderQuery(req.body)).catch(err => next(err));
+    let data = await dbAgent.executeSQL(queryMaker.getPostOrderQuery(req.body));
     let orderNumber;
 
-    orderNumber = 1111;//data[ data.length - 1 ][ 0 ].orderNumber;
+    //last order related to commit operation
+    orderNumber = data[ data.length - 2 ][ 0 ].orderNumber;
     sendOrderEmail(orderNumber, req.body);
 
     res.json(orderNumber);
@@ -74,6 +81,7 @@ async function postOrder(req, res, next) {
 function sendOrderEmail(orderNumber, orderData) {
     let colorStyle;    
     let colorFlag = false;
+    let messageText, messageHtml; 
     let transporter = nodemailer.createTransport({
         service: 'gmail',
         auth: {
@@ -161,7 +169,7 @@ function sendOrderEmail(orderNumber, orderData) {
     mailOptions.text = messageText;
     mailOptions.html = messageHtml;
 
-    transporter.sendMail( mailOptions, (error, info) => {
+    transporter.sendMail(mailOptions, (error, info) => {
         if (error) {
             console.log(error);
         }
@@ -169,9 +177,10 @@ function sendOrderEmail(orderNumber, orderData) {
 }
 //--------------------------------------------------------------------------------
 async function getCategoryPath(req, res, next) {
-    let data = await dbAgent.executeSQL(queryMaker.getCategoryPathQuery(req)).catch(err => next(err));
+    let data = await dbAgent.executeSQL(queryMaker.getCategoryPathQuery(req));
     let path = [];
     let categoryId = Number.parseInt(req.params.categoryId);
+    let element;
 
     element = data.find(el => el.categoryId === categoryId);
     while (element) {
@@ -184,56 +193,58 @@ async function getCategoryPath(req, res, next) {
 } 
 //--------------------------------------------------------------------------------
 async function getPropertiesFilter(req, res, next) {
-    let data = await dbAgent.executeSQL(queryMaker.getPropertiesFilterQuery(req)).catch(err => next(err));
+    let data = await dbAgent.executeSQL(queryMaker.getPropertiesFilterQuery(req.params.categoryId));
 
     res.json(data);
 }
 //--------------------------------------------------------------------------------
 async function getPropertyComparison(req, res, next) {
-    let data = await dbAgent.executeSQL(queryMaker.getPropertyComparisonQuery(req)).catch(err => next(err));
+    let data = await dbAgent.executeSQL(queryMaker.getPropertyComparisonQuery(req));
 
     res.json(data);
 }
 //--------------------------------------------------------------------------------
 async function getCategories(req, res, next) {
-    let data = await dbAgent.executeSQL(queryMaker.getCategoryListQuery()).catch(err => next(err));
+    let data = await dbAgent.executeSQL(queryMaker.getCategoryListQuery());
 
     res.json(data);
 }
 //--------------------------------------------------------------------------------
 async function getCategoryTree(req, res, next) {
-    let data = await dbAgent.executeSQL(queryMaker.getCategoryTreeQuery()).catch(err => next(err));
+    let data = await dbAgent.executeSQL(queryMaker.getCategoryTreeQuery());
 
     res.json(data);
 }  
 //--------------------------------------------------------------------------------
 async function getCarriers(req, res, next) {
-    let data = await dbAgent.executeSQL(queryMaker.getCarrierListQuery()).catch(err => next(err));
+    let data = await dbAgent.executeSQL(queryMaker.getCarrierListQuery());
 
     res.json(data);
 }
 //--------------------------------------------------------------------------------
 async function getNewItems(req, res, next) {
-    let data = await dbAgent.executeSQL(queryMaker.getNewItemsQuery()).catch(err => next(err));
+    let data = await dbAgent.executeSQL(queryMaker.getNewItemsQuery());
 
     res.json(data);
 }  
 //--------------------------------------------------------------------------------
 async function getItemProperties(req, res, next) {
-    let data = await dbAgent.executeSQL(queryMaker.getItemPropertiesQuery(req.params.itemId)).catch(err => next(err));
+    let data = await dbAgent.executeSQL(queryMaker.getItemPropertiesQuery(req.params.itemId));
 
     res.json(data);
 }
 //--------------------------------------------------------------------------------
 async function getItems(req, res, next) {
-    let data = await dbAgent.executeSQL(queryMaker.getItemListQuery(req)).catch(err => next(err));
+  let data = await dbAgent.executeSQL(queryMaker.getItemListQuery(req));
 
+  if (data.length) {
     await bindImageList(data,next);
-    res.json(data);
+  }  
+  res.json(data);
 }
 //--------------------------------------------------------------------------------
 async function bindImageList(data,next) {
-  let imageListResult = await dbAgent.executeSQL(queryMaker.getImageListQuery(data)).catch(err => next(err));
+  let imageListResult = await dbAgent.executeSQL(queryMaker.getImageListQuery(data));
 
   data.forEach(el => { 
     el.imageList = imageListResult.filter(subEl => subEl.itemId === el.id)
@@ -245,6 +256,7 @@ async function bindImageList(data,next) {
 }
 //--------------------------------------------------------------------------------
 function onError(err, req, res, next) {
+  console.log(err.message);
   res.status(500);
   res.json({    
     errorMessage: err.message

@@ -17,12 +17,12 @@ if (process.env.DATABASE_URL) {
     console.log('Database connection parameters changed to : ' + JSON.stringify(connetionParams));
 }
 //--------------------------------------------------------------------------------
-function executeSQL( querySQL ) {
+function executeSQL(querySQL) {
     return new Promise((resolve,reject) => {
         let connection = mysql.createConnection(connetionParams);
         
         connection.connect();
-        connection.query( querySQL, (err, data) => {
+        connection.query(querySQL, (err, data) => {
             connection.destroy();
             if (err) {
                 reject(err);

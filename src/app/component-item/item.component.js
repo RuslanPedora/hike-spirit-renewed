@@ -30,8 +30,8 @@ var ItemComponent = (function () {
     ItemComponent.prototype.ngOnInit = function () {
         var _this = this;
         this.activatedRoute.queryParams.subscribe(function (queryParams) {
-            var itemId = queryParams['id' + _this.dataService.getItemPrefix()];
-            if (itemId != undefined) {
+            var itemId = queryParams['id'];
+            if (itemId) {
                 _this.getItem(Number.parseInt(itemId));
                 _this.getItemProperties(Number.parseInt(itemId));
             }
@@ -41,14 +41,14 @@ var ItemComponent = (function () {
     ItemComponent.prototype.getItem = function (itemId) {
         var _this = this;
         var tempList;
-        this.dataService.getItemList('/?' + JSON.stringify({ id_IT: itemId }))
+        this.dataService.getItemList("id=" + itemId)
             .then(function (itemList) {
             tempList = itemList;
             _this.dataService.converRate(tempList);
             if (tempList.length > 0) {
                 _this.item = tempList[0];
                 _this.dataService.addToViewItem(_this.item);
-                _this.dataService.buildPath(_this.item);
+                _this.dataService.buildPath(_this.item, true);
                 if (_this.reEnter && _this.item.imageList.length > 0) {
                     _this.loupeFragment = _this.item.imageList[0].bigImage;
                     _this.mouseEntered = true;
@@ -161,8 +161,9 @@ var ItemComponent = (function () {
     };
     //-----------------------------------------------------------------------------
     ItemComponent.prototype.mouseLeave = function (event) {
-        if (this.item.imageList.length == 0)
+        if (this.item.imageList.length == 0) {
             return;
+        }
         this.elementLoupeImage.style.display = 'none';
         this.mouseEntered = false;
     };
@@ -172,8 +173,9 @@ var ItemComponent = (function () {
     };
     //-----------------------------------------------------------------------------
     ItemComponent.prototype.addToCompareItem = function () {
-        if (this.item.id > 0)
+        if (this.item.id > 0) {
             this.dataService.addToComapreItem(this.item);
+        }
     };
     return ItemComponent;
 }());

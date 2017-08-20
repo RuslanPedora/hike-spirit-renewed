@@ -16,18 +16,16 @@ import { Category } from 'hs_core/category';
 export class CategoryListComponent implements OnInit {
 	private categoryList: Category[] = [];
 	//-----------------------------------------------------------------------------
-	constructor( private router: Router,
-				 private dataService: DataService ) {
+	constructor(private router: Router,
+				private dataService: DataService) {
 	}
 	//-----------------------------------------------------------------------------
 	ngOnInit() {
-		this.dataService.getCategoryList().then( categoryList => this.categoryList = categoryList );
+		this.dataService.getCategoryList().then(categoryList => this.categoryList = categoryList);
 	}
 	//-----------------------------------------------------------------------------
-	gotoItemList( selectedCategory: Category ) {
-		let parObject = {};
-		parObject[ 'categoryId' ] = selectedCategory.id;
-		this.router.navigate( [ '/item-list' ], { queryParams: parObject } );
+	gotoItemList(selectedCategory: Category) {
+		this.router.navigate([ '/item-list' ], { queryParams: { categoryId: selectedCategory.id } });
 	}
 	//-----------------------------------------------------------------------------
 }

@@ -20,9 +20,6 @@ var DataService = (function () {
         this.http = http;
         this.localStorageService = localStorageService;
         //-----------------------------------------------------------------------------
-        this.itemPrefix = '_IT';
-        this.propertyPrefix = '_IP';
-        //-----------------------------------------------------------------------------
         this.lastViewItems = [];
         this.maxViewItems = 5;
         this.compareItems = [];
@@ -45,8 +42,6 @@ var DataService = (function () {
         this.newItemUrl = this.hostUrl + '/items-new';
         this.itemUrl = this.hostUrl + '/items';
         this.comparedPropertiesUrl = this.hostUrl + '/property-comparison';
-        this.propertiesUrl = this.hostUrl + '/property-filter';
-        this.categoryPathUrl = this.hostUrl + '/categories';
         this.orderUrl = this.hostUrl + '/orders';
         this.restoreFromLocalStorage();
     }
@@ -92,7 +87,7 @@ var DataService = (function () {
         restoredValue = this.localStorageService.get('hs_basket');
         try {
             this.orderRows = JSON.parse(restoredValue);
-            if (this.orderRows == null)
+            if (this.orderRows === null)
                 this.orderRows = [];
         }
         catch (error) {
@@ -151,48 +146,38 @@ var DataService = (function () {
     };
     //-----------------------------------------------------------------------------
     DataService.prototype.getProperties = function (categoryId) {
-        return this.http.get(this.propertiesUrl + '/?' + JSON.stringify({ 'categoryId': categoryId }))
+        return this.http.get(this.categoryUrl + "/" + categoryId + "/property-filter")
             .toPromise()
             .then(function (response) { return response.json(); })
-            .catch(function (error) {
-            return console.log(error);
-        });
+            .catch(function (error) { return console.log(error); });
     };
     //-----------------------------------------------------------------------------
     DataService.prototype.getCategoryList = function () {
         return this.http.get(this.categoryUrl)
             .toPromise()
             .then(function (response) { return response.json(); })
-            .catch(function (error) {
-            return console.log(error);
-        });
+            .catch(function (error) { return console.log(error); });
     };
     //-----------------------------------------------------------------------------
     DataService.prototype.getCategoryTreeData = function () {
         return this.http.get(this.categoryTreeDataUrl)
             .toPromise()
             .then(function (response) { return response.json(); })
-            .catch(function (error) {
-            return console.log(error);
-        });
+            .catch(function (error) { return console.log(error); });
     };
     //-----------------------------------------------------------------------------
     DataService.prototype.getItemList = function (query) {
-        return this.http.get(this.itemUrl + query)
+        return this.http.get(this.itemUrl + "?" + query)
             .toPromise()
             .then(function (response) { return response.json(); })
-            .catch(function (error) {
-            return console.log(error);
-        });
+            .catch(function (error) { return console.log(error); });
     };
     //-----------------------------------------------------------------------------
     DataService.prototype.getCarrierList = function () {
         return this.http.get(this.carrierUrl)
             .toPromise()
             .then(function (response) { return response.json(); })
-            .catch(function (error) {
-            return console.log(error);
-        });
+            .catch(function (error) { return console.log(error); });
     };
     //-----------------------------------------------------------------------------
     DataService.prototype.getItemProperties = function (itemId) {
@@ -206,18 +191,14 @@ var DataService = (function () {
         return this.http.get(this.newItemUrl)
             .toPromise()
             .then(function (response) { return response.json(); })
-            .catch(function (error) {
-            return console.log(error);
-        });
+            .catch(function (error) { return console.log(error); });
     };
     //-----------------------------------------------------------------------------
     DataService.prototype.getComparedProperties = function (query) {
-        return this.http.get(this.comparedPropertiesUrl + query)
+        return this.http.get(this.comparedPropertiesUrl + "?" + query)
             .toPromise()
             .then(function (response) { return response.json(); })
-            .catch(function (error) {
-            return console.log(error);
-        });
+            .catch(function (error) { return console.log(error); });
     };
     //-----------------------------------------------------------------------------
     DataService.prototype.postOrder = function (orderObject) {
@@ -226,9 +207,7 @@ var DataService = (function () {
         return this.http.post(this.orderUrl, JSON.stringify(orderObject), options)
             .toPromise()
             .then(function (response) { return response.json(); })
-            .catch(function (error) {
-            return console.log(error);
-        });
+            .catch(function (error) { return console.log(error); });
     };
     //-----------------------------------------------------------------------------
     DataService.prototype.addToComapreItem = function (item) {
@@ -266,24 +245,17 @@ var DataService = (function () {
         return this.lastViewItems;
     };
     //-----------------------------------------------------------------------------
-    DataService.prototype.getPropertryPrefix = function () {
-        return this.propertyPrefix;
-    };
-    //-----------------------------------------------------------------------------
-    DataService.prototype.getItemPrefix = function () {
-        return this.itemPrefix;
-    };
-    //-----------------------------------------------------------------------------
     DataService.prototype.showMessage = function (text) {
         this.messenger.next(text);
     };
     //-----------------------------------------------------------------------------
-    DataService.prototype.buildPath = function (parObject) {
+    DataService.prototype.buildPath = function (parObject, itemPath) {
         var _this = this;
+        if (itemPath === void 0) { itemPath = false; }
         var addPath;
-        addPath = parObject['mainImage'] ? "/" + parObject.categoryId + "/path" :
+        addPath = itemPath ? "/" + parObject.categoryId + "/path" :
             "/" + parObject.id + "/path";
-        this.http.get("" + this.categoryPathUrl + addPath)
+        this.http.get("" + this.categoryUrl + addPath)
             .toPromise()
             .then(function (data) {
             var categoryPath = data.json();

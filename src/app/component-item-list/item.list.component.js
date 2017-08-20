@@ -29,27 +29,30 @@ var ItemListComponent = (function () {
     ItemListComponent.prototype.getItemList = function (params) {
         var _this = this;
         var queryString = '';
-        var queryObject = {};
-        var tempItemList = [];
-        var paramName;
-        for (paramName in params) {
-            queryObject[paramName] = params[paramName];
+        var _loop_1 = function (paramName) {
+            queryString += queryString === '' ? '' : '&';
+            if (params[paramName] instanceof Array) {
+                queryString += params[paramName].map(function (el) { return paramName + "=" + el; }).join('&');
+            }
+            else {
+                queryString += paramName + "=" + params[paramName];
+            }
+        };
+        for (var paramName in params) {
+            _loop_1(paramName);
         }
-        if (Object.keys(queryObject).length > 0)
-            queryString = '/?' + JSON.stringify(queryObject);
         this.dataService.getItemList(queryString).then(function (itemList) {
-            tempItemList = itemList;
-            _this.dataService.converRate(tempItemList);
-            _this.itemList = [];
-            _this.itemList = tempItemList;
+            _this.itemList = itemList;
+            _this.dataService.converRate(_this.itemList);
         });
     };
     //-----------------------------------------------------------------------------
     ItemListComponent.prototype.scrollImage = function (selectedItem, forward) {
         var imageIndex = 0;
         var i;
-        if (selectedItem.imageList.length <= 1)
+        if (selectedItem.imageList.length <= 1) {
             return;
+        }
         imageIndex = selectedItem.imageList.findIndex(function (element) { return element.shift == 0; });
         if (forward && imageIndex == selectedItem.imageList.length - 1) {
             for (i in selectedItem.imageList)
@@ -66,9 +69,7 @@ var ItemListComponent = (function () {
     };
     //-----------------------------------------------------------------------------
     ItemListComponent.prototype.gotoItem = function (selectedItem) {
-        var parObject = {};
-        parObject['id' + this.dataService.getItemPrefix()] = selectedItem.id;
-        this.router.navigate(['/item'], { queryParams: parObject });
+        this.router.navigate(['/item'], { queryParams: { id: selectedItem.id } });
     };
     //-----------------------------------------------------------------------------
     ItemListComponent.prototype.buyItem = function (selectedItem) {

@@ -80,9 +80,9 @@
 		</span>
 		<div class='subMenuContainer'>
 			Price:
-			<input type='number' [(ngModel)]='lowPrice' (change)='filterByPropertis()'>	
+			<input type='number' [(ngModel)]='lowPrice' (input)='filterByPropertis()'>	
 			-
-			<input type='number' [(ngModel)]='highPrice' (change)='filterByPropertis()'>	
+			<input type='number' [(ngModel)]='highPrice' (input)='filterByPropertis()'>	
 			<div *ngFor='let property of propertyList;' class='propertyName'>
 				{{property.name}}:
 				<div *ngFor='let value of property.values;' class='glClickable valueRow' (click)='toggleFilter(property,value)'>

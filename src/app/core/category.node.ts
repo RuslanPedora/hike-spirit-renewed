@@ -6,7 +6,7 @@ export class CategoryNode {
 	level: number = 0;
 	nodes: CategoryNode[] = [];
 	submenuWidth: number = 0;
-	constructor( category: Category, itemCount: number, level: number ) {
+	constructor(category: Category, itemCount: number, level: number) {
 		this.category = category;
 		this.level = level;
 		this.itemCount = itemCount;

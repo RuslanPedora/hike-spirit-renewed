@@ -39,7 +39,7 @@ var CompareItems = (function () {
             this.router.navigate(['/compare-items'], { queryParams: parObject });
         }
         else {
-            parObject['id' + this.dataService.getItemPrefix()] = selectedItem.id;
+            parObject['id'] = selectedItem.id;
             this.router.navigate(['/item'], { queryParams: parObject });
         }
     };
@@ -58,7 +58,7 @@ var CompareItems = (function () {
         var propertyName = '';
         var propertyValues = [];
         var tempArray = [];
-        queryString = '/?' + JSON.stringify({ id: this.compareItems.map(function (element) { return element.id; }) });
+        queryString = this.compareItems.map(function (el) { return "id=" + el.id; }).join('&');
         this.dataService.getComparedProperties(queryString).then(function (dataList) {
             tempList = dataList;
             var _loop_1 = function (i) {

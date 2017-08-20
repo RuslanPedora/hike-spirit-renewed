@@ -39,7 +39,8 @@
   </div>
   <div class='fieldDiv'>
     <label for='phone'>Phone <span>*</span></label>
-    <input type='text' [(ngModel)]='phoneNumber' name='phone' required placeholder='Phone number...'>
+    <input type='text' [(ngModel)]='phoneNumber' name='phone' required placeholder='Phone number...' 
+	       pattern='^[0-9]{3}[-][0-9]{3}[-][0-9]{2}[-][0-9]{2}$' title='Please input phone xxx-xxx-xx-xx'>
   </div>
   <div id='areaDiv'>
     <label for="comment">Your Comment</label>

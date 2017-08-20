@@ -24,25 +24,19 @@ var InvitationComponent = (function () {
         var _this = this;
         this.dataService.getCategoryList().then(function (categoryList) {
             _this.categoryList = categoryList;
-            if (_this.categoryList.length >= 4)
+            if (_this.categoryList.length >= 4) {
                 _this.categoryList = _this.categoryList.slice(0, 4);
+            }
         });
         this.dataService.getNewItemList().then(function (itemList) { return _this.itemList = itemList; });
     };
     //-----------------------------------------------------------------------------
     InvitationComponent.prototype.gotoItemList = function (selectedCategory) {
-        var parObject = {};
-        parObject['categoryId'] = selectedCategory.id;
-        this.router.navigate(['/item-list'], { queryParams: parObject });
+        this.router.navigate(['/item-list'], { queryParams: { categoryId: selectedCategory.id } });
     };
     //-----------------------------------------------------------------------------
     InvitationComponent.prototype.gotoItem = function (selectedItem) {
-        var parObject = {};
-        parObject['id' + this.dataService.getItemPrefix()] = selectedItem.id;
-        this.router.navigate(['/item'], { queryParams: parObject });
-    };
-    //-----------------------------------------------------------------------------
-    InvitationComponent.prototype.onResize = function (event) {
+        this.router.navigate(['/item'], { queryParams: { id: selectedItem.id } });
     };
     //-----------------------------------------------------------------------------
     InvitationComponent.prototype.scrollDown = function () {

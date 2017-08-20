@@ -24,9 +24,7 @@ var LastViewedItems = (function () {
     };
     //-----------------------------------------------------------------------------
     LastViewedItems.prototype.gotoItem = function (selectedItem) {
-        var parObject = {};
-        parObject['id' + this.dataService.getItemPrefix()] = selectedItem.id;
-        this.router.navigate(['/item'], { queryParams: parObject });
+        this.router.navigate(['/item'], { queryParams: { id: selectedItem.id } });
     };
     return LastViewedItems;
 }());

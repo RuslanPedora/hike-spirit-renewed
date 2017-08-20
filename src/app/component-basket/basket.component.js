@@ -65,9 +65,7 @@ var BasketComponent = (function () {
     };
     //-----------------------------------------------------------------------------
     BasketComponent.prototype.gotoItem = function (selectedItem) {
-        var parObject = {};
-        parObject['id' + this.dataService.getItemPrefix()] = selectedItem.id;
-        this.router.navigate(['/item'], { queryParams: parObject });
+        this.router.navigate(['/item'], { queryParams: { id: selectedItem.id } });
     };
     //-----------------------------------------------------------------------------
     BasketComponent.prototype.postOrder = function () {
@@ -83,9 +81,7 @@ var BasketComponent = (function () {
         orderObject['carrier'] = this.selectedCarrier;
         orderObject['orderRows'] = this.orderRows;
         orderObject['comment'] = this.comment;
-        this.dataService.postOrder(orderObject).then(function (result) {
-            return _this.dataService.showMessage('Your order #' + result['orderNumber'] + ' has been posted');
-        });
+        this.dataService.postOrder(orderObject).then(function (orderNumber) { return _this.dataService.showMessage("Your order # " + orderNumber + " has been posted"); });
     };
     //-----------------------------------------------------------------------------
     BasketComponent.prototype.setPaymentType = function (paymentType) {

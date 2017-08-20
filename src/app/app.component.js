@@ -52,7 +52,7 @@ var ApplicationComponent = (function () {
         this.messageListener = this.dataService.messageSource.subscribe(function (message) { return _this.showMessage(message); });
         this.activatedRoute.queryParams.subscribe(function (queryParams) {
             var categoryIdPar = queryParams['categoryId'];
-            if (categoryIdPar != undefined) {
+            if (categoryIdPar) {
                 _this.dataService.buildPath({ id: Number.parseInt(categoryIdPar) });
                 _this.selectedCategory = categoryIdPar;
                 if (_this.selectedProperties.length == 0) {
@@ -60,10 +60,10 @@ var ApplicationComponent = (function () {
                     _this.lowPrice = 0;
                     _this.highPrice = 0;
                     _this.dataService.getProperties(categoryIdPar).then(function (data) { return _this.fillPropertyList(data); });
-                    var lowPrice = queryParams['lowPrice' + _this.dataService.getItemPrefix()];
-                    if (lowPrice != undefined)
+                    var lowPrice = queryParams['lowPrice'];
+                    if (lowPrice)
                         _this.lowPrice = lowPrice;
-                    var highPrice = queryParams['highPrice' + _this.dataService.getItemPrefix()];
+                    var highPrice = queryParams['highPrice'];
                     if (highPrice != undefined)
                         _this.highPrice = highPrice;
                 }
@@ -85,12 +85,6 @@ var ApplicationComponent = (function () {
     //-----------------------------------------------------------------------------
     ApplicationComponent.prototype.ngAfterContentInit = function () {
         this.onResize(undefined);
-    };
-    //-----------------------------------------------------------------------------
-    ApplicationComponent.prototype.ngAfterViewInit = function () {
-    };
-    //-----------------------------------------------------------------------------
-    ApplicationComponent.prototype.ngAfterViewChecked = function () {
     };
     //-----------------------------------------------------------------------------
     ApplicationComponent.prototype.ngOnDestroy = function () {
@@ -322,16 +316,16 @@ var ApplicationComponent = (function () {
     };
     //-----------------------------------------------------------------------------
     ApplicationComponent.prototype.searchItem = function (searchKey) {
-        var parObject = {};
-        var keyAsNumber;
-        parObject['name' + this.dataService.getItemPrefix()] = searchKey;
-        keyAsNumber = Number.parseInt(searchKey);
-        if (!isNaN(keyAsNumber))
-            parObject['searchId' + this.dataService.getItemPrefix()] = searchKey;
-        if (searchKey == '')
-            this.router.navigate(['/item-list']);
-        else
+        var parObject = { 'searchName': searchKey };
+        if (!isNaN(Number.parseInt(searchKey))) {
+            parObject['searchId'] = searchKey;
+        }
+        if (searchKey) {
             this.router.navigate(['/item-list'], { queryParams: parObject });
+        }
+        else {
+            this.router.navigate(['/item-list']);
+        }
     };
     //-----------------------------------------------------------------------------
     ApplicationComponent.prototype.scrollDown = function () {
@@ -358,16 +352,18 @@ var ApplicationComponent = (function () {
         var parObject = {};
         var tempArray = [];
         parObject['categoryId'] = this.selectedCategory;
-        if (this.lowPrice > 0)
-            parObject['lowPrice' + this.dataService.getItemPrefix()] = this.lowPrice;
-        if (this.highPrice > 0)
-            parObject['highPrice' + this.dataService.getItemPrefix()] = this.highPrice;
+        if (this.lowPrice > 0) {
+            parObject['lowPrice'] = this.lowPrice;
+        }
+        if (this.highPrice > 0) {
+            parObject['highPrice'] = this.highPrice;
+        }
         for (var i in this.selectedProperties) {
             tempArray = [];
             for (var j in this.selectedProperties[i].values)
                 tempArray.push(this.selectedProperties[i].values[j].value);
-            parObject['propertyId' + i] = this.selectedProperties[i].id;
-            parObject['value' + i] = tempArray;
+            parObject["propertyId" + i] = this.selectedProperties[i].id;
+            parObject["value" + i] = tempArray;
         }
         this.router.navigate(['/item-list'], { queryParams: parObject });
     };
