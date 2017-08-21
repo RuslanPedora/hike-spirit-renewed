@@ -64,9 +64,9 @@ export class ItemComponent implements OnInit {
 			                                     this.dataService.addToViewItem(this.item);
 			                                     this.dataService.buildPath(this.item, true);
 			                                     if (this.reEnter && this.item.imageList.length > 0) {
-			                                     	this.loupeFragment = this.item.imageList[ 0 ].bigImage;
-			                                     	this.mouseEntered = true;
-			                                     	this.posBigImage(this.offsetX, this.offsetY, this.clientWidth, this.clientHeight);
+			                                     	 this.loupeFragment = this.item.imageList[ 0 ].bigImage;
+			                                     	 this.mouseEntered = true;
+			                                     	 this.posBigImage(this.offsetX, this.offsetY, this.clientWidth, this.clientHeight);
 			                                     }
 											     window.scrollTo(0, 0);
 			                                 }

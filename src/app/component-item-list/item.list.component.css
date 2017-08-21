@@ -8,8 +8,6 @@
 	color: white;
 	font-size: 15px;
 	color: #888888;
-	/*background-color: rgba(31,31,31,.75);*/
-	/*background-color: rgba( 0, 0, 0, .55 );	*/
 	background-color: transparent;
 }
 #sortingBar {
@@ -28,12 +26,15 @@
 #emptyListMessage {
 	padding: 10px;
 }
+#item-flex {
+	display: flex;
+	flex-wrap: wrap;
+}
 .itemWrapper {
-	width: 24.8%;
+	width: calc((100% - 4px) / 4);
 	padding-top: 25%;
+	margin-bottom: 1px;
 	margin-right: 1px;
-	margin-bottom: -2px;
-	display: inline-block;
 	position: relative;
 	text-align: center;
 }
@@ -138,15 +139,7 @@
 	max-height: 100%;
 	max-width: 100%;
 }
-/*.itemInner .imageDiv img {
-    animation: imageSlide 2s;
-    animation-fill-mode: forwards;
-}
-@keyframes imageSlide {
-    from { left: 100%; }
-    to { left: 0%; }
-}
-*/.nameDiv {
+.nameDiv {
 	height: 10%;
 	text-overflow: ellipsis;
 	overflow: hidden;
@@ -180,19 +173,18 @@
 .buyButton:hover {
 	box-shadow: 0px 3px 3px 3px #82A800;
 }
-
 .buyButton i {
 	font-size: 20px;
 }
 @media only screen and (max-width: 820px) {
 	.itemWrapper {
-		width: 33%;
+		width: calc((100% - 3px) / 3);
 		padding-top: 33.33%;
 	}	
 }
 @media only screen and (max-width: 670px) {
 	.itemWrapper {
-		width: 49.5%;
+		width: calc((100% - 2px) / 2);
 		padding-top: 50%;
 	}	
 }

@@ -2,13 +2,11 @@
 	max-width: 1000px;
 	margin: auto;
 	padding: 10px;
-	/*border: 1px solid red;*/
 	text-align: left;
 	vertical-align: top;
 	overflow: auto;
 }
 #logoWrapper {
-	/*border: 1px solid;*/
 	display: inline-block;	
 	float: left;
 }
@@ -19,7 +17,6 @@
 	border-radius: 5px;
 }
 #additionalWrapper {
-	/*border: 1px solid;*/
 	height: 115px;
 	word-break: break-all;
 	vertical-align: top;
@@ -27,8 +24,6 @@
 #topBar {
 	height: 69px;
 	padding: 5px;
-	/*text-align: right;*/
-	/*border: 1px solid white;*/
 }
 #topBar a {
 	text-decoration: none;
@@ -46,7 +41,6 @@
 }
 .navButton i {
 	font-size: 15px;
-	/*font-weight: bold;	*/
 }
 #searchBar {
 	margin: 3px 3px 3px 15px;
@@ -79,7 +73,6 @@
 }
 #basketBar {
 	display: inline-block;
-	/*border: 1px solid white;*/
 	vertical-align: bottom;
 	padding: 0px 17px 5px 5px;	
 	float: right;
@@ -100,9 +93,6 @@
 	background-color: black;
 	text-align: left;
 }
-#categoryTree li {
-	/*border: 1px solid;*/
-}	
 .mainCategorySpan {	
 	display: inline-block;
 	color: white;
@@ -118,7 +108,6 @@
 }
 .subMenuContainer {
 	position: absolute;
-	/*top: 100%;*/
 	display: none;
 	z-index: 20;
 	overflow: auto;
@@ -163,7 +152,6 @@
 	text-align: left;
 	display: inline-block;	
 	vertical-align: top;	
-	/*border: 1px solid red;*/
 }
 #filterdiv {
 	margin-bottom: -2px;
@@ -280,20 +268,17 @@ input[type="number"]::-webkit-inner-spin-button {
 	margin: auto;
 	width: 90%;
 	max-width: 100%;
-	/*border: 1px solid white;*/
 }
 .contactSection {	
 	max-width: 250px;
 	height: 350px;
 	display: inline-block;
 	margin: 0 auto;
-	/*border: 1px solid white;*/
 	padding: 10px;
 	vertical-align: top;
 }
 .contactSection ul {	
 	padding-left: 2px;
-	/*border: 1px solid white;*/
 }
 #contactList li{ 
 	display: block;
@@ -337,11 +322,6 @@ input[type="number"]::-webkit-inner-spin-button {
 	color: #82A800;
 	text-align: left;
 }
-#middleList li:last-child { 
-/*	margin: 0;
-	padding: 0;
-	border: none;
-*/}
 fieldset { 
 	margin: 0;
 	padding: 0;
@@ -377,7 +357,6 @@ fieldset {
 	z-index: 999;
 	display: inline-block;
 	position: fixed;
-	/*visibility:hidden;*/
 	bottom: 20px;
 	right: 20px;
 	width: 36px;
@@ -413,7 +392,6 @@ fieldset {
 	border-radius: 4px;	
     animation: messageMove .8s;
     animation-fill-mode: forwards;
-    /*opacity: 0;	*/
     box-shadow: 3px 3px 3px 3px black;
     background-color: rgba( 255, 255, 255, .85 );
 }

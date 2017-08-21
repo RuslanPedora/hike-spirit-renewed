@@ -48,8 +48,9 @@ var DataService = (function () {
     //-----------------------------------------------------------------------------
     DataService.prototype.getBasketTotal = function () {
         var result = 0;
-        if (this.orderRows.length > 0)
+        if (this.orderRows.length > 0) {
             result = this.orderRows.map(function (element) { return element.total; }).reduce(function (total, sum) { return total + sum; });
+        }
         return result;
     };
     //-----------------------------------------------------------------------------
@@ -87,27 +88,30 @@ var DataService = (function () {
         restoredValue = this.localStorageService.get('hs_basket');
         try {
             this.orderRows = JSON.parse(restoredValue);
-            if (this.orderRows === null)
+            if (this.orderRows === null) {
                 this.orderRows = [];
+            }
         }
-        catch (error) {
+        catch (err) {
         }
         this.basketEventEmitter.next('');
         restoredValue = this.localStorageService.get('hs_compareList');
         try {
             this.compareItems = JSON.parse(restoredValue);
-            if (this.compareItems == null)
+            if (this.compareItems == null) {
                 this.compareItems = [];
+            }
         }
-        catch (error) {
+        catch (err) {
         }
         restoredValue = this.localStorageService.get('hs_viewList');
         try {
             this.lastViewItems = JSON.parse(restoredValue);
-            if (this.lastViewItems == null)
+            if (this.lastViewItems == null) {
                 this.lastViewItems = [];
+            }
         }
-        catch (error) {
+        catch (err) {
         }
     };
     //-----------------------------------------------------------------------------

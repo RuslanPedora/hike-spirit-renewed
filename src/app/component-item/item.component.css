@@ -10,7 +10,6 @@
 	width: 50%;
 	padding-top: 61%;
 	display: inline-block;
-	/*border: 1px solid black;*/
 	position: relative;
 	overflow: auto;
 }
@@ -75,7 +74,6 @@
 	height: 100%;
 	position: absolute;	
 	top: 0%;
-	/*border: 1px solid green;*/
 	transition: left 1s;
 }
 .smallImageWrapper {
@@ -84,7 +82,6 @@
 	position: absolute;	
 	top: 0%;
 	padding: 1px;
-	/*border: 1px solid green;*/
 	transition: left 1s;	
 }
 .itemImage {
@@ -96,7 +93,6 @@
 	padding-top: 61%;
 	margin: -1px;
 	display: inline-block;
-	/*border: 1px solid black;*/
 	position: relative;
 	top: 0%;
 	overflow: auto;
@@ -108,7 +104,6 @@
 	position: absolute;
 	top: 5%;
 	left: 5%;
-	/*border: 1px solid red;*/
 	display: none;
 	z-index: 20;
 	background-color: white;

@@ -83,7 +83,7 @@ function getItemListQuery(req) {
     }    
     
     return `\
-      SELECT * FROM\
+      SELECT itemSelection.* FROM\
         (SELECT items.id as id, items.name as name, items.mainImage as mainImage,\
                  IFNULL(price, 0) AS price, IFNULL(discount, 0) AS discount,\
                  IFNULL(rate, 0) AS rate,\

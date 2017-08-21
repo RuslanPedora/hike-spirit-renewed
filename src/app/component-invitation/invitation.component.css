@@ -66,7 +66,6 @@ header li span {
 	margin: auto;
 	width: 90%;
 	max-width: 1000px;
-	/*border: 1px solid black;*/
 }
 .categoryWrapper {
 	width: 200px;
@@ -118,14 +117,10 @@ header li span {
 	width: 90%;
 	max-width: 1400px;
 	padding: 30px 0;
-	/*border: 1px solid white;*/
 }
 .face {
 	width: 80px;
 	height: 80px;	
-}
-#testimonials > div {
-	/*border: 1px solid yellow;	*/
 }
 #testimonials li div {
 	width: 95%;
@@ -181,7 +176,6 @@ header li span {
 	margin: auto;
 	width: 90%;
 	max-width: 1000px;
-	/*border: 1px solid black;*/
 }
 .itemWrapper {
 	width: 300px;

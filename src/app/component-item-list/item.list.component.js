@@ -18,6 +18,7 @@ var ItemListComponent = (function () {
         this.activatedRoute = activatedRoute;
         this.dataService = dataService;
         this.itemList = [];
+        this.sotringKey = '';
     }
     //-----------------------------------------------------------------------------
     ItemListComponent.prototype.ngOnInit = function () {
@@ -44,6 +45,9 @@ var ItemListComponent = (function () {
         this.dataService.getItemList(queryString).then(function (itemList) {
             _this.itemList = itemList;
             _this.dataService.converRate(_this.itemList);
+            if (_this.sotringKey) {
+                _this.sortItemList(_this.sotringKey);
+            }
         });
     };
     //-----------------------------------------------------------------------------
@@ -77,6 +81,7 @@ var ItemListComponent = (function () {
     };
     //-----------------------------------------------------------------------------
     ItemListComponent.prototype.sortItemList = function (sortKey) {
+        this.sotringKey = sortKey;
         this.itemList.sort(this[sortKey]);
     };
     //-----------------------------------------------------------------------------

@@ -18,6 +18,7 @@ import { Image }    from 'hs_core/image';
 //-----------------------------------------------------------------------------
 export class ItemListComponent implements OnInit {
 	itemList: Item[] = [];
+	sotringKey: string = '';
 	//-----------------------------------------------------------------------------
 	constructor(private router: Router,
 				private activatedRoute: ActivatedRoute,
@@ -44,6 +45,9 @@ export class ItemListComponent implements OnInit {
 		this.dataService.getItemList(queryString).then(itemList => { 
 			this.itemList = itemList;
 			this.dataService.converRate(this.itemList);
+			if (this.sotringKey) {
+				this.sortItemList(this.sotringKey);
+			}
 		});
 	}
 	//-----------------------------------------------------------------------------
@@ -77,6 +81,7 @@ export class ItemListComponent implements OnInit {
 	}
 	//-----------------------------------------------------------------------------
 	sortItemList(sortKey: string): void {
+		this.sotringKey = sortKey;
 		this.itemList.sort(this[ sortKey ]);
 	}
 	//-----------------------------------------------------------------------------

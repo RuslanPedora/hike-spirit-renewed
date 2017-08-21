@@ -32,51 +32,55 @@
 		Unfortunately nothing was find according to your request please try another criteria
 		<i class='fa fa-hand-pointer-o'></i>
 	</div>
-	<div *ngFor='let item of itemList;let i = index;' class='itemWrapper'>
-		<div class='itemInner glBgWhite' style.animationDelay='{{i/20}}s'>
-			<div class='fixedInner'>
-				<i id='leftArrow' class='fa fa-chevron-left glCGreen glClickable' (click)='scrollImage(item,false)'></i>
-				<i id='rightArrow' class='fa fa-chevron-right glCGreen glClickable' (click)='scrollImage(item,true)'></i>
-				<span id='newDiv' *ngIf='item.newItem'>
-					New
-				</span>
-				<div id='discountDiv' *ngIf='item.discount>0'>
-					-{{item.discount}}%
-				</div>
-				<div class='imageDiv'>
-					<div class='imageScrollDiv' *ngIf='item.imageList.length<=1'>
-						<img src='/images/{{item.mainImage}}' class='glClickable' (click)='gotoItem(item)'>
+
+	<div id='item-flex'>
+		<div *ngFor='let item of itemList;let i = index;' class='itemWrapper'>
+			<div class='itemInner glBgWhite' style.animationDelay='{{i/20}}s'>
+				<div class='fixedInner'>
+					<i id='leftArrow' class='fa fa-chevron-left glCGreen glClickable' (click)='scrollImage(item,false)'></i>
+					<i id='rightArrow' class='fa fa-chevron-right glCGreen glClickable' (click)='scrollImage(item,true)'></i>
+					<span id='newDiv' *ngIf='item.newItem'>
+						New
+					</span>
+					<div id='discountDiv' *ngIf='item.discount>0'>
+						-{{item.discount}}%
 					</div>
-					<ng-container *ngIf='item.imageList.length>1'>
-						<div *ngFor='let image of item.imageList'
-							  style.left='{{image.shift}}%'
-						      class='imageScrollDiv'>
-							<img src='/images/{{image.mediumImage}}' class='glClickable' (click)='gotoItem(item)'>
+					<div class='imageDiv'>
+						<div class='imageScrollDiv' *ngIf='item.imageList.length<=1'>
+							<img src='/images/{{item.mainImage}}' class='glClickable' (click)='gotoItem(item)'>
 						</div>
-					</ng-container>
-				</div>
-				<div class='rateDiv'>
-					<span *ngFor='let rateElement of item.rateArray'>						
-						<i class='fa fa-star glCGreen' *ngIf='rateElement==1'></i>
-						<i class='fa fa-star-half-full glCGreen' *ngIf='rateElement>0&&rateElement<1'></i>
-						<i class='fa fa-star-o glCGreen' *ngIf='rateElement==0'></i>
-					</span>					
-				</div>
-				<div class='nameDiv glClickable' (click)='gotoItem(item)'>
-					{{item.name}}
-				</div>
-				<div class='idDiv'>
-					code:{{item.id}}
-				</div>
-				<div class='priceDiv'>
-					<b>{{item.discountPrice.toFixed(2)}}$</b>
-					<del *ngIf='item.discount>0'>
-						{{item.price.toFixed(2)}}$
-					</del>					
-				</div>
-				<div class='buyButton glBtn small glBgGreen glClickable' (click)='buyItem(item)'>Buy <i class='fa fa-cart-plus'></i></div>
+						<ng-container *ngIf='item.imageList.length>1'>
+							<div *ngFor='let image of item.imageList'
+								style.left='{{image.shift}}%'
+								class='imageScrollDiv'>
+								<img src='/images/{{image.mediumImage}}' class='glClickable' (click)='gotoItem(item)'>
+							</div>
+						</ng-container>
+					</div>
+					<div class='rateDiv'>
+						<span *ngFor='let rateElement of item.rateArray'>						
+							<i class='fa fa-star glCGreen' *ngIf='rateElement==1'></i>
+							<i class='fa fa-star-half-full glCGreen' *ngIf='rateElement>0&&rateElement<1'></i>
+							<i class='fa fa-star-o glCGreen' *ngIf='rateElement==0'></i>
+						</span>					
+					</div>
+					<div class='nameDiv glClickable' (click)='gotoItem(item)'>
+						{{item.name}}
+					</div>
+					<div class='idDiv'>
+						code:{{item.id}}
+					</div>
+					<div class='priceDiv'>
+						<b>{{item.discountPrice.toFixed(2)}}$</b>
+						<del *ngIf='item.discount>0'>
+							{{item.price.toFixed(2)}}$
+						</del>					
+					</div>
+					<div class='buyButton glBtn small glBgGreen glClickable' (click)='buyItem(item)'>Buy <i class='fa fa-cart-plus'></i></div>
+				</div>	
 			</div>	
-		</div>	
+		</div>
 	</div>
+
 	<last-viewed-items></last-viewed-items>
 </div>
